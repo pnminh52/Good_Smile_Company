@@ -113,7 +113,7 @@ const RightSide = ({ product }) => {
           })}
         </p>
 
-        <div className="flex flex-col gap-2 py-4">
+        <div className="flex flex-col gap-2 py-2">
          {
           product.stock >0 && (
             <button
@@ -142,6 +142,10 @@ const RightSide = ({ product }) => {
             {inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
           </button>
         </div>
+        <div className=' space-y-2 py-4'>
+                  
+                    <p>{product.description}</p>
+                </div>
       </div>
       <div className="block sm:hidden px-4">
         <DetailSection product={product} />

@@ -1,81 +1,104 @@
-import React from 'react'
+import React, { useState } from "react";
+
+const Dropdown = ({ title, children, defaultOpen = true }) => {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className="">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex relative border-b-3 border-gray-300 justify-between items-center py-3 font-semibold text-lg"
+      >
+        <span className="relative">
+          {title}
+          {/* gạch cam */}
+          <span className="absolute left-0 -bottom-[14px] w-1/2 h-[3px] bg-[#FF6624] rounded"></span>
+        </span>
+      </button>
+  
+      {open && <div className="text-black">{children}</div>}
+    </div>
+  );
+  
+};
 
 const DetailSection = ({ product }) => {
-    return (
-        <div>
-            <div className='space-y-4 sm:py-4 py-0'>
-                <div className=' space-y-2'>
-                    <p className='py-4 font-semibold text-lg border-b border-gray-400'>Product Description </p>
-                    <p>{product.description}</p>
-                </div>
-                <div className=' space-y-2'>
-                <p className='py-4 font-semibold text-lg border-b border-gray-400'>Where to Purchase</p>
-                    <p>Good Smile Company Online Store</p>
-                    <ul>
-                        <li>*All orders placed on the Good Smile Company Online Store during the specified preorder period are guaranteed to be fulfilled.</li>
-                        <li>*Please note that this does not apply to orders with incorrect payment and/or shipping information provided.</li>
-                        <li>*Dates and times listed are in Japan Standard Time (JST) unless otherwise stated.</li>
-                    </ul>
-                    <p>International Partner Shops</p>
-                    <ul>
-                        <li>This product is available from our partner shops.</li>
-                        <li>Please see the following listing to find a partner shop in your area: Partner Shop Listing</li>
-                    </ul>
-                </div>
-                <div>
-                <p className='py-4 font-semibold text-lg border-b border-gray-400'>Product Specifications</p>
-                    {product.series && (
-                        <div className='flex items-center gap-10 py-6 border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Series</p>
-                            <p className="text-black">{product.series}</p>
-                        </div>
-                    )}
+  return (
+    <div className=" ">
+      {/* Where to Purchase */}
+      <Dropdown title="Where to Purchase" defaultOpen={true}>
+      
+        <ul className="  space-y-3 py-3">
+          <li>
+            *All orders placed on the Good Smile Company Online Store during the
+            specified preorder period are guaranteed to be fulfilled.
+          </li>
+          <li>
+            *Please note that this does not apply to orders with incorrect
+            payment and/or shipping information provided.
+          </li>
+          <li>
+            *Dates and times listed are in Japan Standard Time (JST) unless
+            otherwise stated.
+          </li>
+        </ul>
+       
+        <ul className=" space-y-3 ">
+          <li>*This product is available from our partner shops.</li>
+          <li>
+          *Please see the following listing to find a partner shop in your
+            area: Partner Shop Listing
+          </li>
+        </ul>
+      </Dropdown>
 
-                    {product.specifications && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Specifications</p>
-                            <p className="text-black">{product.specifications}</p>
-                        </div>
-                    )}
+      {/* Product Specifications */}
+      <Dropdown title="Product Specifications">
+        {product.series && (
+          <div className="flex items-center gap-10 py-4 border-b border-gray-200">
+            <p className="font-semibold text-black">Series</p>
+            <p>{product.series}</p>
+          </div>
+        )}
+        {product.specifications && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
+            <p className="font-semibold text-black">Specifications</p>
+            <p>{product.specifications}</p>
+          </div>
+        )}
+        {product.sculptor && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
+            <p className="font-semibold text-black">Sculptor</p>
+            <p>{product.sculptor}</p>
+          </div>
+        )}
+        {product.paintwork && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
+            <p className="font-semibold text-black">Paintwork</p>
+            <p>{product.paintwork}</p>
+          </div>
+        )}
+        {product.relatedInfo && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
+            <p className="font-semibold text-black">Related Information</p>
+            <p>{product.relatedInfo}</p>
+          </div>
+        )}
+        {product.manufacturer && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
+            <p className="font-semibold text-black">Manufacturer</p>
+            <p>{product.manufacturer}</p>
+          </div>
+        )}
+        {product.distributedBy && (
+          <div className="flex items-center gap-10 py-6 ">
+            <p className="font-semibold text-black">Distributed by</p>
+            <p>{product.distributedBy}</p>
+          </div>
+        )}
+      </Dropdown>
+    </div>
+  );
+};
 
-                    {product.sculptor && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Sculptor</p>
-                            <p className="text-black">{product.sculptor}</p>
-                        </div>
-                    )}
-
-                    {product.paintwork && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Paintwork</p>
-                            <p className="text-black">{product.paintwork}</p>
-                        </div>
-                    )}
-
-                    {product.relatedInfo && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Related Information</p>
-                            <p className="text-black">{product.relatedInfo}</p>
-                        </div>
-                    )}
-
-                    {product.manufacturer && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Manufacturer</p>
-                            <p className="text-black">{product.manufacturer}</p>
-                        </div>
-                    )}
-
-                    {product.distributedBy && (
-                        <div className='flex items-center gap-10 py-6  border-b border-gray-400'>
-                            <p className=" font-semibold text-black ">Distributed by</p>
-                            <p className="text-black">{product.distributedBy}</p>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    )
-}
-
-export default DetailSection
+export default DetailSection;

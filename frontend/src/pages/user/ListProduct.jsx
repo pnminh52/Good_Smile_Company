@@ -5,6 +5,7 @@ import FilterSideBar from "../../components/user/listProduct/FilterSideBar";
 import { getProducts } from "../../api/products";
 import { Input, Button } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
+import NoResult from "../../components/user/NoResult";
 const ListProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,9 +46,9 @@ const ListProduct = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
+     
         <Loader />
-      </div>
+    
     );
   }
 
@@ -121,7 +122,7 @@ const ListProduct = () => {
         {/* Product List */}
         <div className="w-full sm:w-[80%]">
           {filteredProducts.length === 0 ? (
-            <p className="text-gray-500">No products available.</p>
+          <NoResult />
           ) : (
             <ProductCard products={filteredProducts} />
           )}
