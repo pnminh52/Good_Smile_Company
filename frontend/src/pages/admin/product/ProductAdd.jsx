@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createProduct } from "../../../api/products";
 import { getCategories } from "../../../api/categories";
 import { useNavigate } from "react-router-dom";
+import BrandSelect from './../../../components/admin/product/BrandSelect';
 
 function ProductAdd() {
   const navigate = useNavigate();
@@ -101,14 +102,8 @@ function ProductAdd() {
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
-         <input
-          className="border rounded p-2"
-          placeholder="imageCopyright"
-          value={form.imagecopyright}
-          onChange={(e) =>
-            setForm({ ...form, imagecopyright: e.target.value })
-          }
-        />
+        <BrandSelect form={form} setForm={setForm} />
+
         <input
           className="border rounded p-2"
           placeholder="Series"

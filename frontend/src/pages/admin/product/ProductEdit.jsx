@@ -41,12 +41,16 @@ function ProductEdit() {
         const res = await getProductById(id);
         setForm({
           ...res.data,
+          release_date: res.data.release_date
+            ? new Date(res.data.release_date).toISOString().split("T")[0] // ép thành YYYY-MM-DD
+            : "",
           additional_images: res.data.additional_images || [""],
         });
       } catch (err) {
         console.error("❌ Error fetching product:", err);
       }
     };
+    
 
     const fetchCategories = async () => {
       try {
