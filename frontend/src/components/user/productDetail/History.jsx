@@ -33,29 +33,41 @@ const History = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto relative group">
-      <h2 className="text-2xl font-semibold py-4 px-4 sm:px-0">Recently Viewed</h2>
-
-     <div className="hidden sm:block">
-       {/* Nút Prev */}
-            <button
-              ref={prevRef}
-              className="absolute rotate-180 -left-5 top-1/2 -translate-y-1/2 z-10 
-              bg-white shadow-md w-10 cursor-pointer h-10 flex items-center justify-center rounded-full hover:bg-gray-100 
-              "
-            >
-              <img src="https://www.goodsmile.com/img/icon/arrow-paging.svg" alt="" />
-            </button>
       
-            {/* Nút Next */}
-            <button
-              ref={nextRef}
-              className="absolute rotate-0 -right-5 top-1/2 -translate-y-1/2 z-10 
-              bg-white shadow-md w-10 cursor-pointer h-10 flex items-center justify-center rounded-full hover:bg-gray-100 
-              "
-            >
-              <img src="https://www.goodsmile.com/img/icon/arrow-paging.svg" alt="" />
-            </button>
-     </div>
+
+     <h2 className="text-2xl font-semibold pb-4 px-4 sm:px-0">
+     Recently Viewed
+  </h2>
+    <div className="relative group ">
+     
+
+      {/* Navigation buttons (desktop only) */}
+      <div className="hidden sm:block">
+        <button
+          ref={prevRef}
+          className="absolute rotate-180 cursor-pointer -left-5 bottom-1/2 -translate-y-1/2  z-10 
+          bg-white shadow-md w-14 h-14 flex items-center justify-center rounded-full hover:bg-gray-100"
+        >
+          <img
+          className="w-3"
+            src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+            alt="prev"
+          />
+        </button>
+
+        <button
+          ref={nextRef}
+          className="absolute rotate-0 cursor-pointer -right-5 bottom-1/2 -translate-y-1/2 z-10 
+          bg-white shadow-md w-12 h-12 flex items-center justify-center rounded-full hover:bg-gray-100"
+        >
+          <img
+          className="w-3"
+            src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+            alt="next"
+          />
+        </button>
+      </div>
+
 
      <div className="px-4 sm:px-0">
      <Swiper
@@ -91,6 +103,7 @@ const History = ({ product }) => {
         ))}
       </Swiper>
      </div>
+    </div>
     </div>
   );
 };

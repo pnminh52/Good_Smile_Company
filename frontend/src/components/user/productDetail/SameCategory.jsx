@@ -28,19 +28,23 @@ const SameCategory = ({ product }) => {
   if (!sameProducts.length) return null;
 
   return (
-    <div className="max-w-screen-xl mx-auto relative group ">
-      <h2 className="text-2xl font-semibold py-4 px-4 sm:px-0">
-        More from this category
-      </h2>
+    <div className="max-w-screen-xl mx-auto ">
+      
+      <h2 className="text-2xl font-semibold pb-4 px-4 sm:px-0">
+    More from this category
+  </h2>
+    <div className="relative group ">
+     
 
       {/* Navigation buttons (desktop only) */}
       <div className="hidden sm:block">
         <button
           ref={prevRef}
-          className="absolute rotate-180 -left-5 top-1/2 -translate-y-1/2 z-10 
-          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+          className="absolute rotate-180 cursor-pointer -left-5 bottom-1/2 -translate-y-1/2  z-10 
+          bg-white shadow-md w-14 h-14 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
+          className="w-3"
             src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
             alt="prev"
           />
@@ -48,10 +52,11 @@ const SameCategory = ({ product }) => {
 
         <button
           ref={nextRef}
-          className="absolute rotate-0 -right-5 top-1/2 -translate-y-1/2 z-10 
-          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+          className="absolute rotate-0 cursor-pointer -right-5 bottom-1/2 -translate-y-1/2 z-10 
+          bg-white shadow-md w-12 h-12 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
+          className="w-3"
             src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
             alt="next"
           />
@@ -90,6 +95,7 @@ const SameCategory = ({ product }) => {
             ))}
         </Swiper>
       </div>
+    </div>
     </div>
   );
 };
