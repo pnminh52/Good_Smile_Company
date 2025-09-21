@@ -16,6 +16,79 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+// ✅ GET recommended products (cùng series, trừ sản phẩm hiện tại)
+export const getRecommendedProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Lấy product hiện tại
+    const [currentProduct] = await sql`
+      SELECT series FROM products WHERE id = ${id}
+    `;
+
+    if (!currentProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const { series } = currentProduct;
+
+    if (!series) {
+      return res.status(200).json([]); // sản phẩm không có series thì trả về rỗng
+    }
+
+    // Lấy danh sách sản phẩm khác cùng series
+    const products = await sql`
+      SELECT p.*, c.name AS category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.series = ${series} AND p.id != ${id}
+      ORDER BY p.id DESC
+      LIMIT 10
+    `;
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("❌ Error getRecommendedProducts:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// ✅ GET products by same category (trừ sản phẩm hiện tại)
+export const getProductsBySameCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Lấy category_id của product hiện tại
+    const [currentProduct] = await sql`
+      SELECT category_id FROM products WHERE id = ${id}
+    `;
+
+    if (!currentProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const categoryId = currentProduct.category_id;
+
+    if (!categoryId) {
+      return res.status(200).json([]); // sản phẩm không có category thì trả về rỗng
+    }
+
+    // Lấy sản phẩm khác cùng category
+    const products = await sql`
+      SELECT p.*, c.name AS category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.category_id = ${categoryId} AND p.id != ${id}
+      ORDER BY p.id DESC
+      LIMIT 10
+    `;
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("❌ Error getProductsBySameCategory:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 // ✅ GET product by ID
 export const getProductById = async (req, res) => {

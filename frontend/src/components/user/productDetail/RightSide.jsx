@@ -105,6 +105,11 @@ const RightSide = ({ product }) => {
             Preorders open now
           </p>
         )}
+         {product.status === "available" && (
+          <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
+            Available
+          </p>
+        )}
 
        <div className="py-4">
        <p className="text-black text-lg">
@@ -113,7 +118,7 @@ const RightSide = ({ product }) => {
             currency: "VND",
           })}
         </p>
-        <div className="text-gray-500 flex">
+        <div className="text-gray-500 text-sm ">
         <p>Limit 3 per person /  Shipping costs not included</p>
      
         </div>

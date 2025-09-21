@@ -52,8 +52,8 @@ const ProductDetails = () => {
 
   </div>
    <History product={product}/>
-   <SameCategory />
-   <RecommendProduction />
+   <SameCategory product={product} />
+   <RecommendProduction product={product} />
   </div>
   
   );

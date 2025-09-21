@@ -21,13 +21,13 @@ const ProductCard2 = ({ product }) => {
           />
         )}
       </div>
-      <h2 className="font-semibold text-sm py-1 truncate">{product.name}</h2>
-      <p className="text-gray-600 text-sm">
-        {Number(product.price).toLocaleString("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        })}
-      </p>
+      <h2 className="font-semibold text-sm py-1">{product.name}</h2>
+                                <p className="text-gray-600 text-sm">
+  {(Number(product.price)).toLocaleString("vi-VN",{
+    style: "currency",
+    currency: "VND",
+  })}
+</p>
     </div>
   )
 }
