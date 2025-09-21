@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DetailSection from './DetailSection';
 
 const LeftSide = ({ product }) => {
   const [mainImage, setMainImage] = useState(
     product.additional_images?.[0] || product.base_image
   );
+
+  useEffect(() => {
+    setMainImage(product.additional_images?.[0] || product.base_image);
+  }, [product]);
 
   return (
   <div>

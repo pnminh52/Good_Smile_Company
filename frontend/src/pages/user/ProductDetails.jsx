@@ -4,6 +4,9 @@ import { getProductById } from "../../api/products";
 import Loader from './../../components/Loader';
 import LeftSide from './../../components/user/productDetail/LeftSide';
 import RightSide from './../../components/user/productDetail/RightSide';
+import History from './../../components/user/productDetail/History';
+import SameCategory from './../../components/user/productDetail/SameCategory';
+import RecommendProduction from './../../components/user/productDetail/RecommendProduction';
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -32,7 +35,8 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="sm:max-w-screen-2xl w-full mx-auto px-0 sm:px-25 py-0 sm:py-10 flex flex-col sm:flex-row gap-8">
+  <div>
+      <div className="sm:max-w-screen-2xl w-full mx-auto px-0 sm:px-25 py-0 sm:py-10 flex flex-col sm:flex-row gap-8">
     {/* Left */}
     <div className="w-full sm:w-[70%]">
       <LeftSide product={product} />
@@ -44,6 +48,12 @@ const ProductDetails = () => {
         <RightSide product={product} />
       </div>
     </div>
+   
+
+  </div>
+   <History product={product}/>
+   <SameCategory />
+   <RecommendProduction />
   </div>
   
   );

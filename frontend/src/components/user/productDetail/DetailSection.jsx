@@ -55,7 +55,7 @@ const DetailSection = ({ product }) => {
       {/* Product Specifications */}
       <Dropdown title="Product Specifications">
         {product.series && (
-          <div className="flex items-center gap-10 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
             <p className="font-semibold text-black">Series</p>
             <p>{product.series}</p>
           </div>

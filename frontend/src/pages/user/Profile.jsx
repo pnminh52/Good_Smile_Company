@@ -11,6 +11,7 @@ const Profile = () => {
   const handdleLogOut = () => {
     logout();
     navigate("/");
+    localStorage.removeItem("historyProducts");
     toast.success("Logout successful!");
   };
 

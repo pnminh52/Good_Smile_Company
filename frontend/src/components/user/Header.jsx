@@ -135,7 +135,7 @@ const Header = () => {
             <Link to={"/product"}>
               <img src="https://www.goodsmile.com/img/icon/search.svg" alt="" />
             </Link>
-            <Link to={"/cart"}>
+            <Link onClick={handleCartClick} to={"/cart"}>
               <img src="https://www.goodsmile.com/img/icon/cart.svg" alt="" />
             </Link>
             {/* <img
@@ -151,9 +151,7 @@ const Header = () => {
                 <img src="https://www.goodsmile.com/img/icon/user.svg" alt="" />
               </Link>
             )}
-            <Link to={"/product"}>
-            <img className="w-5.5 h-5.5" src="https://www.goodsmile.com/img/common/face.svg" alt="" />
-            </Link>
+          
           </div>{" "}
         </div>
        

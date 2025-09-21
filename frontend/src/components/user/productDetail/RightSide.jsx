@@ -106,12 +106,19 @@ const RightSide = ({ product }) => {
           </p>
         )}
 
-        <p className="text-black text-lg py-4">
+       <div className="py-4">
+       <p className="text-black text-lg">
           {Number(product.price).toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
           })}
         </p>
+        <div className="text-gray-500 flex">
+        <p>Limit 3 per person /  Shipping costs not included</p>
+     
+        </div>
+       
+       </div>
 
         <div className="flex flex-col gap-2 py-2">
          {
