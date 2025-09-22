@@ -3,18 +3,24 @@ import React, { useState, useEffect } from "react";
 import { Select, Input } from "antd";
 import PopupFilters from "./PopupFilters";
 import PriceFilter from './PriceFilter';
+import { useSearchParams } from "react-router-dom";
 
 const { Option } = Select;
 const { Search } = Input;
 
 const FilterSideBar = ({priceRange, setPriceRange,sortAlpha, setSortAlpha,setShowFilter,statusFilter,setSortPrice, setSelectedSeries, setSelectedCategories, setSelectedManufacturers, setStockFilter, setStatusFilter, sortPrice,stockFilter, selectedSeries, selectedCategories, selectedManufacturers, products, setFilteredProducts, searchTerm, setSearchTerm }) => {
 
-
-
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") || "";
   const seriesOptions = [...new Set(products.map((p) => p.series).filter(Boolean))];
   const categoryOptions = [...new Set(products.map((p) => p.category_name).filter(Boolean))];
   const manufacturerOptions = [...new Set(products.map((p) => p.manufacturer).filter(Boolean))];
-
+useEffect(()=>{
+  if (keyword) {
+    setSearchTerm(keyword)
+    
+  }
+}, [keyword, setSearchTerm])
   useEffect(() => {
     let filtered = [...products];
 

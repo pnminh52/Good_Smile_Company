@@ -20,6 +20,10 @@ const images = [
     large: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/303/21dcd9af597c2b25a9c98e9f9f3d5b99.jpg",
   },
   {
+    small: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/316/4b7bd0c72b54404e7e1ba4499ab3f964.jpg",
+    large: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/316/ffe250f8dd1e2be6fc3dd75d2017a811.jpg",
+  },
+  {
     small: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/314/e0d5a258719377017c3f0e1597dcb83f.jpg",
     large: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/314/6ab1e5de255565e7bbca049b65d85685.jpg",
   },
@@ -117,7 +121,7 @@ const SliderBanner = () => {
      </div>
      <div className="absolute -bottom-4.5 left-0 right-0 flex justify-center z-99 gap-2 px-4">
           {images.map((_, i) => (
-            <div key={i} className="bg-white/30 h-1 sm:w-20 w-10 rounded overflow-hidden">
+            <div key={i} className="bg-white/30 h-1 sm:w-10 w-10 rounded overflow-hidden">
               <div
                 ref={(el) => (progressRefs.current[i] = el)}
                 className="bg-white h-full w-0 transition-all duration-100 linear"
