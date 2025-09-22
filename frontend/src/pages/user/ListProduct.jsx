@@ -9,6 +9,8 @@ import NoResult from "../../components/user/NoResult";
 const ListProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sortAlpha, setSortAlpha]=useState("")
+  const [priceRange, setPriceRange] = useState([2000000, 10000000]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
@@ -108,6 +110,10 @@ const ListProduct = () => {
   sortPrice={sortPrice}
   setSortPrice={setSortPrice}
   setShowFilter={setShowFilter}
+  sortAlpha={sortAlpha}
+  setSortAlpha={setSortAlpha}
+  priceRange={priceRange}
+  setPriceRange={setPriceRange}
 
 />
 {/* <div className="py-2">
@@ -148,6 +154,10 @@ const ListProduct = () => {
   sortPrice={sortPrice}
   setSortPrice={setSortPrice}
   setShowFilter={setShowFilter}
+  sortAlpha={sortAlpha}
+  setSortAlpha={setSortAlpha}
+  priceRange={priceRange}
+  setPriceRange={setPriceRange}
 />
 
         </div>

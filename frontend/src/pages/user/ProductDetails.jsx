@@ -51,9 +51,11 @@ const ProductDetails = () => {
    
 
   </div>
-   <History product={product}/>
+  <div className="space-y-2 py-2">
+  <History product={product}/>
    <SameCategory product={product} />
    <RecommendProduction product={product} />
+  </div>
   </div>
   
   );

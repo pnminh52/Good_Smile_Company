@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { Select, Input } from "antd";
 import PopupFilters from "./PopupFilters";
+import PriceFilter from './PriceFilter';
 
 const { Option } = Select;
 const { Search } = Input;
 
-const FilterSideBar = ({setShowFilter,statusFilter,setSortPrice, setSelectedSeries, setSelectedCategories, setSelectedManufacturers, setStockFilter, setStatusFilter, sortPrice,stockFilter, selectedSeries, selectedCategories, selectedManufacturers, products, setFilteredProducts, searchTerm, setSearchTerm }) => {
+const FilterSideBar = ({priceRange, setPriceRange,sortAlpha, setSortAlpha,setShowFilter,statusFilter,setSortPrice, setSelectedSeries, setSelectedCategories, setSelectedManufacturers, setStockFilter, setStatusFilter, sortPrice,stockFilter, selectedSeries, selectedCategories, selectedManufacturers, products, setFilteredProducts, searchTerm, setSearchTerm }) => {
 
 
 
@@ -31,7 +32,13 @@ const FilterSideBar = ({setShowFilter,statusFilter,setSortPrice, setSelectedSeri
     if (statusFilter) filtered = filtered.filter((p) => p.status === statusFilter);
     if (sortPrice === "asc") filtered.sort((a, b) => a.price - b.price);
     if (sortPrice === "desc") filtered.sort((a, b) => b.price - a.price);
-
+    if (sortAlpha==="asc") filtered.sort((a,b)=> a.name.localeCompare(b.name))
+      if (sortAlpha==="desc") filtered.sort((a,b)=> b.name.localeCompare(a.name))
+        if (priceRange) {
+          filtered = filtered.filter(
+            (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
+          );
+        }
     setFilteredProducts(filtered);
   }, [
     selectedSeries,
@@ -40,7 +47,9 @@ const FilterSideBar = ({setShowFilter,statusFilter,setSortPrice, setSelectedSeri
     stockFilter,
     statusFilter,
     sortPrice,
+    sortAlpha,
     products,
+    priceRange,
     setFilteredProducts,
   ]);
 
@@ -52,6 +61,7 @@ const FilterSideBar = ({setShowFilter,statusFilter,setSortPrice, setSelectedSeri
   
   return (
     <div className="space-y-3">
+      
 <div className="hidden sm:block">
         <Input
     placeholder="Search..."
@@ -65,6 +75,20 @@ const FilterSideBar = ({setShowFilter,statusFilter,setSortPrice, setSelectedSeri
 </div>
 
 <div className="flex flex-col gap-0 ">
+<PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
+
+<Select
+  placeholder="Sort Alphabet"
+  value={sortAlpha}
+  onChange={handleMobileChange(setSortAlpha)}
+  style={selectStyle}
+  size="large"
+>
+  <Option value="">Sort by alphabet</Option>
+  <Option value="asc">A → Z</Option>
+  <Option value="desc">Z → A</Option>
+</Select>
+
   <Select
     placeholder="Stock"
     value={stockFilter}
