@@ -1,4 +1,3 @@
-// FilterSideBar.jsx
 import React, { useState, useEffect } from "react";
 import { Select, Input } from "antd";
 import PopupFilters from "./PopupFilters";
@@ -6,65 +5,31 @@ import PriceFilter from './PriceFilter';
 import { useSearchParams } from "react-router-dom";
 
 const { Option } = Select;
-const { Search } = Input;
 
-const FilterSideBar = ({priceRange, setPriceRange,sortAlpha, setSortAlpha,setShowFilter,statusFilter,setSortPrice, setSelectedSeries, setSelectedCategories, setSelectedManufacturers, setStockFilter, setStatusFilter, sortPrice,stockFilter, selectedSeries, selectedCategories, selectedManufacturers, products, setFilteredProducts, searchTerm, setSearchTerm }) => {
+const FilterSideBar = ({
+  priceRange, setPriceRange,
+  sortAlpha, setSortAlpha,
+  setShowFilter,
+  statusFilter, setSortPrice,
+  setSelectedSeries, setSelectedCategories, setSelectedManufacturers,
+  setStockFilter, setStatusFilter,
+  sortPrice, stockFilter,
+  selectedSeries, selectedCategories, selectedManufacturers,
+  products, setFilteredProducts,
+  searchTerm, setSearchTerm
+}) => {
 
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") || "";
   const seriesOptions = [...new Set(products.map((p) => p.series).filter(Boolean))];
   const categoryOptions = [...new Set(products.map((p) => p.category_name).filter(Boolean))];
   const manufacturerOptions = [...new Set(products.map((p) => p.manufacturer).filter(Boolean))];
-useEffect(()=>{
-  if (keyword) {
-    setSearchTerm(keyword)
-    
-  }
-}, [keyword, setSearchTerm])
-  useEffect(() => {
-    let filtered = [...products];
 
-    if (selectedSeries.length) filtered = filtered.filter((p) => selectedSeries.includes(p.series));
-    if (selectedCategories.length) filtered = filtered.filter((p) => selectedCategories.includes(p.category_name));
-    if (selectedManufacturers.length) filtered = filtered.filter((p) => selectedManufacturers.includes(p.manufacturer));
-    if (stockFilter) {
-      filtered = filtered.filter((p) => {
-        if (stockFilter === "inStock") return p.stock >= 50;
-        if (stockFilter === "few") return p.stock > 0 && p.stock < 50;
-        if (stockFilter === "soldOut") return p.stock === 0;
-        return true;
-      });
-    }
-    if (statusFilter) filtered = filtered.filter((p) => p.status === statusFilter);
-    if (sortPrice === "asc") filtered.sort((a, b) => a.price - b.price);
-    if (sortPrice === "desc") filtered.sort((a, b) => b.price - a.price);
-    if (sortAlpha==="asc") filtered.sort((a,b)=> a.name.localeCompare(b.name))
-      if (sortAlpha==="desc") filtered.sort((a,b)=> b.name.localeCompare(a.name))
-        if (priceRange) {
-          filtered = filtered.filter(
-            (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
-          );
-        }
-    setFilteredProducts(filtered);
-  }, [
-    selectedSeries,
-    selectedCategories,
-    selectedManufacturers,
-    stockFilter,
-    statusFilter,
-    sortPrice,
-    sortAlpha,
-    products,
-    priceRange,
-    setFilteredProducts,
-  ]);
 
-  const selectStyle = { width: "100%", marginBottom: "12px" }; // full width + margin between rows
+
+  const selectStyle = { width: "100%", marginBottom: "12px" };
   const handleMobileChange = (setter) => (value) => {
     setter(value);
-    if (setShowFilter) setShowFilter(false); 
+    if (setShowFilter) setShowFilter(false);
   };
-  
   return (
     <div className="space-y-3">
       

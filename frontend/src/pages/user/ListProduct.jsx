@@ -6,31 +6,28 @@ import { getProducts } from "../../api/products";
 import { Input, Button } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import NoResult from "../../components/user/NoResult";
+import { useSearchParams } from "react-router-dom";
 const ListProduct = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [sortAlpha, setSortAlpha]=useState("")
-  const [priceRange, setPriceRange] = useState([2000000, 10000000]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get("category") || "";
+  const keyword = searchParams.get("keyword") || "";
+  const [searchTerm, setSearchTerm] = useState(keyword);
+  const [sortAlpha, setSortAlpha] = useState("");
+  const [priceRange, setPriceRange] = useState([2000000, 10000000]);
+  const [selectedSeries, setSelectedSeries] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(
+    categoryFromUrl ? [categoryFromUrl] : []
+  );
+  const [selectedManufacturers, setSelectedManufacturers] = useState([]);
+  const [stockFilter, setStockFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortPrice, setSortPrice] = useState("");
   const [showFilter, setShowFilter] = useState(false);
-    const [selectedSeries, setSelectedSeries] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedManufacturers, setSelectedManufacturers] = useState([]);
-    const [stockFilter, setStockFilter] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
-    const [sortPrice, setSortPrice] = useState("");
 
-  // Lọc theo searchTerm
-  useEffect(() => {
-    setFilteredProducts(
-      products.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm, products]);
-
-  // Lấy tất cả sản phẩm
+  // Fetch products 1 lần
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -46,13 +43,83 @@ const ListProduct = () => {
     fetchProducts();
   }, []);
 
-  if (loading) {
-    return (
-     
-        <Loader />
-    
-    );
-  }
+  // Filter logic duy nhất
+  useEffect(() => {
+    let filtered = [...products];
+
+    // Category từ URL hoặc chọn thủ công
+    if (selectedCategories.length) {
+      filtered = filtered.filter((p) =>
+        selectedCategories.includes(p.category_name)
+      );
+    }
+
+    // Series
+    if (selectedSeries.length) {
+      filtered = filtered.filter((p) =>
+        selectedSeries.includes(p.series)
+      );
+    }
+
+    // Manufacturer
+    if (selectedManufacturers.length) {
+      filtered = filtered.filter((p) =>
+        selectedManufacturers.includes(p.manufacturer)
+      );
+    }
+
+    // Stock
+    if (stockFilter) {
+      filtered = filtered.filter((p) => {
+        if (stockFilter === "inStock") return p.stock >= 50;
+        if (stockFilter === "few") return p.stock > 0 && p.stock < 50;
+        if (stockFilter === "soldOut") return p.stock === 0;
+        return true;
+      });
+    }
+
+    // Status
+    if (statusFilter) {
+      filtered = filtered.filter((p) => p.status === statusFilter);
+    }
+
+    // Search
+    if (searchTerm) {
+      filtered = filtered.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Price Range
+    if (priceRange) {
+      filtered = filtered.filter(
+        (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
+      );
+    }
+
+    // Sort Price
+    if (sortPrice === "asc") filtered.sort((a, b) => a.price - b.price);
+    if (sortPrice === "desc") filtered.sort((a, b) => b.price - a.price);
+
+    // Sort Alphabet
+    if (sortAlpha === "asc") filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (sortAlpha === "desc") filtered.sort((a, b) => b.name.localeCompare(a.name));
+
+    setFilteredProducts(filtered);
+  }, [
+    products,
+    selectedSeries,
+    selectedCategories,
+    selectedManufacturers,
+    stockFilter,
+    statusFilter,
+    sortPrice,
+    sortAlpha,
+    searchTerm,
+    priceRange,
+  ]);
+
+  if (loading) return <Loader />;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-0">

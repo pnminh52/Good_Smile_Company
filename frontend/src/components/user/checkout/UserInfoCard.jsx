@@ -81,64 +81,64 @@ const UserInfoCard = ({ onChange }) => {
   if (!user) return null;
 
   return (
-    <div className="max-w-sm mx-auto border rounded-2xl shadow p-6 bg-white">
+    <div className="">
       <div className="flex flex-col gap-4">
 
         {/* Thêm district mới */}
-        <div className="flex flex-col gap-2">
-          <label className="font-medium">Add New District/City</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={newDistrict}
-              onChange={handleNewDistrictChange}
-              placeholder="Enter district/city"
-              className="border rounded px-3 py-2 flex-1"
-            />
-            <button
-              type="button"
-              onClick={handleAddDistrict}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Add
-            </button>
-          </div>
-        </div>
+       {
+        districts.length<3 && (
+           <div className="flex flex-col gap-2">
+                    <label className="font-semibold text-xl">Add New District/City</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newDistrict}
+                        onChange={handleNewDistrictChange}
+                        placeholder="Enter district/city"
+                        className="border rounded px-3 py-2 flex-1"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddDistrict}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+        )
+       }
 
         {/* Danh sách district */}
-        <div className="flex flex-col gap-1">
-          <label className="font-medium">Saved Districts/Cities</label>
-          {districts.map((d, i) => (
-            <div
-              key={i}
-              className={`flex items-center justify-between border px-3 py-2 rounded ${
-                selectedDistrict === d ? "bg-blue-100" : "bg-gray-100"
-              }`}
-            >
-              <span
-                onClick={() => handleSelectDistrict(d)}
-                className="cursor-pointer"
-              >
-                {d}
-              </span>
-              <button
-                type="button"
-                onClick={() => handleRemoveDistrict(i)}
-                className="text-red-500 font-bold"
-              >
-                x
-              </button>
-            </div>
-          ))}
+        <div className="flex flex-col gap-1 ">
+          <label className="font-semibold text-xl">Saved Districts/Cities</label>
+        <div className="py-6 space-y-4">
+            {districts.map((d, i) => (
+                      <div
+                        key={i}
+                        className={`flex items-center justify-between border px-3 py-2 rounded ${
+                          selectedDistrict === d ? "bg-blue-100" : "bg-gray-100"
+                        }`}
+                      >
+                        <span
+                          onClick={() => handleSelectDistrict(d)}
+                          className="cursor-pointer"
+                        >
+                          {d}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDistrict(i)}
+                          className="text-red-500 font-bold"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+        </div>
         </div>
 
-        {/* District đang chọn */}
-        <div className="mt-2">
-          <label className="font-medium">Selected District for Order</label>
-          <div className="border rounded px-3 py-2 mt-1 bg-gray-50">
-            {selectedDistrict || "None"}
-          </div>
-        </div>
+       
       </div>
     </div>
   );
