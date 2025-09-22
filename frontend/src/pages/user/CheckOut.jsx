@@ -7,14 +7,17 @@ import useToast from "../../hook/useToast";
 import useShippingFee from "../../hook/useShippingFee";
 import CheckOutItem from './../../components/user/checkout/CheckOutItem';
 import PriceTable from "../../components/user/checkout/PriceTable";
+import NotFound from './NotFound';
+import Loader from './../../components/Loader';
+
 const Checkout = () => {
   const toast = useToast();
   const location = useLocation();
   const navigate = useNavigate();
   const cartItems = location.state?.cartItems || [];
-
   const { address, shippingFee } = useShippingFee();
   const [userInfo, setUserInfo] = React.useState({ selectedDistrict: "", district: [] });
+  const [loading, setLoading] = React.useState(false); // loader state
 
   React.useEffect(() => {
     if (address) setUserInfo(prev => ({ ...prev, selectedDistrict: address }));
@@ -25,42 +28,47 @@ const Checkout = () => {
     0
   );
 
-// Checkout.jsx
-const handleCodPayment = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    toast.error("Please login before ordering!");
-    return;
-  }
+  const handleCodPayment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login before ordering!");
+      return;
+    }
 
-  const orderData = {
-    items: cartItems.map(item => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-    })),
-    address: userInfo.address,             // giữ nguyên address
-    selectedDistrict: userInfo.selectedDistrict, // district mới
-    shippingFee
+    setLoading(true); // bật loader
+    setTimeout(async () => {
+      const orderData = {
+        items: cartItems.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+        })),
+        address: userInfo.address,
+        selectedDistrict: userInfo.selectedDistrict,
+        shippingFee
+      };
+
+      try {
+        await createOrder(orderData, token);
+        await clearCart(token);
+        toast.success("Order placed successfully!");
+        navigate("/order");
+      } catch (err) {
+        console.error("COD error:", err.response?.data || err.message);
+        toast.error("Order failed");
+      } finally {
+        setLoading(false); // tắt loader
+      }
+    }, 1000); // delay 1 giây
   };
 
-  try {
-    await createOrder(orderData, token); // backend sẽ lưu district vào orders
-    await clearCart(token);
-    toast.success("Order placed successfully!");
-    navigate("/order");
-  } catch (err) {
-    console.error("COD error:", err.response?.data || err.message);
-    toast.error("Order failed");
+  if (cartItems.length === 0) return <><NotFound /></>;
+  if (loading) {
+    return <Loader />;
   }
-};
-
-
-  if (cartItems.length === 0) return <p>No items to checkout.</p>;
-
-  return (
+   return (
     <div className="max-w-screen-lg w-full mx-auto sm:px-30 px-4">
       <h1 className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">Checkout</h1>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col">
         <CheckOutItem cartItems={cartItems} />
 
         <UserInfoCard onChange={setUserInfo} />
@@ -69,8 +77,11 @@ const handleCodPayment = async () => {
           total={total}
           shippingFee={shippingFee}
           handleCodPayment={handleCodPayment}
+          loading={loading}   // truyền xuống PriceTable
         />
       </div>
+
+     
     </div>
   );
 };

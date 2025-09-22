@@ -88,19 +88,19 @@ const UserInfoCard = ({ onChange }) => {
        {
         districts.length<3 && (
            <div className="flex flex-col gap-2">
-                    <label className="font-semibold text-xl">Add New District/City</label>
+                    <label className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">District / city</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={newDistrict}
                         onChange={handleNewDistrictChange}
-                        placeholder="Enter district/city"
-                        className="border rounded px-3 py-2 flex-1"
+                        placeholder="Enter your current address and place of residence"
+                        className="border border-gray-300 rounded px-3 py-2 flex-1"
                       />
                       <button
                         type="button"
                         onClick={handleAddDistrict}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-orange-500 text-white px-8 py-2 rounded-full "
                       >
                         Add
                       </button>
@@ -111,27 +111,38 @@ const UserInfoCard = ({ onChange }) => {
 
         {/* Danh sách district */}
         <div className="flex flex-col gap-1 ">
-          <label className="font-semibold text-xl">Saved Districts/Cities</label>
-        <div className="py-6 space-y-4">
+          <label className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">Your saved addresses</label>
+        <div className=" space-y-2">
             {districts.map((d, i) => (
                       <div
                         key={i}
-                        className={`flex items-center justify-between border px-3 py-2 rounded ${
-                          selectedDistrict === d ? "bg-blue-100" : "bg-gray-100"
+                        className={`flex items-center justify-between border  px-3 py-2 rounded ${
+                          selectedDistrict === d ? "bg-gray-50 border border-[#FF6624]" : "opacity-40"
                         }`}
                       >
-                        <span
+                        <p
                           onClick={() => handleSelectDistrict(d)}
                           className="cursor-pointer"
                         >
                           {d}
-                        </span>
+                        </p>
                         <button
                           type="button"
                           onClick={() => handleRemoveDistrict(i)}
-                          className="text-red-500 font-bold"
+                          className="cursor-pointer text-red-500 font-bold"
                         >
-                          x
+                           <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="#EA1717"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29 5.29c.39-.39 1.02-.39 1.41 0L12 10.59l5.29-5.3a1 1 0 111.42 1.42L13.41 12l5.3 5.29a1 1 0 01-1.42 1.42L12 13.41l-5.29 5.3a1 1 0 01-1.42-1.42L10.59 12l-5.3-5.29a1 1 0 010-1.42z"
+                    />
+                  </svg>
                         </button>
                       </div>
                     ))}

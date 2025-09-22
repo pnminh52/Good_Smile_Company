@@ -1,37 +1,78 @@
-import React from 'react'
-
-const PriceTable = ({total, shippingFee, handleCodPayment}) => {
+import React from "react";
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+const PriceTable = ({ total, shippingFee, handleCodPayment }) => {
+  const navigate =useNavigate()
   return (
     <div>
-          <div className="mt-4 text-right">
-                <p className="font-bold">
-                  Subtotal: {total.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
-                </p>
-                <p className="font-bold">
-                  Shipping: {shippingFee === null ? "Đang tính phí..." : shippingFee.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
-                </p>
-                <p className="font-bold text-lg">
-                  Grand Total: {shippingFee === null ? "Đang tính tổng..." : (total + shippingFee).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
-                </p>
+      <div className="py-4 space-y-4">
+        <div className="border-t space-y-2 py-2 border-b border-gray-300 ">
+          <div className="flex itemx-center justify-between">
+            <p>Subtotal</p>
+            <p>
+              {total.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+          <p >
+            Shipping{" "}
+           
+          </p>
+          <p>
+             {shippingFee === null
+                          ? "..."
+                          : shippingFee.toLocaleString("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            })}
+          </p>
+          </div>
+
+          <div className="flex font-semibold items-center justify-between">
+  <p >
+            Grand Total{" "}
+           
+          </p>
+          <p>
+          {shippingFee === null
+              ? "..."
+              : (total + shippingFee).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+
+          </p>
+          </div>
+
         
-                <div className="flex gap-4 mt-4 justify-end">
-                  {/* <button
+        
+        </div>
+
+        <div className="flex gap-4 items-center ">
+          {/* <button
                     onClick={() => toast.error("VNPay is in testing")}
                     className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                   >
                     Pay with VNPay
                   </button> */}
-                  <button
-                    onClick={handleCodPayment}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  >
-                    Pay with COD
-                  </button>
-                  <button>back to cart</button>
-                </div>
-              </div>
+          <button
+            onClick={handleCodPayment}
+            className="bg-[#FF6624] text-white w-full py-2 rounded-full cursor-pointer font-semibold"
+          >
+            Pay with COD
+          </button>
+     
+          <button onClick={()=>navigate("/cart")} className="bg-[#FFF] text-[#FF6624]  w-full py-2 rounded-full cursor-pointer border  border-[#FF6624] font-semibold">
+                     Back to Cart
+                   </button>
+         
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default PriceTable
+export default PriceTable;
