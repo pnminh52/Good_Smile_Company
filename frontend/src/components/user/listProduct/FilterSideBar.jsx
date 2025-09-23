@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Select, Input } from "antd";
 import PopupFilters from "./PopupFilters";
 import PriceFilter from './PriceFilter';
-import { useSearchParams } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -15,7 +14,8 @@ const FilterSideBar = ({
   setStockFilter, setStatusFilter,
   sortPrice, stockFilter,
   selectedSeries, selectedCategories, selectedManufacturers,
-  products, setFilteredProducts,
+  products,
+  setSortSold, sortSold,
   searchTerm, setSearchTerm
 }) => {
 
@@ -32,100 +32,112 @@ const FilterSideBar = ({
   };
   return (
     <div className="space-y-3">
-      
-<div className="hidden sm:block">
+
+      <div className="hidden sm:block">
         <Input
-    placeholder="Search..."
-    allowClear
-    size="large"   // 👈 để đồng bộ chiều cao
-    onSearch={(value) => setSearchTerm(value)}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    value={searchTerm}
-  />
+          placeholder="Search..."
+          allowClear
+          size="large"
+          onSearch={(value) => setSearchTerm(value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+        />
 
-</div>
+      </div>
 
-<div className="flex flex-col gap-0 ">
-<PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
+      <div className="flex flex-col gap-0 ">
+        <PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
 
-<Select
-  placeholder="Sort Alphabet"
-  value={sortAlpha}
-  onChange={handleMobileChange(setSortAlpha)}
-  style={selectStyle}
-  size="large"
->
-  <Option value="">Sort by alphabet</Option>
-  <Option value="asc">A → Z</Option>
-  <Option value="desc">Z → A</Option>
-</Select>
+        <Select
+          placeholder="Sort Alphabet"
+          value={sortAlpha}
+          onChange={handleMobileChange(setSortAlpha)}
+          style={selectStyle}
+          size="large"
+        >
+          <Option value="">Sort by alphabet</Option>
+          <Option value="asc">A → Z</Option>
+          <Option value="desc">Z → A</Option>
+        </Select>
+        <Select
+          placeholder="Sort Sold"
+          value={sortSold}
+          onChange={(value) => setSortSold(value)}
+          style={selectStyle}
+          size="large"
+        >
+          <Option value="">Sort by sold</Option>
+          <Option value="asc">Low → High</Option>
+          <Option value="desc">High → Low</Option>
+        </Select>
 
-  <Select
-    placeholder="Stock"
-    value={stockFilter}
-    onChange={handleMobileChange(setStockFilter)}
-    allowClear
-    style={selectStyle}
-    size="large"
-  >
-    <Option value="">Sort by stock</Option>
-    <Option value="inStock">In Stock (≥50)</Option>
-    <Option value="few">Few left (1-49)</Option>
-    <Option value="soldOut">Sold Out</Option>
-  </Select>
 
-  <Select
-    placeholder="Status"
-    value={statusFilter}
-    onChange={handleMobileChange(setStatusFilter)}
-    allowClear
-    style={selectStyle}
-    size="large"
-  >
-    <Option value="">Sort by status</Option>
-    <Option value="available">Available</Option>
-    <Option value="preorder">Pre-Order</Option>
-    <Option value="soldout">Sold Out</Option>
-  </Select>
+        <Select
+          placeholder="Stock"
+          value={stockFilter}
+          onChange={handleMobileChange(setStockFilter)}
+          allowClear
+          style={selectStyle}
+          size="large"
+        >
+          <Option value="">Sort by stock</Option>
+          <Option value="inStock">In Stock (≥50)</Option>
+          <Option value="few">Few left (1-49)</Option>
+          <Option value="soldOut">Sold Out</Option>
+        </Select>
 
-  <Select
-    placeholder="Sort Price"
-    value={sortPrice}
-    onChange={handleMobileChange(setSortPrice)}
-    style={selectStyle}
-    size="large"
-  >
-    <Option value="">Sort by price</Option>
-    <Option value="asc">Low → High</Option>
-    <Option value="desc">High → Low</Option>
-  </Select>
-</div>
-<hr className="border-t pb-2 border-gray-300" />
+        <Select
+          placeholder="Status"
+          value={statusFilter}
+          onChange={handleMobileChange(setStatusFilter)}
+          allowClear
+          style={selectStyle}
+          size="large"
+        >
+          <Option value="">Sort by status</Option>
+          <Option value="available">Available</Option>
+          <Option value="preorder">Pre-Order</Option>
+          <Option value="soldout">Sold Out</Option>
+        </Select>
 
-       <div>
+        <Select
+          placeholder="Sort Price"
+          value={sortPrice}
+          onChange={handleMobileChange(setSortPrice)}
+          style={selectStyle}
+          size="large"
+        >
+          <Option value="">Sort by price</Option>
+          <Option value="asc">Low → High</Option>
+          <Option value="desc">High → Low</Option>
+        </Select>
+      </div>
+      <hr className="border-t pb-2 border-gray-300" />
+
+      <div>
         {/* 3 filter đầu bằng PopupFilters */}
-       <PopupFilters
-        placeholder="Search by Series"
-        options={seriesOptions}
-        selected={selectedSeries}
-        setSelected={setSelectedSeries}
-        setShowFilter={setShowFilter}
-      />
-      <PopupFilters
-        placeholder="Search by Category"
-        options={categoryOptions}
-        selected={selectedCategories}
-        setSelected={setSelectedCategories}
-        setShowFilter={setShowFilter}
-      />
-      <PopupFilters
-        placeholder="Search by Manufacturer"
-        options={manufacturerOptions}
-        selected={selectedManufacturers}
-        setSelected={setSelectedManufacturers}
-        setShowFilter={setShowFilter}
-      />
-       </div>
+        <PopupFilters
+          placeholder="Search by Series"
+          options={seriesOptions}
+          selected={selectedSeries}
+          setSelected={setSelectedSeries}
+          setShowFilter={setShowFilter}
+        />
+        <PopupFilters
+          placeholder="Search by Category"
+          options={categoryOptions}
+          selected={selectedCategories}
+          setSelected={setSelectedCategories}
+          setShowFilter={setShowFilter}
+        />
+        <PopupFilters
+          placeholder="Search by Manufacturer"
+          options={manufacturerOptions}
+          selected={selectedManufacturers}
+          setSelected={setSelectedManufacturers}
+          setShowFilter={setShowFilter}
+        />
+      </div>
     </div>
   );
 };

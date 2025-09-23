@@ -26,6 +26,31 @@ const DetailSection = ({ product }) => {
   return (
     <div className=" ">
       {/* Where to Purchase */}
+     {
+      product.gift_items.length>0 && (
+        <Dropdown title={"Good Smile Company Bonus"} defaultOpen={true}>
+        {
+        product.gift_items.map((gift, index) => (
+          <div key={index} className="flex flex-col gap-0  ">
+                        {gift.title && <p className=" text-black pt-2 pb-4">{gift.title}</p>}
+            {gift.description && <p>{gift.description}</p>}
+
+            {gift.image && (
+             <div className="flex items-center justify-center p-6 bg-gray-100">
+               <img
+                src={gift.image}
+                alt={gift.title || `Gift ${index + 1}`}
+                className="w-[300px] h-auto object-cover "
+              />
+             </div>
+            )}
+          </div>
+        ))
+        
+        }
+      </Dropdown>
+      )
+     }
       <Dropdown title="Where to Purchase" defaultOpen={true}>
       
         <ul className="  space-y-3 py-3">

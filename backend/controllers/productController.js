@@ -1,6 +1,5 @@
 import { sql } from "../config/db.js";
 
-// ✅ GET all products (kèm category_name)
 export const getAllProducts = async (req, res) => {
   try {
     const products = await sql`
@@ -16,7 +15,6 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-// ✅ GET recommended products (cùng series, trừ sản phẩm hiện tại)
 export const getRecommendedProducts = async (req, res) => {
   try {
     const { id } = req.params;
@@ -53,7 +51,6 @@ export const getRecommendedProducts = async (req, res) => {
   }
 };
 
-// ✅ GET products by same category (trừ sản phẩm hiện tại)
 export const getProductsBySameCategory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -90,7 +87,6 @@ export const getProductsBySameCategory = async (req, res) => {
   }
 };
 
-// ✅ GET product by ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -112,7 +108,6 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// ✅ CREATE new product
 export const createProduct = async (req, res) => {
   try {
     const {
@@ -131,6 +126,7 @@ export const createProduct = async (req, res) => {
       distributedBy,
       price,
       stock,
+      sold = 0,
       status,
       base_image,
       imagecopyright,
@@ -138,6 +134,7 @@ export const createProduct = async (req, res) => {
       category_id,
       description,
       copyrightSeries,
+      gift_items = [], // <-- thêm gift_items
     } = req.body;
 
     if (!name || !base_image) {
@@ -148,14 +145,15 @@ export const createProduct = async (req, res) => {
       INSERT INTO products (
         name, title, series, release_date, decalProduction, specifications, sculptor,
         planningAndProduction, productionCooperation, paintwork, relatedInformation,
-        manufacturer, distributedBy, price, stock, status, base_image, imagecopyright,
-        additional_images, category_id, description, copyrightSeries
+        manufacturer, distributedBy, price, stock, sold, status, base_image, imagecopyright,
+        additional_images, category_id, description, copyrightSeries, gift_items
       )
       VALUES (
         ${name}, ${title}, ${series}, ${release_date}, ${decalProduction}, ${specifications}, ${sculptor},
         ${planningAndProduction}, ${productionCooperation}, ${paintwork}, ${relatedInformation},
-        ${manufacturer}, ${distributedBy}, ${price}, ${stock}, ${status}, ${base_image}, ${imagecopyright},
-        COALESCE(${additional_images}::text[], '{}'), ${category_id || null}, ${description}, ${copyrightSeries}
+        ${manufacturer}, ${distributedBy}, ${price}, ${stock}, ${sold}, ${status}, ${base_image}, ${imagecopyright},
+        COALESCE(${additional_images}::text[], '{}'), ${category_id || null}, ${description}, ${copyrightSeries},
+        COALESCE(${JSON.stringify(gift_items)}::jsonb, '[]')
       )
       RETURNING *
     `;
@@ -167,7 +165,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// ✅ UPDATE product
+
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -187,6 +185,7 @@ export const updateProduct = async (req, res) => {
       distributedBy,
       price,
       stock,
+      sold,
       status,
       base_image,
       imagecopyright,
@@ -194,6 +193,7 @@ export const updateProduct = async (req, res) => {
       category_id,
       description,
       copyrightSeries,
+      gift_items = [], // <-- thêm gift_items
     } = req.body;
 
     const [updatedProduct] = await sql`
@@ -214,13 +214,15 @@ export const updateProduct = async (req, res) => {
         distributedBy = ${distributedBy},
         price = ${price},
         stock = ${stock},
+        sold = ${sold},
         status = ${status},
         base_image = ${base_image},
-        imageCopyright=${imagecopyright},
+        imageCopyright = ${imagecopyright},
         additional_images = COALESCE(${additional_images}::text[], '{}'),
         category_id = ${category_id || null},
         description = ${description},
-        copyrightSeries = ${copyrightSeries}
+        copyrightSeries = ${copyrightSeries},
+        gift_items = COALESCE(${JSON.stringify(gift_items)}::jsonb, '[]')
       WHERE id = ${id}
       RETURNING *
     `;
@@ -236,7 +238,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// ✅ DELETE product
+
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;

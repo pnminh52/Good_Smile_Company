@@ -14,11 +14,11 @@ const ProductCard = ({ products, columns = 4 }) => {
             <div className={`grid  sm:gap-4 gap-2 ${columnClasses[columns] || columnClasses[4]}`}>
                 {products
                     .slice()
-                    .sort((a, b) => {
-                        if (a.status === "preorder" && b.status !== "preorder") return -1;
-                        if (a.status !== "preorder" && b.status === "preorder") return 1;
-                        return 0;
-                    })
+                    // .sort((a, b) => {
+                    //     if (a.status === "preorder" && b.status !== "preorder") return -1;
+                    //     if (a.status !== "preorder" && b.status === "preorder") return 1;
+                    //     return 0;
+                    // })
                     .map((p) => (
                         <Link to={`/product/${p.id}`} key={p.id} className="flex flex-col">
                             <div className="relative w-full aspect-square rounded-lg overflow-hidden">
@@ -40,30 +40,37 @@ const ProductCard = ({ products, columns = 4 }) => {
                             </div>
 
                             <div>
-                                {p.stock > 0 && p.stock < 50 && (
-                                    <p className="bg-red-200 px-2 inline-block text-sm text-red-700 rounded-full">
+                               <div className="flex items-center gap-2">
+                               {p.stock > 0 && p.stock < 50 && (
+                                    <p className="bg-red-200 px-2 inline-block text-xs text-red-700 rounded-full">
                                         Few left in stock
                                     </p>
                                 )}
 
                                 {p.stock === 0 && (
-                                    <p className="bg-gray-200 px-2 inline-block text-sm text-gray-700 rounded-full">
+                                    <p className="bg-gray-200 px-2 inline-block text-xs text-gray-700 rounded-full">
                                         Sold out
                                     </p>
                                 )}
 
                                 {p.status === "preorder" && (
-                                    <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
+                                    <p className="bg-green-200 px-2 inline-block text-xs text-green-700 rounded-full">
                                         Preorders open now
                                     </p>
                                 )}
+                                {p.gift_items && p.gift_items.length > 0 && (
+  <p className="bg-yellow-200 px-2 inline-block text-xs text-yellow-700 rounded-full">
+    W/Bonus
+  </p>
+)}
+                               </div>
 
                                 <h2 className="font-semibold text-sm py-1">{p.name}</h2>
                                 <p className="text-gray-600 text-sm">
   {(Number(p.price)).toLocaleString("vi-VN",{
     style: "currency",
     currency: "VND",
-  })}
+  })} / {p.sold} sold
 </p>
 
                             </div>

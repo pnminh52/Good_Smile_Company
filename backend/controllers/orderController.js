@@ -96,6 +96,9 @@ export const createOrder = async (req, res) => {
       await sql`
         UPDATE products SET stock = stock - ${item.quantity} WHERE id = ${item.product_id}
       `;
+      await sql`
+      UPDATE products SET sold = sold + ${item.quantity} WHERE id = ${item.product_id}
+    `;
     }
 
     res.status(201).json({

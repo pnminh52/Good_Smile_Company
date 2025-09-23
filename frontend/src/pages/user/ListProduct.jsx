@@ -21,6 +21,8 @@ const ListProduct = () => {
   const [selectedCategories, setSelectedCategories] = useState(
     categoryFromUrl ? [categoryFromUrl] : []
   );
+  const [sortSold, setSortSold]=useState("")
+
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
   const [stockFilter, setStockFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -43,32 +45,28 @@ const ListProduct = () => {
     fetchProducts();
   }, []);
 
-  // Filter logic duy nhất
   useEffect(() => {
     let filtered = [...products];
-
-    // Category từ URL hoặc chọn thủ công
+  
+    // Filter
     if (selectedCategories.length) {
       filtered = filtered.filter((p) =>
         selectedCategories.includes(p.category_name)
       );
     }
-
-    // Series
+  
     if (selectedSeries.length) {
       filtered = filtered.filter((p) =>
         selectedSeries.includes(p.series)
       );
     }
-
-    // Manufacturer
+  
     if (selectedManufacturers.length) {
       filtered = filtered.filter((p) =>
         selectedManufacturers.includes(p.manufacturer)
       );
     }
-
-    // Stock
+  
     if (stockFilter) {
       filtered = filtered.filter((p) => {
         if (stockFilter === "inStock") return p.stock >= 50;
@@ -77,34 +75,40 @@ const ListProduct = () => {
         return true;
       });
     }
-
-    // Status
+  
     if (statusFilter) {
       filtered = filtered.filter((p) => p.status === statusFilter);
     }
-
-    // Search
+  
     if (searchTerm) {
       filtered = filtered.filter((p) =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
-    // Price Range
+  
     if (priceRange) {
       filtered = filtered.filter(
         (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
       );
     }
-
-    // Sort Price
-    if (sortPrice === "asc") filtered.sort((a, b) => a.price - b.price);
-    if (sortPrice === "desc") filtered.sort((a, b) => b.price - a.price);
-
-    // Sort Alphabet
-    if (sortAlpha === "asc") filtered.sort((a, b) => a.name.localeCompare(b.name));
-    if (sortAlpha === "desc") filtered.sort((a, b) => b.name.localeCompare(a.name));
-
+  
+    // Multi-level sort
+    filtered.sort((a, b) => {
+      // 1. Sort sold
+      if (sortSold === "asc" && a.sold !== b.sold) return a.sold - b.sold;
+      if (sortSold === "desc" && a.sold !== b.sold) return b.sold - a.sold;
+  
+      // 2. Sort price
+      if (sortPrice === "asc" && a.price !== b.price) return a.price - b.price;
+      if (sortPrice === "desc" && a.price !== b.price) return b.price - a.price;
+  
+      // 3. Sort alphabet
+      if (sortAlpha === "asc") return a.name.localeCompare(b.name);
+      if (sortAlpha === "desc") return b.name.localeCompare(a.name);
+  
+      return 0;
+    });
+  
     setFilteredProducts(filtered);
   }, [
     products,
@@ -117,7 +121,9 @@ const ListProduct = () => {
     sortAlpha,
     searchTerm,
     priceRange,
+    sortSold,
   ]);
+  
 
   if (loading) return <Loader />;
 
@@ -180,6 +186,8 @@ const ListProduct = () => {
   sortAlpha={sortAlpha}
   setSortAlpha={setSortAlpha}
   priceRange={priceRange}
+  sortSold={sortSold}
+  setSortSold={setSortSold}
   setPriceRange={setPriceRange}
 
 />
@@ -224,6 +232,8 @@ const ListProduct = () => {
   sortAlpha={sortAlpha}
   setSortAlpha={setSortAlpha}
   priceRange={priceRange}
+  sortSold={sortSold}
+  setSortSold={setSortSold}
   setPriceRange={setPriceRange}
 />
 

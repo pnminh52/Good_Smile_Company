@@ -1,6 +1,5 @@
 import React from 'react'
 import BrandSelect from './BrandSelect'
-import Link from 'antd/es/typography/Link'
 const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handleAdditionImageChange, removeAdditionImage}) => {
   return (
     <div>  <form
@@ -66,6 +65,74 @@ const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handle
         setForm({ ...form, planningAndProduction: e.target.value })
       }
     />
+     <input
+     type='number'
+      className="border rounded p-2"
+      placeholder="Planning and Production"
+      value={form.sold}
+      onChange={(e) => setForm({ ...form, sold: Number(e.target.value) })}
+    />
+    <div>
+  <h3 className="font-semibold mb-2">🎁 Gift Items</h3>
+  {form.gift_items.map((gift, i) => (
+    <div key={i} className="flex flex-col gap-2 mb-2 border p-2 rounded">
+      <input
+        className="border rounded p-2"
+        placeholder="Gift Title"
+        value={gift.title}
+        onChange={(e) => {
+          const newGifts = [...form.gift_items];
+          newGifts[i].title = e.target.value;
+          setForm({ ...form, gift_items: newGifts });
+        }}
+      />
+      <input
+        className="border rounded p-2"
+        placeholder="Gift Description"
+        value={gift.description}
+        onChange={(e) => {
+          const newGifts = [...form.gift_items];
+          newGifts[i].description = e.target.value;
+          setForm({ ...form, gift_items: newGifts });
+        }}
+      />
+      <input
+        className="border rounded p-2"
+        placeholder="Gift Image URL"
+        value={gift.image}
+        onChange={(e) => {
+          const newGifts = [...form.gift_items];
+          newGifts[i].image = e.target.value;
+          setForm({ ...form, gift_items: newGifts });
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          const newGifts = form.gift_items.filter((_, index) => index !== i);
+          setForm({ ...form, gift_items: newGifts });
+        }}
+        className="px-3 py-1 bg-red-500 text-white rounded"
+      >
+        ❌ Remove Gift
+      </button>
+    </div>
+  ))}
+
+  <button
+    type="button"
+    onClick={() =>
+      setForm({
+        ...form,
+        gift_items: [...form.gift_items, { title: "", description: "", image: "" }],
+      })
+    }
+    className="px-4 py-2 bg-blue-500 text-white rounded"
+  >
+    ➕ Add Gift
+  </button>
+</div>
+
     <input
       className="border rounded p-2"
       placeholder="Production Cooperation"

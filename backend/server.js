@@ -114,10 +114,12 @@ CREATE TABLE IF NOT EXISTS products (
   status VARCHAR(50) DEFAULT 'available',  -- Trạng thái (available, preorder, soldout,…)
   base_image TEXT,                     -- Ảnh chính
   imagecopyright TEXT,
+  sold INT DEFAULT 0, 
   additional_images TEXT[],            -- Ảnh phụ
   category_id INT REFERENCES categories(id) ON DELETE SET NULL,
-  description TEXT,                    -- Mô tả chi tiết
-  copyrightSeries VARCHAR(255),        -- Bản quyền series
+  description TEXT,                  
+  copyrightSeries VARCHAR(255),  
+    gift_items JSONB DEFAULT '[]',     
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `;
