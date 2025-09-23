@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, Tag } from "antd";
+import { Table, Button, Tag, Tooltip } from "antd";
 import { EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 import PopupDetails from "./PopupDetails";
 import { getOrderDetail } from "../../../api/orders";
@@ -36,6 +36,12 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       render: (total) => `${Number(total).toLocaleString("vi-VN")} đ`,
     },
     {
+      title: "Items",
+      key: "itemsCount",
+      align: "center",
+      render: (_, record) => record.items?.length || 0, 
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -56,8 +62,15 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       title: "Address / District",
       key: "address",
       align: "center",
-      render: (_, record) =>
-        [record.address, record.district].filter(Boolean).join(", "),
+      render: (_, record) => {
+        const fullAddress = [record.address, record.district].filter(Boolean).join(", ");
+        const shortAddress = fullAddress.length > 20 ? fullAddress.slice(0, 20) + "..." : fullAddress;
+        return (
+          <Tooltip title={fullAddress}>
+            {shortAddress}
+          </Tooltip>
+        );
+      },
     },
     {
       title: "Created At",

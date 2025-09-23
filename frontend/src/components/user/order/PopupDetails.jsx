@@ -13,24 +13,24 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
   const toast = useToast();
 
   const handleSave = async () => {
-    if (status !== 4 && status < order.status_id) {
-      toast.error("Cannot reverse state!");
+    if (order.status_id >= 4) {
+      toast.error("Order already canceled!");
       return;
     }
-
+  
     try {
       setLoading(true);
-      await updateOrderStatus(order.id, status, token);
+      await updateOrderStatus(order.id, 4, token); 
       if (onUpdated) onUpdated();
       onClose();
-      toast.success("Status updated successfully!");
+      toast.success("Order canceled successfully!");
     } catch (err) {
-      toast.error("Cập nhật trạng thái thất bại!");
+      toast.error("Failed to cancel order!");
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
    <div className="hide-scrollbar">
      <Modal
@@ -81,23 +81,24 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
         <div className="my-4">
           <Text strong>Status: </Text>
           <Select
-            value={status}
-            onChange={(value) => setStatus(value)}
-            style={{ width: "100%", maxWidth: 250, marginTop: 8 }}
-          >
-            <Option value={1} disabled={order.status_id !== 1}>
-              Pending
-            </Option>
-            <Option value={2} disabled={order.status_id !== 1}>
-              Processing
-            </Option>
-            <Option value={3} disabled={order.status_id !== 2}>
-              Completed
-            </Option>
-            <Option value={4} disabled={order.status_id > 2}>
-              Canceled
-            </Option>
-          </Select>
+  value={status} 
+  onChange={(value) => setStatus(value)}
+  style={{ width: "100%", maxWidth: 250, marginTop: 8 }}
+>
+  <Option value={1} disabled={order.status_id !== 1 && order.status_id !== 4}>
+    Pending
+  </Option>
+  <Option value={2} disabled={order.status_id !== 2 && order.status_id !== 4}>
+    Processing
+  </Option>
+  <Option value={3} disabled={order.status_id !== 3 && order.status_id !== 4}>
+    Completed
+  </Option>
+  <Option value={4} disabled={order.status_id === 4}>
+    Canceled
+  </Option>
+</Select>
+
         </div>
 
         <div className="mt-4">

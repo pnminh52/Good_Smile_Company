@@ -1,6 +1,5 @@
-// components/user/order/OrderFilterBar.jsx
 import React from "react";
-import { Select, Input, Divider } from "antd";
+import { Select, Input } from "antd";
 import PriceFilter from "./../listProduct/PriceFilter";
 
 const { Option } = Select;
@@ -11,16 +10,16 @@ const OrderFilterBar = ({
   keyword,
   onChange,
   priceRange,
-  sortQuantity
+  sortQuantity,
+  sortTotal
 }) => {
   const handleFieldChange = (field) => (value) => {
-    onChange({ [field]: value });
+    onChange({ [field]: value ?? undefined });
   };
 
   return (
-    <div className=" space-y-3">
+    <div className="space-y-3">
       <Input
-        // style={{ marginBottom: 16 }}
         placeholder="Search..."
         value={keyword}
         onChange={(e) => handleFieldChange("keyword")(e.target.value)}
@@ -34,7 +33,7 @@ const OrderFilterBar = ({
         max={100000000}
       />
 
-      <div className="flex flex-col gap-[12px] ">
+      <div className="flex flex-col gap-[12px]">
         <Select
           placeholder="Sort by status"
           value={status || undefined}
@@ -43,7 +42,6 @@ const OrderFilterBar = ({
           size="large"
           className="w-full"
         >
-          <Option value="">Sort by status</Option>
           <Option value="pending">Pending</Option>
           <Option value="processing">Processing</Option>
           <Option value="shipped">Shipped</Option>
@@ -52,28 +50,44 @@ const OrderFilterBar = ({
         </Select>
 
         <Select
-          placeholder="Sort by date"
-          value={sortOrder || undefined}
-          onChange={handleFieldChange("sortOrder")}
-          allowClear
-          size="large"
-          className="w-full"
-        >
-          <Option value="newest">Newest → Oldest</Option>
-          <Option value="oldest">Oldest → Newest</Option>
-        </Select>
-        <Select
-  placeholder="Sort by quantity"
-  value={sortQuantity || undefined}
-  onChange={handleFieldChange("sortQuantity")}
+  placeholder="Sort by date"
+  value={sortOrder || undefined}
+  onChange={handleFieldChange("sortOrder")}
   allowClear
   size="large"
   className="w-full"
 >
-  <Option value="asc">Few → Many</Option>
-  <Option value="desc">Many → Few</Option>
+  <Option value="newest">Newest → Oldest</Option>
+  <Option value="oldest">Oldest → Newest</Option>
+  <Option value="this_year">This Year</Option>
+  <Option value="this_month">This Month</Option>
+  <Option value="this_week">This Week</Option>
 </Select>
 
+
+        <Select
+          placeholder="Sort by quantity"
+          value={sortQuantity || undefined}
+          onChange={handleFieldChange("sortQuantity")}
+          allowClear
+          size="large"
+          className="w-full"
+        >
+          <Option value="asc">Few → Many</Option>
+          <Option value="desc">Many → Few</Option>
+        </Select>
+
+        <Select
+          placeholder="Sort by total"
+          value={sortTotal || undefined}
+          onChange={handleFieldChange("sortTotal")}
+          allowClear
+          size="large"
+          className="w-full"
+        >
+          <Option value="asc">Low → High</Option>
+          <Option value="desc">High → Low</Option>
+        </Select>
       </div>
     </div>
   );
