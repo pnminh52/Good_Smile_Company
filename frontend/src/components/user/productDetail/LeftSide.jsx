@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DetailSection from './DetailSection';
-
+import { Image } from "antd";
 const LeftSide = ({ product }) => {
   const [mainImage, setMainImage] = useState(
     product.additional_images?.[0] || product.base_image
@@ -39,14 +39,15 @@ const LeftSide = ({ product }) => {
 
       {/* Ảnh chính */}
       <div className="flex-1">
-        <div className="w-full h-[600px] bg-gray-100 flex items-center justify-center ">
-          <img
-            src={mainImage}
-            alt={product.name}
-            className="max-w-full max-h-full object-contain"
-          />
-        </div>
-      </div>
+  <div className="w-full h-[600px] bg-gray-100 flex items-center justify-center">
+    <Image
+      src={mainImage}
+      alt={product.name}
+      style={{ maxWidth: "100%", maxHeight: "600px", objectFit: "cover" }}
+      preview={{ mask: <span>Click to enlarge</span> }}
+    />
+  </div>
+</div>
 
       {/* Ảnh phụ cho mobile */}
 <div className="block sm:hidden mt-2">
@@ -96,13 +97,14 @@ const LeftSide = ({ product }) => {
 
       {/* Ảnh chính */}
       <div className="flex-1 w-full">
-        <div className="w-full h-[400px] sm:h-[600px] lg:h-[700px] bg-gray-100 flex items-center justify-center">
-          <img
-            src={mainImage}
-            alt={product.name}
-            className="max-w-full max-h-full object-contain"
-          />
-        </div>
+       <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center">
+           <Image
+             src={mainImage}
+             alt={product.name}
+             style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "cover" }}
+             preview={{ mask: <span>Click to enlarge</span> }}
+           />
+         </div>
 
         {/* Ảnh phụ cho tablet/mobile - scroll ngang */}
         <div className="flex sm:hidden mt-2 overflow-x-auto hide-scrollbar gap-2">
