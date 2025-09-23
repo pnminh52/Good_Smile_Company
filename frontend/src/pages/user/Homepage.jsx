@@ -5,6 +5,7 @@ import SearchByBrand from './../../components/user/homepage/SearchByBrand';
 import PreOrdersNow from './../../components/user/homepage/PreOrdersNow';
 import Event from '../../components/user/homepage/Event';
 import Loader from "../../components/Loader";
+import Top10Revenue from './../../components/user/homepage/Top10Revenue';
 
 
 
@@ -28,6 +29,7 @@ const Homepage = () => {
     <SliderBanner />
     <Section1  />
   <div className=" max-w-screen-xl mx-auto">
+    {/* <Top10Revenue /> */}
   <PreOrdersNow  />
 
 <SearchByBrand  />
