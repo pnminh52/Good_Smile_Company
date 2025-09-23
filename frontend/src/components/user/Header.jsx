@@ -114,7 +114,7 @@ const Header = () => {
                     src="https://www.goodsmile.com/img/icon/user.svg"
                     alt=""
                   />
-                  My Account
+                   Account
                 </li>
               </Link>
             ) : (

@@ -19,8 +19,9 @@ const Profile = () => {
     <div className="max-w-screen-xl sm:px-60 px-4 mx-auto ">
       <div className="py-6 space-y-6 ">
         <p className="text-2xl font-semibold">My Account</p>
-        <ProfileCard />
-       <UserMenu handdleLogOut={handdleLogOut}/>
+        <UserMenu />
+        <ProfileCard handdleLogOut={handdleLogOut}/>
+    
       </div>
     
     </div>

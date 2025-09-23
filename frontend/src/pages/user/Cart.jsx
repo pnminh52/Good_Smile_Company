@@ -11,6 +11,7 @@ import useToast from "../../hook/useToast";
 import PriceInfo from "./../../components/user/cart/PriceInfo";
 import LeftSide from "./../../components/user/cart/LeftSide";
 import Loader from "./../../components/Loader";
+import NoResult from './../../components/user/NoResult';
 
 const Cart = () => {
   const { user } = useAuth();
@@ -98,11 +99,11 @@ const Cart = () => {
       </p>
     );
   }
-  if (cartItems.length === 0) return <p>Your cart is empty.</p>;
+  if (cartItems.length === 0) return <><NoResult /></>;
 
   return (
     <div className="max-w-screen-xl w-full mx-auto sm:px-30 px-4">
-      <h1 className="sm:text-2xl text-xl  font-semibold sm:py-6 py-4">Your Cart</h1>
+      <h1 className="sm:text-2xl text-xl  font-semibold sm:py-6 py-4"> Cart</h1>
 
       <div className="flex flex-col lg:flex-row gap-4 ">
         <div className="w-full sm:w-[70%]">

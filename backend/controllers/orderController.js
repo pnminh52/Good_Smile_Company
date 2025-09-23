@@ -1,10 +1,10 @@
 import { sql } from "../config/db.js";
 
 export const getUserOrders = async (req, res) => {
-  const userId = req.user.id; // giả sử bạn đã middleware auth để attach user
+  const userId = req.user.id;
   try {
     const orders = await sql`
-      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.created_at
+      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.district, o.created_at
       FROM orders o
       LEFT JOIN order_status os ON o.status_id = os.id
       WHERE o.user_id = ${userId}
@@ -21,7 +21,7 @@ export const getOrderDetail = async (req, res) => {
   const userId = req.user.id;
   try {
     const order = await sql`
-      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.created_at
+      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.district, o.created_at
       FROM orders o
       LEFT JOIN order_status os ON o.status_id = os.id
       WHERE o.id = ${orderId} AND o.user_id = ${userId}
@@ -41,6 +41,7 @@ export const getOrderDetail = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const createOrder = async (req, res) => {
   const userId = req.user.id;

@@ -94,7 +94,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { phone, address, avatar } = req.body;
+  const { phone, address, avatar, district } = req.body;
   const userId = req.user?.id;
 
   if (!userId) return res.status(401).json({ error: "Not authorized" });
@@ -105,16 +105,19 @@ export const updateProfile = async (req, res) => {
       SET
         phone = COALESCE(${phone}, phone),
         address = COALESCE(${address}, address),
-        avatar = COALESCE(${avatar}, avatar)
+        avatar = COALESCE(${avatar}, avatar),
+        district = COALESCE(${district}::text[], district) -- district mảng string
       WHERE id = ${userId}
-      RETURNING id, name, email, phone, address, avatar
+      RETURNING id, name, email, phone, address, avatar, district
     `;
+
     res.json({ message: "Profile updated", user: updated[0] });
   } catch (err) {
     console.error("❌ Update profile error:", err.message);
     res.status(500).json({ error: "Could not update profile" });
   }
 };
+
 
 
 export const getProfile = async (req, res) => {

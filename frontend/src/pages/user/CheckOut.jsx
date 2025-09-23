@@ -8,7 +8,9 @@ import useShippingFee from "../../hook/useShippingFee";
 import CheckOutItem from './../../components/user/checkout/CheckOutItem';
 import PriceTable from "../../components/user/checkout/PriceTable";
 import NotFound from './NotFound';
+import { useState, useEffect } from "react";
 import Loader from './../../components/Loader';
+
 
 const Checkout = () => {
   const toast = useToast();
@@ -16,10 +18,10 @@ const Checkout = () => {
   const navigate = useNavigate();
   const cartItems = location.state?.cartItems || [];
   const { address, shippingFee } = useShippingFee();
-  const [userInfo, setUserInfo] = React.useState({ selectedDistrict: "", district: [] });
-  const [loading, setLoading] = React.useState(false); // loader state
+  const [userInfo, setUserInfo] = useState({ selectedDistrict: "", district: [] });
+  const [loading, setLoading] = useState(false); 
 
-  React.useEffect(() => {
+ useEffect(() => {
     if (address) setUserInfo(prev => ({ ...prev, selectedDistrict: address }));
   }, [address]);
 
