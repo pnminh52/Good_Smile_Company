@@ -108,7 +108,12 @@ const RightSide = ({ product }) => {
                                     <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
                                         Preorders
                                     </p>
-                                )}
+                                )}{product.status === "available" && (
+                                  <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
+                                      Available
+                                  </p>
+                              )}
+                                
                                 {product.gift_items && product.gift_items.length > 0 && (
   <p className="bg-yellow-200 px-2 inline-block text-sm text-yellow-700 rounded-full">
     W/Bonus
