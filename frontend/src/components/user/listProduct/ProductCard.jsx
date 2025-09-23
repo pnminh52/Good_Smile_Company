@@ -47,12 +47,17 @@ const ProductCard = ({ products, columns = 4 }) => {
                                         Sold out
                                     </p>
                                 )}
-
+ {p.status === "available" && (
+                                    <p className="bg-green-200 px-2 inline-block text-xs text-green-700 rounded-full">
+                                        Available
+                                    </p>
+                                )}
                                 {p.status === "preorder" && (
                                     <p className="bg-green-200 px-2 inline-block text-xs text-green-700 rounded-full">
                                         Preorders
                                     </p>
                                 )}
+
                                 {p.gift_items && p.gift_items.length > 0 && (
   <p className="bg-yellow-200 px-2 inline-block text-xs text-yellow-700 rounded-full">
     W/Bonus
