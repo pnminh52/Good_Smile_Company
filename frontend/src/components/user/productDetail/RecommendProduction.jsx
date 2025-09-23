@@ -30,38 +30,49 @@ const RecommendProduction  = ({ product }) => {
     <div className="max-w-screen-xl mx-auto relative group ">
      
 
-<h2 className="text-2xl font-semibold pb-4 px-4 sm:px-0">
-Recommended from the same series
-</h2>
+
+<div className="pb-4 sm:text-xl text-lg px-4 sm:px-0 flex flex-col  sm:flex-row sm:gap-2 gap-0">
+<h2 className="  font-semibold ">
+Recommended from the same series 
+ </h2>
+  {product.series && (
+   
+    
+  <p className="uppercase font-semibold text-blue-600">#{product.series}</p>
+)}
+      </div>
 <div className="relative group ">
 
+{
+  recommended.length>7 && (
+<div className="hidden sm:block">
+        <button
+          ref={prevRef}
+          className="absolute rotate-180 cursor-pointer -left-5 top-16 -translate-y-1/2  z-10 
+          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+        >
+          <img
+          className="w-3"
+            src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+            alt="prev"
+          />
+        </button>
 
- {/* Navigation buttons (desktop only) */}
- <div className="hidden sm:block">
-   <button
-     ref={prevRef}
-     className="absolute rotate-180 cursor-pointer -left-5 bottom-1/2 -translate-y-1/2  z-10 
-     bg-white shadow-md w-14 h-14 flex items-center justify-center rounded-full hover:bg-gray-100"
-   >
-     <img
-     className="w-3"
-       src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
-       alt="prev"
-     />
-   </button>
+        <button
+          ref={nextRef}
+          className="absolute rotate-0 cursor-pointer -right-5 top-16 -translate-y-1/2 z-10 
+          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+        >
+          <img
+          className="w-3"
+            src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+            alt="next"
+          />
+        </button>
+      </div>
+  )
+}
 
-   <button
-     ref={nextRef}
-     className="absolute rotate-0 cursor-pointer -right-5 bottom-1/2 -translate-y-1/2 z-10 
-     bg-white shadow-md w-12 h-12 flex items-center justify-center rounded-full hover:bg-gray-100"
-   >
-     <img
-     className="w-3"
-       src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
-       alt="next"
-     />
-   </button>
- </div>
       
 
       {/* Slider */}
@@ -69,7 +80,7 @@ Recommended from the same series
         <Swiper
           modules={[Navigation]}
           spaceBetween={8}
-          slidesPerView={2}
+          slidesPerView={3}
           loop={recommended.length > 4}
           navigation={{
             prevEl: prevRef.current,
@@ -80,9 +91,7 @@ Recommended from the same series
             swiper.params.navigation.nextEl = nextRef.current;
           }}
           breakpoints={{
-            640: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
+            1024: { slidesPerView: 7 },
           }}
         >
           {recommended

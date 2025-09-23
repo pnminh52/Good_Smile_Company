@@ -15,6 +15,7 @@ const FilterSideBar = ({
   sortPrice, stockFilter,
   selectedSeries, selectedCategories, selectedManufacturers,
   products,
+  giftFilter, setGiftFilter,
   setSortSold, sortSold,
   searchTerm, setSearchTerm
 }) => {
@@ -111,6 +112,22 @@ const FilterSideBar = ({
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>
         </Select>
+        <div className="py-2">
+        <label
+  className="flex items-center gap-2 cursor-pointer"
+  onClick={() => setGiftFilter(!giftFilter)}
+>
+  {/* Custom checkbox */}
+  <span
+    className={`w-5 h-5 flex items-center justify-center rounded-md border transition-all duration-300 
+      ${giftFilter ? "bg-[#F06E00] border-[#F06E00]" : "bg-white border-gray-300"}`}
+  >
+    {/* Không có dấu tích, chỉ đổi màu */}
+  </span>
+  <span className="truncate text-sm">Only show products with gifts</span>
+</label>
+
+  </div>
       </div>
       <hr className="border-t pb-2 border-gray-300" />
 

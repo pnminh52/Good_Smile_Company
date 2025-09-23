@@ -15,6 +15,7 @@ const SameCategory = ({ product }) => {
   useEffect(() => {
     const fetchSameCategory = async () => {
       if (!product?.id) return;
+       console.log(product.category?.name)
       try {
         const { data } = await getProductsBySameCategory(product.id);
         setSameProducts(data || []);
@@ -29,19 +30,27 @@ const SameCategory = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto ">
-      
-      <h2 className="text-2xl font-semibold pb-4 px-4 sm:px-0">
-    More from this category
-  </h2>
+     
+     <div className="pb-4 sm:text-xl text-lg px-4 sm:px-0 flex flex-col  sm:flex-row sm:gap-2 gap-0">
+<h2 className="  font-semibold ">
+More from this category
+ </h2>
+
+  {product.category_name && (
+   
+    
+  <p className="uppercase  text-xl font-semibold text-blue-600">#{product.category_name}</p>
+)}
+      </div>
+     
     <div className="relative group ">
      
-
-      {/* Navigation buttons (desktop only) */}
-      <div className="hidden sm:block">
+    {sameProducts.length > 7 && (
+    <div className="hidden sm:block">
         <button
           ref={prevRef}
-          className="absolute rotate-180 cursor-pointer -left-5 bottom-1/2 -translate-y-1/2  z-10 
-          bg-white shadow-md w-14 h-14 flex items-center justify-center rounded-full hover:bg-gray-100"
+          className="absolute rotate-180 cursor-pointer -left-5 top-16 -translate-y-1/2  z-10 
+          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
           className="w-3"
@@ -52,8 +61,8 @@ const SameCategory = ({ product }) => {
 
         <button
           ref={nextRef}
-          className="absolute rotate-0 cursor-pointer -right-5 bottom-1/2 -translate-y-1/2 z-10 
-          bg-white shadow-md w-12 h-12 flex items-center justify-center rounded-full hover:bg-gray-100"
+          className="absolute rotate-0 cursor-pointer -right-5 top-16 -translate-y-1/2 z-10 
+          bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
           className="w-3"
@@ -62,13 +71,14 @@ const SameCategory = ({ product }) => {
           />
         </button>
       </div>
+    )}
 
       {/* Slider */}
       <div className="px-4 sm:px-0">
         <Swiper
           modules={[Navigation]}
           spaceBetween={8}
-          slidesPerView={2}
+          slidesPerView={3}
           loop={sameProducts.length > 4}
           navigation={{
             prevEl: prevRef.current,
@@ -79,9 +89,7 @@ const SameCategory = ({ product }) => {
             swiper.params.navigation.nextEl = nextRef.current;
           }}
           breakpoints={{
-            640: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
+            1024: { slidesPerView: 7 },
           }}
         >
           {sameProducts

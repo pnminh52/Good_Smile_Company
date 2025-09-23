@@ -15,27 +15,30 @@ const LeftSide = ({ product }) => {
      <div className="hidden sm:block">
      <div className="flex gap-4">
       {/* List ảnh phụ - scroll dọc */}
-     <div className="hidden sm:block">
-       {product.additional_images?.length > 0 && (
-              <div className="w-16 h-[400px] hide-scrollbar overflow-y-auto flex flex-col gap-2 pr-1">
-                {product.additional_images.map((img, i) => (
-                  <div
-                    key={i}
-                    className={`w-16 h-16 bg-gray-100 flex items-center justify-center  cursor-pointer  
-                    
-                    `}
-                    onClick={() => setMainImage(img)}
-                  >
-                    <img
-                      src={img}
-                      alt={`Additional ${i}`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-     </div>
+      <div className="hidden sm:block">
+  {product.additional_images?.length > 0 && (
+    <div className="w-16 h-[400px] hide-scrollbar overflow-y-auto flex flex-col gap-2 pr-1">
+      {product.additional_images.map((img, i) => {
+        const isSelected = img === mainImage; 
+        return (
+          <div
+            key={i}
+            className={`w-16 bg-gray-100 h-16 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
+              ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"}`}
+            onClick={() => setMainImage(img)}
+          >
+            <img
+              src={img}
+              alt={`Additional ${i}`}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
+
 
       {/* Ảnh chính */}
       <div className="flex-1">
@@ -49,28 +52,8 @@ const LeftSide = ({ product }) => {
   </div>
 </div>
 
-      {/* Ảnh phụ cho mobile */}
-<div className="block sm:hidden mt-2">
-  {product.additional_images?.length > 0 && (
-    <div className="w-full overflow-hidden">
-      <div className="flex gap-2">
-        {product.additional_images.map((img, i) => (
-          <div
-            key={i}
-            className="w-16 h-16 bg-gray-100 flex items-center justify-center cursor-pointer"
-            onClick={() => setMainImage(img)}
-          >
-            <img
-              src={img}
-              alt={`Additional ${i}`}
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  )}
-</div>
+
+
 
 
     </div>
@@ -106,22 +89,26 @@ const LeftSide = ({ product }) => {
            />
          </div>
 
-        {/* Ảnh phụ cho tablet/mobile - scroll ngang */}
         <div className="flex sm:hidden mt-2 overflow-x-auto hide-scrollbar gap-2">
-          {product.additional_images?.map((img, i) => (
-            <div
-              key={i}
-              className="w-16 h-16 bg-gray-100 flex items-center justify-center cursor-pointer flex-shrink-0"
-              onClick={() => setMainImage(img)}
-            >
-              <img
-                src={img}
-                alt={`Additional ${i}`}
-                className="max-w-full max-h-full object-contain"
-              />
-            </div>
-          ))}
-        </div>
+  {product.additional_images?.map((img, i) => {
+    const isSelected = img === mainImage; 
+    return (
+      <div
+        key={i}
+        className={`w-16 h-16 flex-shrink-0 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
+          ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"} bg-gray-100`}
+        onClick={() => setMainImage(img)}
+      >
+        <img
+          src={img}
+          alt={`Additional ${i}`}
+          className="max-w-full max-h-full object-contain"
+        />
+      </div>
+    );
+  })}
+</div>
+
       </div>
 
     </div>

@@ -22,7 +22,7 @@ const ListProduct = () => {
     categoryFromUrl ? [categoryFromUrl] : []
   );
   const [sortSold, setSortSold]=useState("")
-
+  const [giftFilter, setGiftFilter] = useState(false);
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
   const [stockFilter, setStockFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -60,7 +60,10 @@ const ListProduct = () => {
         selectedSeries.includes(p.series)
       );
     }
-  
+    if (giftFilter) {
+      filtered = filtered.filter((p) => p.gift_items && p.gift_items.length > 0);
+    }
+    
     if (selectedManufacturers.length) {
       filtered = filtered.filter((p) =>
         selectedManufacturers.includes(p.manufacturer)
@@ -117,6 +120,7 @@ const ListProduct = () => {
     selectedManufacturers,
     stockFilter,
     statusFilter,
+    giftFilter,
     sortPrice,
     sortAlpha,
     searchTerm,
@@ -189,6 +193,8 @@ const ListProduct = () => {
   sortSold={sortSold}
   setSortSold={setSortSold}
   setPriceRange={setPriceRange}
+  giftFilter={giftFilter}
+  setGiftFilter={setGiftFilter}
 
 />
 {/* <div className="py-2">
@@ -235,6 +241,8 @@ const ListProduct = () => {
   sortSold={sortSold}
   setSortSold={setSortSold}
   setPriceRange={setPriceRange}
+  giftFilter={giftFilter}
+  setGiftFilter={setGiftFilter}
 />
 
         </div>

@@ -90,33 +90,40 @@ const RightSide = ({ product }) => {
         <h1 className="text- font-semibold">{product.title}</h1>
         <h1 className="text-xl font-semibold py-4">{product.name}</h1>
 
-        {product.stock > 0 && product.stock < 50 && (
-          <p className="bg-red-200 px-2 inline-block text-sm text-red-700 rounded-full">
-            Few left in stock
-          </p>
-        )}
-        {product.stock === 0 && (
-          <p className="bg-gray-200 px-2 inline-block text-sm text-gray-700 rounded-full">
-            Sold out
-          </p>
-        )}
-        {product.status === "preorder" && (
-          <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
-            Preorders open now
-          </p>
-        )}
-         {product.status === "available" && (
-          <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
-            Available
-          </p>
-        )}
+        <div>
+                               <div className="flex items-center gap-2">
+                               {product.stock > 0 && product.stock < 50 && (
+                                    <p className="bg-red-200 px-2 inline-block text-sm text-red-700 rounded-full">
+                                        Few left
+                                    </p>
+                                )}
 
+                                {product.stock === 0 && (
+                                    <p className="bg-gray-200 px-2 inline-block text-sm text-gray-700 rounded-full">
+                                        Sold out
+                                    </p>
+                                )}
+
+                                {product.status === "preorder" && (
+                                    <p className="bg-green-200 px-2 inline-block text-sm text-green-700 rounded-full">
+                                        Preorders
+                                    </p>
+                                )}
+                                {product.gift_items && product.gift_items.length > 0 && (
+  <p className="bg-yellow-200 px-2 inline-block text-sm text-yellow-700 rounded-full">
+    W/Bonus
+  </p>
+)}
+                               </div>
+
+                               
+                            </div>
        <div className="py-4">
        <p className="text-black text-lg">
           {Number(product.price).toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
-          })}
+          })} / {product.sold} sold
         </p>
         <div className="text-gray-500 text-sm ">
         <p>Limit 3 per person /  Shipping costs not included</p>

@@ -43,7 +43,7 @@ const ProductCard = ({ products, columns = 4 }) => {
                                <div className="flex items-center gap-2">
                                {p.stock > 0 && p.stock < 50 && (
                                     <p className="bg-red-200 px-2 inline-block text-xs text-red-700 rounded-full">
-                                        Few left in stock
+                                        Few left
                                     </p>
                                 )}
 
@@ -55,7 +55,7 @@ const ProductCard = ({ products, columns = 4 }) => {
 
                                 {p.status === "preorder" && (
                                     <p className="bg-green-200 px-2 inline-block text-xs text-green-700 rounded-full">
-                                        Preorders open now
+                                        Preorders
                                     </p>
                                 )}
                                 {p.gift_items && p.gift_items.length > 0 && (
