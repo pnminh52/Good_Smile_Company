@@ -31,7 +31,7 @@ const SameCategory = ({ product }) => {
   return (
     <div className="max-w-screen-xl mx-auto ">
      
-     <div className="pb-4 sm:text-xl text-lg px-4 sm:px-0 flex flex-col  sm:flex-row sm:gap-2 gap-0">
+     <div className="pb-0 sm:text-xl text-lg px-4 sm:px-0 flex flex-col  sm:flex-row sm:gap-2 gap-0">
 <h2 className="  font-semibold ">
 More from this category
  </h2>
@@ -49,7 +49,7 @@ More from this category
     <div className="hidden sm:block">
         <button
           ref={prevRef}
-          className="absolute rotate-180 cursor-pointer -left-5 top-16 -translate-y-1/2  z-10 
+          className="absolute rotate-180 cursor-pointer -left-5 top-20  -translate-y-1/2  z-10 
           bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
@@ -61,7 +61,7 @@ More from this category
 
         <button
           ref={nextRef}
-          className="absolute rotate-0 cursor-pointer -right-5 top-16 -translate-y-1/2 z-10 
+          className="absolute rotate-0 cursor-pointer -right-5 top-20  -translate-y-1/2 z-10 
           bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img

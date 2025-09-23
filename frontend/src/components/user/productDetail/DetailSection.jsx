@@ -32,11 +32,14 @@ const DetailSection = ({ product }) => {
         {
         product.gift_items.map((gift, index) => (
           <div key={index} className="flex flex-col gap-0  ">
-                        {gift.title && <p className=" text-black pt-2 pb-4">{gift.title}</p>}
+            <div className="pt-2 pb-4">
+ {gift.title && <p className=" text-black ">{gift.title}</p>}
             {gift.description && <p>{gift.description}</p>}
+            </div>
+                       
 
             {gift.image && (
-             <div className="flex items-center justify-center p-6 bg-gray-100">
+             <div className="flex items-center justify-center p-4 bg-gray-100">
                <img
                 src={gift.image}
                 alt={gift.title || `Gift ${index + 1}`}

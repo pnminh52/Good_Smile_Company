@@ -14,11 +14,6 @@ const ProductCard = ({ products, columns = 4 }) => {
             <div className={`grid  sm:gap-4 gap-2 ${columnClasses[columns] || columnClasses[4]}`}>
                 {products
                     .slice()
-                    // .sort((a, b) => {
-                    //     if (a.status === "preorder" && b.status !== "preorder") return -1;
-                    //     if (a.status !== "preorder" && b.status === "preorder") return 1;
-                    //     return 0;
-                    // })
                     .map((p) => (
                         <Link to={`/product/${p.id}`} key={p.id} className="flex flex-col">
                             <div className="relative w-full aspect-square rounded-lg overflow-hidden">

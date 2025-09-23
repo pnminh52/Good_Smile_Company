@@ -51,7 +51,7 @@ const ProductDetails = () => {
    
 
   </div>
-  <div className="space-y-2 sm:px-50 px-0 py-2">
+  <div className="space-y-0 sm:px-50 px-0 py-2">
   <History product={product}/>
    <SameCategory product={product} />
    <RecommendProduction product={product} />

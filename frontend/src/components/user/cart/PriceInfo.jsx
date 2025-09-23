@@ -36,7 +36,7 @@ const PriceInfo = ({ cartItems, handleCheckout }) => {
     </div>
     <div className="border-b border-gray-300"/>
 
-       <div className="py-4 space-y-2 ">
+       <div className="pt-4 space-y-2 ">
         <button
           onClick={handleCheckout}
           className="bg-[#FF6900] text-white w-full py-3 font-semibold rounded-full cursor-pointer "

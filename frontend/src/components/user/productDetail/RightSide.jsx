@@ -90,7 +90,7 @@ const RightSide = ({ product }) => {
         <h1 className="text- font-semibold">{product.title}</h1>
         <h1 className="text-xl font-semibold py-4">{product.name}</h1>
 
-        <div>
+   
                                <div className="flex items-center gap-2">
                                {product.stock > 0 && product.stock < 50 && (
                                     <p className="bg-red-200 px-2 inline-block text-sm text-red-700 rounded-full">
@@ -117,7 +117,7 @@ const RightSide = ({ product }) => {
                                </div>
 
                                
-                            </div>
+                       
        <div className="py-4">
        <p className="text-black text-lg">
           {Number(product.price).toLocaleString("vi-VN", {

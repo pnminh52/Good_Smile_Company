@@ -6,7 +6,8 @@ import {
   updateProduct,
   deleteProduct,
   getProductsBySameCategory,
-  getRecommendedProducts
+  getRecommendedProducts,
+  getCartRecommendedProducts
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 router.get("/:id/same-category", getProductsBySameCategory);
 router.get("/:id/recommended", getRecommendedProducts);
+router.post("/cart-recommend", getCartRecommendedProducts);
 
 export default router;

@@ -12,14 +12,26 @@ import PriceInfo from "./../../components/user/cart/PriceInfo";
 import LeftSide from "./../../components/user/cart/LeftSide";
 import Loader from "./../../components/Loader";
 import NoResult from './../../components/user/NoResult';
+import { getCartRecommendedProducts } from "../../api/products";
+import ProductCard from "../../components/user/listProduct/ProductCard";
 
 const Cart = () => {
   const { user } = useAuth();
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const toast = useToast();
+  const fetchRecommended = async (cartItems) => {
+    if (cartItems.length === 0) return;
+    try {
+      const res = await getCartRecommendedProducts(cartItems.map(item => item.product_id));
+      setRecommendedProducts(res.data);
+    } catch (error) {
+      console.error("Failed to fetch recommended products:", error);
+    }
+  };
 
   const fetchCart = async () => {
     try {
@@ -45,7 +57,14 @@ const Cart = () => {
       fetchCart();
     }
   }, [user, token]);
-
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      fetchRecommended(cartItems);
+    } else {
+      setRecommendedProducts([]);
+    }
+  }, [cartItems]);
+  
   const handleDelete = async (cartId) => {
     try {
       await deleteCartItem(cartId, token);
@@ -117,7 +136,15 @@ const Cart = () => {
           <PriceInfo handleCheckout={handleCheckout} cartItems={cartItems} />
         </div>
       </div>
+
+
+
+ <div className="gap-4 ">
+  <p className="sm:text-2xl text-xl  font-semibold sm:py-6 py-4">Maybe you also like?</p>
+          <ProductCard products={recommendedProducts.slice(0,8)} columns={4} />
+        </div>
     </div>
+         
   );
 };
 

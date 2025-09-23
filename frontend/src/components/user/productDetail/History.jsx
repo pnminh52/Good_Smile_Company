@@ -35,7 +35,7 @@ const History = ({ product }) => {
     <div className="max-w-screen-xl mx-auto relative group">
       
 
-      <h2 className=" sm:text-xl text-lg font-semibold pb-4 px-4 sm:px-0">
+      <h2 className=" sm:text-xl text-lg font-semibold px-4 sm:px-0">
       Recently Viewed
   </h2>
     <div className="relative group ">
@@ -45,7 +45,7 @@ const History = ({ product }) => {
  <div className="hidden sm:block">
         <button
           ref={prevRef}
-          className="absolute rotate-180 cursor-pointer -left-5 top-16 -translate-y-1/2  z-10 
+          className="absolute rotate-180 cursor-pointer -left-5 top-20 -translate-y-1/2  z-10 
           bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img
@@ -57,7 +57,7 @@ const History = ({ product }) => {
 
         <button
           ref={nextRef}
-          className="absolute rotate-0 cursor-pointer -right-5 top-16 -translate-y-1/2 z-10 
+          className="absolute rotate-0 cursor-pointer -right-5 top-20 -translate-y-1/2 z-10 
           bg-white shadow-md w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
         >
           <img

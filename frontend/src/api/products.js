@@ -19,3 +19,6 @@ export const getProductsBySameCategory = (id) => api.get(`/products/${id}/same-c
 export const getRecommendedProducts = (id) => 
     api.get(`/products/${id}/recommended`);
   
+export const getCartRecommendedProducts = (productIds) => 
+    api.post("/products/cart-recommend", { productIds });
+

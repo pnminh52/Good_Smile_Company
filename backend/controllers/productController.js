@@ -257,3 +257,54 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getCartRecommendedProducts = async (req, res) => {
+  try {
+    const { productIds } = req.body;
+
+    if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+      return res.status(400).json({ error: "No products in cart" });
+    }
+
+    // Lấy thông tin các sản phẩm trong giỏ
+    const cartProducts = await sql`
+      SELECT id, series, category_id
+      FROM products
+      WHERE id = ANY(${productIds})
+    `;
+
+    if (!cartProducts.length) return res.status(200).json([]);
+
+    // Lấy danh sách series và category hợp lệ
+    const seriesList = cartProducts.map(p => p.series).filter(Boolean);
+    const categoryList = cartProducts.map(p => p.category_id).filter(Boolean);
+
+    if (!seriesList.length && !categoryList.length) return res.status(200).json([]);
+
+    // Tạo điều kiện query an toàn
+    const seriesCondition = seriesList.length
+      ? sql`p.series = ANY(${seriesList})`
+      : sql`FALSE`;
+    const categoryCondition = categoryList.length
+      ? sql`p.category_id = ANY(${categoryList})`
+      : sql`FALSE`;
+
+    // Lấy sản phẩm gợi ý, loại trừ sản phẩm trong giỏ
+    const recommendedProducts = await sql`
+      SELECT p.*, c.name AS category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE (${seriesCondition} OR ${categoryCondition})
+        AND p.id != ALL(${productIds})
+      ORDER BY p.id DESC
+      LIMIT 10
+    `;
+
+    res.status(200).json(recommendedProducts);
+  } catch (error) {
+    console.error("❌ Error getCartRecommendedProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+

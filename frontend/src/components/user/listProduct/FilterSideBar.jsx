@@ -124,7 +124,7 @@ const FilterSideBar = ({
   >
     {/* Không có dấu tích, chỉ đổi màu */}
   </span>
-  <span className="truncate text-sm">Only show products with gifts</span>
+  <span className="truncate ">Bonus Included</span>
 </label>
 
   </div>
