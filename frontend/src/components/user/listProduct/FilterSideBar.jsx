@@ -50,65 +50,61 @@ const FilterSideBar = ({
         <PriceFilter priceRange={priceRange} setPriceRange={setPriceRange} />
 
         <Select
-          placeholder="Sort Alphabet"
-          value={sortAlpha}
+          placeholder="Sort by alphabet"
+          value={sortAlpha || undefined}
           onChange={handleMobileChange(setSortAlpha)}
           style={selectStyle}
           size="large"
         >
-          <Option value="">Sort by alphabet</Option>
           <Option value="asc">A → Z</Option>
           <Option value="desc">Z → A</Option>
         </Select>
         <Select
-          placeholder="Sort Sold"
-          value={sortSold}
+          placeholder="Sort by sold"
+          value={sortSold || undefined}
           onChange={(value) => setSortSold(value)}
           style={selectStyle}
           size="large"
         >
-          <Option value="">Sort by sold</Option>
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>
         </Select>
 
 
         <Select
-          placeholder="Stock"
-          value={stockFilter}
+          placeholder="Sort by stock"
+          value={stockFilter || undefined}
           onChange={handleMobileChange(setStockFilter)}
           allowClear
           style={selectStyle}
           size="large"
         >
-          <Option value="">Sort by stock</Option>
           <Option value="inStock">In Stock (≥50)</Option>
           <Option value="few">Few left (1-49)</Option>
           <Option value="soldOut">Sold Out</Option>
         </Select>
 
         <Select
-          placeholder="Status"
-          value={statusFilter}
-          onChange={handleMobileChange(setStatusFilter)}
-          allowClear
-          style={selectStyle}
-          size="large"
-        >
-          <Option value="">Sort by status</Option>
-          <Option value="available">Available</Option>
-          <Option value="preorder">Pre-Order</Option>
-          <Option value="soldout">Sold Out</Option>
-        </Select>
+  placeholder="Sort by status"
+  value={statusFilter || undefined} 
+  onChange={handleMobileChange(setStatusFilter)}
+  allowClear
+  style={selectStyle}
+  size="large"
+>
+  <Option value="available">Available</Option>
+  <Option value="preorder">Pre-Order</Option>
+  <Option value="soldout">Sold Out</Option>
+</Select>
+
 
         <Select
-          placeholder="Sort Price"
-          value={sortPrice}
+          placeholder="Sort by price"
+          value={sortPrice || undefined}
           onChange={handleMobileChange(setSortPrice)}
           style={selectStyle}
           size="large"
         >
-          <Option value="">Sort by price</Option>
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>
         </Select>

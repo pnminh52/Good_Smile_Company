@@ -33,7 +33,17 @@ export const loginUser = async (req, res) => {
     if (!validPass) return res.status(400).json({ error: "Invalid password" });
 
     const token = jwt.sign({ id: user[0].id }, JWT_SECRET, { expiresIn: "7d" });
-    res.json({ message: "Login success", token, user: { id: user[0].id, name: user[0].name, email: user[0].email } });
+    res.json({
+      message: "Login success",
+      token,
+      user: {
+        id: user[0].id,
+        name: user[0].name,
+        email: user[0].email,
+        role: user[0].role 
+      }
+    });
+    
   } catch (err) {
     console.error("❌ Login error:", err.message);
     res.status(500).json({ error: "Login failed" });

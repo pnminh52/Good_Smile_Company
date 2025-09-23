@@ -27,7 +27,13 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(user));
   
       toast.success("Login successful!"); 
-      navigate("/");
+    
+      if (user.role.toLowerCase() ==="admin") {
+        navigate("/admin")
+        
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const errMsg = err.response?.data?.error || "Login failed";
       setError(errMsg);
