@@ -1,17 +1,34 @@
 import axios from "axios";
 
-const API = `${import.meta.env.VITE_REACT_APP_API_URL}/api/users`;
-export const register = (data) => axios.post(`${API}/register`, data);
-export const login = (data) => axios.post(`${API}/login`, data);
-export const forgotPassword = (email) => axios.post(`${API}/forgot-password`, { email });
+const API = import.meta.env.VITE_REACT_APP_API_URL
+  ? `${import.meta.env.VITE_REACT_APP_API_URL}/api/users`
+  : "http://localhost:3000/api/users";
+
+const api = axios.create({
+  baseURL: API,
+});
+
+// Đăng ký
+export const register = (data) => api.post("/register", data);
+
+// Đăng nhập
+export const login = (data) => api.post("/login", data);
+
+// Quên mật khẩu
+export const forgotPassword = (email) => api.post("/forgot-password", { email });
+
+// Reset mật khẩu
 export const resetPassword = (email, token, newPassword) =>
-  axios.post(`${API}/reset-password`, { email, token, newPassword });
+  api.post("/reset-password", { email, token, newPassword });
+
+// Cập nhật profile
 export const updateProfile = (data, token) =>
-    axios.put(`${API}/update-profile`, data, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  api.put("/update-profile", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+// Lấy profile
 export const getProfile = (token) =>
-        axios.get(`${API}/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      
+  api.get("/profile", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
