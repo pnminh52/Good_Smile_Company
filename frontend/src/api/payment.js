@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:3000/api/payment";
+const API_URL = `${import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000"}/api/payment`;
 
 export const createVnpayPayment = (data) =>
   axios.post(`${API}/create-payment`, data);

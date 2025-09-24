@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:3000/api",
-});
+const API_URL = `${import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000"}/api`;
 
+const api = axios.create({
+  baseURL: API_URL,
+});
 export const getWishlistApi = async (userId, token) => {
   const res = await api.get(`/wishlist/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },

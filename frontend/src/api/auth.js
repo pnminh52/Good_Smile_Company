@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:3000/api/users"; // base url backend
-
+const API = `${import.meta.env.VITE_REACT_APP_API_URL}/api/users`;
 export const register = (data) => axios.post(`${API}/register`, data);
 export const login = (data) => axios.post(`${API}/login`, data);
 export const forgotPassword = (email) => axios.post(`${API}/forgot-password`, { email });
