@@ -7,7 +7,7 @@ const API = import.meta.env.VITE_REACT_APP_API_URL
 const api = axios.create({
   baseURL: API,
 });
-
+export { api };
 // Đăng ký
 export const register = (data) => api.post("/register", data);
 
