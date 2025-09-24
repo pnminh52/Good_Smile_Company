@@ -8,19 +8,36 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 export const registerUser = async (req, res) => {
-  const { name, email, password, address, district, phone } = req.body;
+  const { name, email, password, address, district = [], phone } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "Name, email, and password are required" });
+  }
+
   try {
+    // Check duplicate email
+    const existing = await sql`SELECT id FROM users WHERE email = ${email}`;
+    if (existing.length) return res.status(400).json({ error: "Email already exists" });
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Chuyển district thành mảng nếu user gửi chuỗi
+    const districtArray = Array.isArray(district) ? district : [district];
+
     const user = await sql`
       INSERT INTO users (name, email, password, address, district, phone)
-      VALUES (${name}, ${email}, ${hashedPassword}, ${address}, ${district}, ${phone})
+      VALUES (${name}, ${email}, ${hashedPassword}, ${address}, ${districtArray}::text[], ${phone})
       RETURNING id, name, email, address, district, phone
     `;
+
     res.status(201).json(user[0]);
   } catch (err) {
-    res.status(500).json({ error: "Register failed" });
+    console.error("❌ Register error:", err.message);
+    res.status(500).json({ error: "Register failed", detail: err.message });
   }
 };
+
+
 
 
 export const loginUser = async (req, res) => {
