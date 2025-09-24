@@ -29,19 +29,49 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+  
+    if (name !== "email") {
+      const regex = /^[a-zA-ZÀ-ỹ0-9\s]*$/u;
+      if (!regex.test(value)) {
+        toast.error("Special characters not allowed!");
+        return;
+      }
+    }
+  
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) {
+        toast.error("Phone number only enter numbers!");
+        return;
+      }
+      if (value.length > 11) {
+        toast.error("Incorrect phone number format!");
+        return;
+      }
+    }
+  
+    setForm({ ...form, [name]: value });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Validate phone trước khi submit
+    if (!/^0\d{9,10}$/.test(form.phone)) {
+      return toast.error("Please enter your correct phone number!");
+    }
+  
     try {
       await register(form);
-      toast.success("Register sucessfully!")
+      toast.success("Register successfully!");
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.error || "Register failed");
+      toast.error(err.response?.data?.error || "Register failed");
     }
   };
+  
+
+
 
   return (
     <div className="max-w-screen-sm mx-auto px-4 sm:px-30 ">
