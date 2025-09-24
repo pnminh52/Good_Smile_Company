@@ -5,7 +5,7 @@ const UserMenu = () => {
   const buttons = [
     { label: "Wishlist", icon: "https://www.goodsmile.com/img/icon/like-transparent.svg", link: "/wishlist" },
     { label: "Order History", icon: "https://www.goodsmile.com/img/icon/history.svg", link: "/order" },
-    { label: "Shipping Address", icon: "https://www.goodsmile.com/img/icon/address.svg",   onClick: () => toast.error("Tính năng đang cập nhật")   },
+    { label: "Shipping Address", icon: "https://www.goodsmile.com/img/icon/address.svg",   onClick: () => toast.error("Upcomming featured!")   },
   ];
 
   return (

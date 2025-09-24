@@ -4,7 +4,8 @@ import Loader from "../../components/Loader";
 import OrderTable from "../../components/user/order/OrderTable";
 import NoResult from "../../components/user/NoResult";
 import OrderFilterBar from "../../components/user/order/OrderFilterBar";
-
+import MobileOrder from './../../components/user/order/MobileOrder';
+import MobileFilter from "../../components/user/order/MobileFilter";
 const Order = () => {
   const [filter, setFilter] = useState({
     status: "",
@@ -17,7 +18,14 @@ const Order = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const [sortTotal, setSortTotal] = useState(""); 
-
+  const [pageKey, setPageKey] = useState(0);
+  const handleFilterChange = (changed) => {
+    if ("priceRange" in changed) setPriceRange(changed.priceRange);
+    if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined); 
+    if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined); 
+    setFilter((prev) => ({ ...prev, ...changed }));
+    setPageKey((prev) => prev + 1);
+  };
 
   const fetchOrders = async () => {
     if (!token) return;
@@ -96,17 +104,20 @@ const Order = () => {
 
   return (
     <div className="max-w-screen-xl w-full mx-auto px-4 sm:px-0">
-      <h1 className="     text-xl font-semibold sm:py-6 py-4">Orders</h1>
+      <h1 className="     text-xl font-semibold sm:py-6 py-4">Orders ({filteredOrders.length})</h1>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="w-[80%]">
+      <div className="flex flex-col sm:flex-row sm:gap-4 gap-2">
+        <div className="w-[80%] hidden sm:block">
           <OrderTable
             orders={filteredOrders}
             token={token}
             reloadOrders={fetchOrders}
           />
+        
         </div>
-        <div className="w-[20%]">
+     
+      
+        <div className=" w-[20%] hidden sm:block">
           <OrderFilterBar
             status={filter.status}
             sortOrder={filter.sortOrder}
@@ -124,6 +135,30 @@ const Order = () => {
             
           />
         </div>
+          <div className="block sm:hidden">
+          <MobileFilter
+           key={pageKey} 
+    status={filter.status}
+    sortOrder={filter.sortOrder}
+    keyword={filter.keyword}
+    priceRange={priceRange}
+    sortQuantity={sortQuantity}
+    sortTotal={sortTotal}
+    onChange={(changed) => {
+      if ("priceRange" in changed) setPriceRange(changed.priceRange);
+      if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined); 
+      if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined); 
+      setFilter((prev) => ({ ...prev, ...changed }));
+    }}
+  />
+          </div>
+           <div className="block sm:hidden">
+                    <MobileOrder  orders={filteredOrders}
+                               key={pageKey} 
+
+                              token={token}
+                              reloadOrders={fetchOrders}/>
+                </div>
       </div>
     </div>
   );

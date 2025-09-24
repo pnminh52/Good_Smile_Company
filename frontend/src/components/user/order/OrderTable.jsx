@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Table, Button, Tag, Tooltip } from "antd";
+import { Table, Button, Tag, Tooltip, ConfigProvider } from "antd";
 import { EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 import PopupDetails from "./PopupDetails";
 import { getOrderDetail } from "../../../api/orders";
-
+import Pagination from "../Pagination";
 const OrderTable = ({ orders, token, reloadOrders }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
-  console.log("One order record:", orders[0]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  const paginatedOrders = orders.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const handleViewDetails = async (id) => {
     try {
@@ -39,7 +45,7 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       title: "Items",
       key: "itemsCount",
       align: "center",
-      render: (_, record) => record.items?.length || 0, 
+      render: (_, record) => record.items?.length || 0,
     },
     {
       title: "Status",
@@ -63,13 +69,14 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       key: "address",
       align: "center",
       render: (_, record) => {
-        const fullAddress = [record.address, record.district].filter(Boolean).join(", ");
-        const shortAddress = fullAddress.length > 20 ? fullAddress.slice(0, 20) + "..." : fullAddress;
-        return (
-          <Tooltip title={fullAddress}>
-            {shortAddress}
-          </Tooltip>
-        );
+        const fullAddress = [record.address, record.district]
+          .filter(Boolean)
+          .join(", ");
+        const shortAddress =
+          fullAddress.length > 20
+            ? fullAddress.slice(0, 20) + "..."
+            : fullAddress;
+        return <Tooltip title={fullAddress}>{shortAddress}</Tooltip>;
       },
     },
     {
@@ -100,17 +107,23 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
   ];
 
   return (
+
     <div className="overflow-x-auto">
-      <Table
-        dataSource={orders}
+    <Table
+        dataSource={paginatedOrders}
         columns={columns}
         rowKey="id"
-        bordered
         pagination={false}
-        scroll={{ x: 800 }} 
-        className="min-w-[600px] sm:min-w-full"
       />
+{orders.length > pageSize && (
+  <Pagination
+    currentPage={currentPage}
+    totalPages={Math.ceil(orders.length / pageSize)}
+    onPageChange={setCurrentPage}
+  />
+)}
 
+  
       {selectedOrder && (
         <PopupDetails
           order={selectedOrder}
@@ -120,7 +133,10 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
         />
       )}
     </div>
+
+  
   );
+  
 };
 
 export default OrderTable;
