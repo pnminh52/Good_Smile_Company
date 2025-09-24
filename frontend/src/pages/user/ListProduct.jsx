@@ -21,7 +21,6 @@ const ListProduct = () => {
   const [selectedCategories, setSelectedCategories] = useState(
     categoryFromUrl ? [categoryFromUrl] : []
   );
-  const [sortRevenue, setSortRevenue]=useState("")
   const [sortSold, setSortSold]=useState("")
   const [giftFilter, setGiftFilter] = useState(false);
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
@@ -105,11 +104,7 @@ const ListProduct = () => {
       // 2. Sort price
       if (sortPrice === "asc" && a.price !== b.price) return a.price - b.price;
       if (sortPrice === "desc" && a.price !== b.price) return b.price - a.price;
-      // 3. Sort revenue
-      const revenueA = (a.price || 0) * (a.sold || 0);
-      const revenueB = (b.price || 0) * (b.sold || 0);
-      if (sortRevenue === "asc" && revenueA !== revenueB) return revenueA - revenueB;
-      if (sortRevenue === "desc" && revenueA !== revenueB) return revenueB - revenueA;
+    
 
       // 4. Sort alphabet
       if (sortAlpha === "asc") return a.name.localeCompare(b.name);
@@ -128,7 +123,6 @@ const ListProduct = () => {
     statusFilter,
     giftFilter,
     sortPrice,
-    sortRevenue,
     sortAlpha,
     searchTerm,
     priceRange,
@@ -202,8 +196,7 @@ const ListProduct = () => {
   setPriceRange={setPriceRange}
   giftFilter={giftFilter}
   setGiftFilter={setGiftFilter}
-  sortRevenue={sortRevenue}
-  setSortRevenue={setSortRevenue}
+
 
 />
 {/* <div className="py-2">
@@ -252,8 +245,7 @@ const ListProduct = () => {
   setPriceRange={setPriceRange}
   giftFilter={giftFilter}
   setGiftFilter={setGiftFilter}
-  sortRevenue={sortRevenue}
-  setSortRevenue={setSortRevenue}
+ 
 />
 
         </div>
