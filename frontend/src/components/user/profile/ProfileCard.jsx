@@ -59,10 +59,10 @@ const ProfileCard = ({handdleLogOut}) => {
 
       setUser((prev) => ({ ...prev, ...res.data.user, avatar: avatarUrl }));
       form.setFieldsValue({ avatar: avatarUrl });
-      toast.success("Cập nhật avatar thành công!");
+      toast.success("Update avatar successfully!");
     } catch (err) {
       console.error(err);
-      toast.error("Upload avatar thất bại!");
+      toast.error("Failed to update avatar!");
     } finally {
       setUploading(false);
     }
@@ -79,10 +79,10 @@ const ProfileCard = ({handdleLogOut}) => {
   
       const res = await updateProfile(payload, token);
       setUser(res.data.user || res.data);
-      toast.success("Cập nhật thông tin thành công!");
+      toast.success("Update info successfully!");
     } catch (err) {
       console.error(err);
-      toast.error("Cập nhật thất bại!");
+      toast.error("Failed to update info!");
     } finally {
       setSaving(false);
     }

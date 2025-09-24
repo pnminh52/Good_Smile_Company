@@ -104,7 +104,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { phone, address, avatar, district } = req.body;
+  const { name, phone, address, avatar, district } = req.body;
   const userId = req.user?.id;
 
   if (!userId) return res.status(401).json({ error: "Not authorized" });
@@ -113,6 +113,7 @@ export const updateProfile = async (req, res) => {
     const updated = await sql`
       UPDATE users
       SET
+       name = COALESCE(${name}, name),
         phone = COALESCE(${phone}, phone),
         address = COALESCE(${address}, address),
         avatar = COALESCE(${avatar}, avatar),
