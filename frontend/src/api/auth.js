@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = import.meta.env.VITE_REACT_APP_API_URL
-  ? `${import.meta.env.VITE_REACT_APP_API_URL}/api/users`
+  ? `${import.meta.env.VITE_REACT_APP_API_URL}/users`
   : "http://localhost:3000/api/users";
 
 const api = axios.create({
