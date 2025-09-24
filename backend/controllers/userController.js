@@ -76,7 +76,6 @@ export const forgotPassword = async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex");
     const expires_at = new Date(Date.now() + 60 * 60 * 1000); // 1h
 
-    // Lưu token (user_id cần unique)
     await sql`
       INSERT INTO password_resets (user_id, token, expires_at)
       VALUES (${user[0].id}, ${token}, ${expires_at})
@@ -86,15 +85,19 @@ export const forgotPassword = async (req, res) => {
 
     const resetLink = `${FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
 
-    // Gửi mail qua configMailer.js
-    await sendResetPasswordEmail(email, resetLink);
+    // Gửi mail **không block request**
+    sendResetPasswordEmail(email, resetLink).catch((err) => {
+      console.error("❌ Send mail error:", err.message);
+    });
 
-    res.json({ message: "Reset password email sent" });
+    // Trả response ngay lập tức
+    res.json({ message: "Reset password email is being sent" });
   } catch (err) {
     console.error("❌ Forgot password error:", err.message);
     res.status(500).json({ error: "Could not send reset email" });
   }
 };
+
 
 export const resetPassword = async (req, res) => {
   const { email, token, newPassword } = req.body;
