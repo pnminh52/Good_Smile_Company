@@ -96,7 +96,7 @@ const Order = () => {
 
   return (
     <div className="max-w-screen-xl w-full mx-auto px-4 sm:px-0">
-      <h1 className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">Orders</h1>
+      <h1 className="     text-xl font-semibold sm:py-6 py-4">Orders</h1>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="w-[80%]">

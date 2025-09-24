@@ -2,19 +2,36 @@ import React, { useState, useEffect } from "react";
 import DetailSection from './DetailSection';
 import { Image } from "antd";
 const LeftSide = ({ product }) => {
-  const [mainImage, setMainImage] = useState(
-    product.additional_images?.[0] || product.base_image
-  );
 
+  const [currentIndex,setCurrentIndex]=useState(0)
+  const images = product.additional_images?.length > 0 
+  ? product.additional_images 
+  : [product.base_image];
+  const [mainImage, setMainImage] = useState(images[0]);
   useEffect(() => {
-    setMainImage(product.additional_images?.[0] || product.base_image);
+    const imgs = product.additional_images?.length > 0 
+      ? product.additional_images 
+      : [product.base_image];
+    setCurrentIndex(0);
+    setMainImage(imgs[0]);
   }, [product]);
+
+  const handlePrev = () => {
+    const newIndex = (currentIndex - 1 + images.length) % images.length;
+    setCurrentIndex(newIndex);
+    setMainImage(images[newIndex]);
+  };
+
+  const handleNext = () => {
+    const newIndex = (currentIndex + 1) % images.length;
+    setCurrentIndex(newIndex);
+    setMainImage(images[newIndex]);
+  };
 
   return (
   <div>
      <div className="hidden sm:block">
      <div className="flex gap-4">
-      {/* List ảnh phụ - scroll dọc */}
       <div className="hidden sm:block">
   {product.additional_images?.length > 0 && (
     <div className="w-16 h-[400px] hide-scrollbar overflow-y-auto flex flex-col gap-2 pr-1">
@@ -42,13 +59,29 @@ const LeftSide = ({ product }) => {
 
       {/* Ảnh chính */}
       <div className="flex-1">
-  <div className="w-full h-[600px] bg-gray-100 flex items-center justify-center">
+  <div className="w-full h-[600px] relative bg-gray-100 flex items-center justify-center">
     <Image
       src={mainImage}
       alt={product.name}
       style={{ maxWidth: "100%", maxHeight: "600px", objectFit: "cover" }}
       preview={{ mask: <span>Click to enlarge</span> }}
     />
+   <div className="absolute bottom-4 right-4 flex gap-2 items-center">
+     <button onClick={()=>handlePrev()} className="cursor-pointer bg-white w-10 h-10 rounded-full left-0 text-[#F06E00] flex items-center justify-center z-10">
+     <img
+              className="w-3 rotate-180"
+              src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+              alt="prev"
+            />
+     </button>
+        <button onClick={()=>handleNext()} className="cursor-pointer bg-white w-10 h-10 rounded-full left-0 text-[#F06E00]  flex items-center justify-center z-10">
+        <img
+              className="w-3"
+              src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+              alt="prev"
+            />
+        </button>
+   </div>
   </div>
 </div>
 
@@ -97,7 +130,12 @@ const LeftSide = ({ product }) => {
         key={i}
         className={`w-16 h-16 flex-shrink-0 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
           ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"} bg-gray-100`}
-        onClick={() => setMainImage(img)}
+          onClick={() => {
+            setMainImage(img);
+            setCurrentIndex(i);
+            window.scrollTo({ top: 0, behavior: "smooth" }); 
+          }}
+          
       >
         <img
           src={img}

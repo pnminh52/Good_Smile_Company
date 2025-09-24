@@ -17,7 +17,8 @@ const FilterSideBar = ({
   products,
   giftFilter, setGiftFilter,
   setSortSold, sortSold,
-  searchTerm, setSearchTerm
+  searchTerm, setSearchTerm,
+  sortRevenue, setSortRevenue
 }) => {
 
   const seriesOptions = [...new Set(products.map((p) => p.series).filter(Boolean))];
@@ -55,6 +56,7 @@ const FilterSideBar = ({
           onChange={handleMobileChange(setSortAlpha)}
           style={selectStyle}
           size="large"
+          allowClear
         >
           <Option value="asc">A → Z</Option>
           <Option value="desc">Z → A</Option>
@@ -65,10 +67,22 @@ const FilterSideBar = ({
           onChange={(value) => setSortSold(value)}
           style={selectStyle}
           size="large"
+          allowClear
         >
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>
         </Select>
+        <Select
+  placeholder="Sort by #10 revenue"
+  value={sortRevenue || undefined}
+  onChange={(value) => setSortRevenue(value)}
+  style={selectStyle}
+  size="large"
+  allowClear
+>
+  <Option value="asc">Low → High</Option>
+  <Option value="desc">High → Low</Option>
+</Select>
 
 
         <Select
@@ -104,6 +118,7 @@ const FilterSideBar = ({
           onChange={handleMobileChange(setSortPrice)}
           style={selectStyle}
           size="large"
+          allowClear
         >
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>

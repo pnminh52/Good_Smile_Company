@@ -88,7 +88,7 @@ const UserInfoCard = ({ onChange }) => {
        {
         districts.length<3 && (
            <div className="flex flex-col gap-2">
-                    <label className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">District / city</label>
+                    <label className="    text-xl font-semibold sm:py-6 py-4">District / city</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -111,7 +111,7 @@ const UserInfoCard = ({ onChange }) => {
 
         {/* Danh sách district */}
         <div className="flex flex-col gap-1 ">
-          <label className="sm:text-2xl text-xl font-semibold sm:py-6 py-4">Your saved addresses</label>
+          <label className="    text-xl font-semibold sm:py-6 py-4">Your saved addresses</label>
         <div className=" space-y-2">
             {districts.map((d, i) => (
                       <div

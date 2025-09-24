@@ -48,7 +48,7 @@ const Wishlist = () => {
 
   return (
     <div className="sm:px-0 px-4 max-w-screen-xl mx-auto">
-      <h1 className="sm:text-2xl text-xl  font-semibold py-4 sm:py-6">My Wishlist</h1>
+      <h1 className="     text-xl  font-semibold py-4 sm:py-6">My Wishlist</h1>
       <ProductCard products={wishlistProducts} columns={5} />
     </div>
   );

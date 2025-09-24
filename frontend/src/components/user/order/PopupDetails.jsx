@@ -65,21 +65,21 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
       <Spin spinning={loading}>
         <div className="space-y-2">
           <p>
-            <Text strong>Total:</Text>{" "}
+            <Text strong>Total</Text>{" "}
             {Number(order.total).toLocaleString("vi-VN")} đ
           </p>
           <p>
-            <Text strong>Address:</Text> {order.address}
-            {order.district && ` / ${order.district}`}
+            <Text strong>Address</Text> {order.address}
+            {order.district && `/${order.district}`}
           </p>
           <p>
-            <Text strong>Created at:</Text>{" "}
+            <Text strong>Created at</Text>{" "}
             {dayjs(order.created_at).format("DD/MM/YYYY HH:mm")}
           </p>
         </div>
 
-        <div className="my-4">
-          <Text strong>Status: </Text>
+        <div className="">
+          <Text strong>Status</Text>
           <Select
   value={status} 
   onChange={(value) => setStatus(value)}
@@ -101,8 +101,8 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
 
         </div>
 
-        <div className="mt-4">
-          <Text strong>Items:</Text>
+        <div className="mt-2">
+          <Text strong>Items</Text>
           {!order.items || order.items.length === 0 ? (
             <p>No items</p>
           ) : (

@@ -21,6 +21,7 @@ const ListProduct = () => {
   const [selectedCategories, setSelectedCategories] = useState(
     categoryFromUrl ? [categoryFromUrl] : []
   );
+  const [sortRevenue, setSortRevenue]=useState("")
   const [sortSold, setSortSold]=useState("")
   const [giftFilter, setGiftFilter] = useState(false);
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
@@ -104,8 +105,13 @@ const ListProduct = () => {
       // 2. Sort price
       if (sortPrice === "asc" && a.price !== b.price) return a.price - b.price;
       if (sortPrice === "desc" && a.price !== b.price) return b.price - a.price;
-  
-      // 3. Sort alphabet
+      // 3. Sort revenue
+      const revenueA = (a.price || 0) * (a.sold || 0);
+      const revenueB = (b.price || 0) * (b.sold || 0);
+      if (sortRevenue === "asc" && revenueA !== revenueB) return revenueA - revenueB;
+      if (sortRevenue === "desc" && revenueA !== revenueB) return revenueB - revenueA;
+
+      // 4. Sort alphabet
       if (sortAlpha === "asc") return a.name.localeCompare(b.name);
       if (sortAlpha === "desc") return b.name.localeCompare(a.name);
   
@@ -122,6 +128,7 @@ const ListProduct = () => {
     statusFilter,
     giftFilter,
     sortPrice,
+    sortRevenue,
     sortAlpha,
     searchTerm,
     priceRange,
@@ -133,7 +140,7 @@ const ListProduct = () => {
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-0">
-      <h1 className="sm:text-2xl text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
+      <h1 className=" text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
 
       {/* Mobile Filter Button */}
       <div className="sm:hidden flex items-center gap-2 mb-2">
@@ -195,6 +202,8 @@ const ListProduct = () => {
   setPriceRange={setPriceRange}
   giftFilter={giftFilter}
   setGiftFilter={setGiftFilter}
+  sortRevenue={sortRevenue}
+  setSortRevenue={setSortRevenue}
 
 />
 {/* <div className="py-2">
@@ -216,8 +225,8 @@ const ListProduct = () => {
         </div>
 
         {/* Sidebar Desktop */}
-        <div className="hidden sm:block w-[20%] sticky top-4 self-start">
-        <FilterSideBar
+        <div className="hidden sm:block w-[20%] hide-scrollbar sticky top-4 self-start max-h-[90vh] overflow-y-auto">       
+           <FilterSideBar
   products={products}
   setFilteredProducts={setFilteredProducts}
   searchTerm={searchTerm}
@@ -243,6 +252,8 @@ const ListProduct = () => {
   setPriceRange={setPriceRange}
   giftFilter={giftFilter}
   setGiftFilter={setGiftFilter}
+  sortRevenue={sortRevenue}
+  setSortRevenue={setSortRevenue}
 />
 
         </div>

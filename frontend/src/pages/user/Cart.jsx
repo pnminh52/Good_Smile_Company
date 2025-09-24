@@ -122,7 +122,7 @@ const Cart = () => {
 
   return (
     <div className="max-w-screen-xl w-full mx-auto sm:px-30 px-4">
-      <h1 className="sm:text-2xl text-xl  font-semibold sm:py-6 py-4"> Cart</h1>
+      <h1 className="  text-xl  font-semibold sm:py-6 py-4"> Cart</h1>
 
       <div className="flex flex-col lg:flex-row gap-4 ">
         <div className="w-full sm:w-[70%]">
@@ -140,7 +140,7 @@ const Cart = () => {
 
 
  <div className="gap-4 ">
-  <p className="sm:text-2xl text-xl  font-semibold sm:py-6 py-4">Maybe you also like?</p>
+  <p className="  text-xl  font-semibold sm:py-6 py-4">Maybe you also like?</p>
           <ProductCard products={recommendedProducts.slice(0,8)} columns={4} />
         </div>
     </div>
