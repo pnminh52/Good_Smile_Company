@@ -1,4 +1,6 @@
 import { createContext, useState, useEffect } from "react";
+import { setLogoutRef } from './../hook/useAuth';
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,8 +12,10 @@ export const AuthProvider = ({ children }) => {
     const savedToken = localStorage.getItem("token");
     if (savedUser) setUser(JSON.parse(savedUser));
     if (savedToken) setToken(savedToken);
+    
+    // Đăng ký logout để dùng bên ngoài React (axios interceptor)
+    setLogoutRef(logout);
   }, []);
-
 
   const login = (userData, token) => {
     setUser(userData);
@@ -19,14 +23,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", token);
   };
-  
+
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
-  
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
