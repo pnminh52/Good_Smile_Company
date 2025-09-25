@@ -1,5 +1,4 @@
 import React from 'react'
-import BrandSelect from './BrandSelect'
 const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handleAdditionImageChange, removeAdditionImage}) => {
   return (
     <div>  <form

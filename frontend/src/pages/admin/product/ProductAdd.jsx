@@ -19,6 +19,7 @@ function ProductAdd({ open, onClose }) {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [categories, setCategories] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState("");
   const [brands] = useState([
     { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/1/logo_gsc.png" },
     { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/112/57_Sorarain.png" },
@@ -69,7 +70,7 @@ function ProductAdd({ open, onClose }) {
       open={open}
       onCancel={onClose}
       footer={null}
-      width={ 500  }
+      width={ 700  }
     >
       <Form
         form={form}
@@ -98,23 +99,26 @@ function ProductAdd({ open, onClose }) {
 
         {/* Brand */}
         <Form.Item label="Brand" name="imagecopyright">
-          <Space wrap>
-            {brands.map((b, idx) => (
-              <div
-                key={idx}
-                onClick={() => form.setFieldsValue({ imagecopyright: b.url })}
-                style={{
-                  border: form.getFieldValue("imagecopyright") === b.url ? "2px solid #1890ff" : "1px solid #ccc",
-                  padding: 4,
-                  cursor: "pointer",
-                  textAlign: "center",
-                }}
-              >
-                <img src={b.url} alt="" style={{ width: 60, height: 60, objectFit: "contain" }} />
-              </div>
-            ))}
-          </Space>
-        </Form.Item>
+  <Space wrap>
+    {brands.map((b, idx) => (
+      <div
+        key={idx}
+        onClick={() => {
+          form.setFieldsValue({ imagecopyright: b.url });
+          setSelectedBrand(b.url); // cập nhật state để re-render ngay
+        }}
+        style={{
+          border: selectedBrand === b.url ? "2px solid #1890ff" : "1px solid #ccc",
+          padding: 4,
+          cursor: "pointer",
+          textAlign: "center",
+        }}
+      >
+        <img src={b.url} alt="" style={{ width: 60, height: 60, objectFit: "contain" }} />
+      </div>
+    ))}
+  </Space>
+</Form.Item>
 
        
 

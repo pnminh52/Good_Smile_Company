@@ -60,11 +60,11 @@ function ProductList() {
         </button>
       </div>
 
-      <FilterTable
+      {/* <FilterTable
         categories={categories}
         products={products}
         onFilterChange={(vals) => setFilters(vals)}
-      />
+      /> */}
 
       {loading ? (
         <div className="text-center py-10">Loading...</div>
