@@ -12,7 +12,7 @@ const AdminLayout = () => {
       <Sidebar />
       <Layout>
         <Topbar />
-        <Content style={{ padding: "24px", minHeight: "100vh", background: "#fff" }}>
+        <Content style={{ padding: "20px", minHeight: "100vh", background: "#F7F7F7" }}>
           <Outlet />
         </Content>
       </Layout>

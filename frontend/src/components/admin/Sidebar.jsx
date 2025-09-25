@@ -27,32 +27,26 @@ const Sidebar = () => {
       width={200}
       style={{
         background: "#fff",
-        minHeight: "100vh",
         borderRight: "1px solid #e8e8e8",
+       
       }}
     >
-      <div className="logo text-xl font-bold w-full flex justify-center mx-auto py-4">
-        <Image
-          src="https://www.goodsmile.com/img/common/logo.svg"
-          preview={false}
-          width={120}
-          height={40}
-        />
+      <div className="logo text-xl font-bold border-b h-16 border-[#e8e8e8] w-full flex justify-center mx-auto py-4">
+        <img  src="https://www.goodsmile.com/img/common/logo.svg" className="w-30 h-auto" alt="" />
       </div>
 
       <Menu
         mode="inline"
         theme="light"
         selectedKeys={[location.pathname]}
-        style={{ height: "100%", borderRight: 0 }}
+        style={{ height: "100%", borderRight: 0,
+           paddingLeft: "5px",
+                  paddingRight: "5px",
+         }}
         items={menuItems.map((item) => ({
           key: item.key,
           icon: item.icon,
           label: <Link to={item.key}>{item.label}</Link>,
-          style:
-            location.pathname === item.key
-              ? { backgroundColor: "#FFBC7F", color: "#fff",  } 
-              : {},
         }))}
       />
     </Sider>

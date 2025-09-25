@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
-import { getCategories, deleteCategory } from "../../../api/categories";
-import { Link } from "react-router-dom";
-import { Table, Button, Popconfirm, Image, Space, message } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { getCategories, deleteCategory, createCategory, getCategoryById, updateCategory } from "../../../api/categories";
+import { Table, Button, Popconfirm, Image, Space, message, Modal } from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import Title from './../../../components/admin/Title';
+import AddPopup from "../../../components/admin/category/AddPopup";
 
 function CategoryList() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // popup Add
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // popup Edit
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState(null);
 
   useEffect(() => {
     fetchCategories();
@@ -18,8 +28,7 @@ function CategoryList() {
       const res = await getCategories();
       setCategories(res.data);
     } catch (err) {
-      message.error("❌ Lỗi khi tải danh mục");
-      console.error("❌ Error fetchCategories:", err.message);
+      message.error("❌ Failed to fetch categories");
     } finally {
       setLoading(false);
     }
@@ -28,76 +37,78 @@ function CategoryList() {
   const handleDelete = async (id) => {
     try {
       await deleteCategory(id);
-      message.success("🗑️ Xóa danh mục thành công");
+      message.success("🗑️ Category deleted successfully");
       fetchCategories();
     } catch (err) {
-      message.error("❌ Lỗi khi xóa danh mục");
-      console.error("❌ Error deleteCategory:", err.message);
+      message.error("❌ Failed to delete category");
+    }
+  };
+
+  const handleAdd = async (values) => {
+    try {
+      setSaving(true);
+      await createCategory(values);
+      message.success("✅ Category created successfully");
+      fetchCategories();
+      setIsAddOpen(false);
+    } catch (err) {
+      message.error("❌ Failed to add category");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const openEdit = async (id) => {
+    setEditLoading(true);
+    try {
+      const res = await getCategoryById(id);
+      setCurrentCategory(res.data);
+      setIsEditOpen(true);
+    } catch (err) {
+      message.error("❌ Failed to load category");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const handleEdit = async (values) => {
+    try {
+      await updateCategory(currentCategory.id, values);
+      message.success("✏️ Category updated successfully");
+      fetchCategories();
+      setIsEditOpen(false);
+    } catch (err) {
+      message.error("❌ Failed to update category");
     }
   };
 
   const columns = [
-    {
-      title: "#",
-      dataIndex: "index",
-      render: (_, __, index) => index + 1,
-      width: 60,
-      align: "center",
-    },
+    { title: "#", render: (_, __, index) => index + 1, align: "center" },
     {
       title: "Image",
       dataIndex: "image",
       render: (img, record) => (
-        <Image
-          src={img}
-          alt={record.name}
-          width={50}
-          height={50}
-          className="object-cover rounded"
-        />
+        <Image src={img} alt={record.name} width={50} height={50} className="object-cover rounded" />
       ),
-      width: 80,
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      render: (text) => <strong>{text}</strong>,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      render: (text) => <span style={{ color: "#555" }}>{text}</span>,
-    },
-    {
-      title: "Products",
-      dataIndex: "product_count",
       align: "center",
-      width: 120,
     },
+    { title: "Name", dataIndex: "name", render: (text) => <strong>{text}</strong>, align: "center" },
+    { title: "Description", dataIndex: "description", align: "center" },
+    { title: "Products", dataIndex: "product_count", align: "center" },
     {
       title: "Actions",
       key: "actions",
       align: "center",
       render: (_, record) => (
         <Space>
-          <Link to={`/admin/categories/edit/${record.id}`}>
-            <Button
-              type="default"
-              icon={<EditOutlined />}
-              style={{ backgroundColor: "#fadb14", color: "#000" }}
-            >
-              
-            </Button>
-          </Link>
+          <Button icon={<EditOutlined />} onClick={() => openEdit(record.id)} />
           <Popconfirm
-            title="Bạn có chắc muốn xóa danh mục này?"
+            title="Delete this category?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <Button danger icon={<DeleteOutlined />}>
-              
-            </Button>
+            <Button danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
@@ -105,14 +116,16 @@ function CategoryList() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded shadow">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Categories</h1>
-        <Link to="/admin/categories/add">
-          <Button type="primary" icon={<PlusOutlined />}>
-            Add Category
-          </Button>
-        </Link>
+    <div className="bg-white rounded-xl shadow p-4 space-y-4">
+      <div className="flex justify-between items-center">
+        <Title />
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsAddOpen(true)}
+        >
+          Add Category
+        </Button>
       </div>
 
       <Table
@@ -120,9 +133,37 @@ function CategoryList() {
         columns={columns}
         dataSource={categories}
         loading={loading}
-        pagination={{ pageSize: 10 }}
+        pagination={false}
         bordered
       />
+
+      {/* ✅ Modal Add */}
+      <Modal
+        title="Add Category"
+        open={isAddOpen}
+        onCancel={() => setIsAddOpen(false)}
+        footer={null}
+      >
+        <AddPopup onSubmit={handleAdd} loading={saving} />
+      </Modal>
+
+      {/* ✅ Modal Edit */}
+      <Modal
+        title="Edit Category"
+        open={isEditOpen}
+        onCancel={() => setIsEditOpen(false)}
+        footer={null}
+      >
+        {editLoading ? (
+          <p className="text-center">⏳ Loading...</p>
+        ) : (
+          <AddPopup
+            onSubmit={handleEdit}
+            loading={false}
+            initialValues={currentCategory || {}}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
