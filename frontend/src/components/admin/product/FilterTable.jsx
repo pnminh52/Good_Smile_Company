@@ -10,7 +10,6 @@ const FilterTable = ({ categories = [], onFilterChange }) => {
   const [stockRange, setStockRange] = useState([0, 100]);
   const [dateOrder, setDateOrder] = useState("");
 
-  // Khi filter thay đổi, gọi callback
   useEffect(() => {
     onFilterChange({
       name: name || undefined,
