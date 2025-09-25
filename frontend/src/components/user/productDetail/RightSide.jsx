@@ -4,6 +4,7 @@ import { addToWishlistApi, removeFromWishlistApi, getWishlistApi } from "../../.
 import DetailSection from "./DetailSection";
 import useToast from "../../../hook/useToast";
 import axios from "axios";
+import api from "../../../api/axios";
 const RightSide = ({ product }) => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ const RightSide = ({ product }) => {
       }
   
       // Lấy giỏ hàng hiện tại
-      const cartRes = await axios.get("http://localhost:3000/api/cart", {
+      const cartRes = await api.get("/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const cartItems = cartRes.data || [];
