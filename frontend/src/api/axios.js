@@ -1,28 +1,19 @@
-import axios from "axios";
+import { useLogout } from "../hook/useLogout"; 
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000/api";
 
-const api = axios.create({
-  baseURL: API_URL,
-});
+let logoutCallback = null;
 
-// tự động logout khi 401
+export const setLogoutCallback = (cb) => {
+  logoutCallback = cb;
+};
+
 api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token"); // xóa token cũ
-      window.location.href = "/login"; // điều hướng về login
+      localStorage.removeItem("token");
+      if (logoutCallback) logoutCallback(); // callback navigate
     }
     return Promise.reject(error);
   }
 );
-
-// Gắn token tự động
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-export default api;

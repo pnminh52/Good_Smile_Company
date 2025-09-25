@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 import Dashboard from "./pages/admin/Dashboard";
 import ProductList from "./pages/admin/product/ProductList";
@@ -26,8 +27,14 @@ import Profile from "./pages/user/Profile";
 import Order from "./pages/user/Order";
 import Wishlist from "./pages/user/Wishlist";
 import SearchByKeyword from "./pages/user/SearchByKeyword";
+import { setLogoutCallback } from "./api/axios";
+import { useLogout } from "./hook/useLogout";
 
 function App() {
+  const logout = useLogout();
+  useEffect(() => {
+    setLogoutCallback(() => logout);
+  }, [logout]);
   return (
     <div className="select-none">
       <Router>
