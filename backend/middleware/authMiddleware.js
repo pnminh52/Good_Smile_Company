@@ -1,24 +1,26 @@
+import { sql } from "../config/db.js";
 import jwt from "jsonwebtoken";
 
-export const protect = (req, res, next) => {
-  let token;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+export const authMiddleware = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Not authorized" });
 
-      req.user = decoded; // Lưu userId vào request
-      return next();
-    } catch (error) {
-      return res.status(401).json({ message: "Not authorized, token failed" });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Kiểm tra user
+    const user = await sql`SELECT id, role FROM users WHERE id = ${decoded.id}`;
+    if (!user.length) {
+      return res.status(401).json({ error: "User does not exist. Please log in again!" });
     }
-  }
 
-  if (!token) {
-    return res.status(401).json({ message: "Not authorized, no token" });
+    // Gắn thông tin user vào req
+    req.user = { id: user[0].id, role: user[0].role };
+    next();
+  } catch (err) {
+    console.error("❌ Auth middleware error:", err.message);
+    return res.status(401).json({ error: "Token is invalid or expired!" });
   }
 };
