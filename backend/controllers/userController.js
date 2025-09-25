@@ -85,13 +85,10 @@ export const forgotPassword = async (req, res) => {
 
     const resetLink = `${FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
 
-    // Gửi mail **không block request**
-    sendResetPasswordEmail(email, resetLink).catch((err) => {
-      console.error("❌ Send mail error:", err.message);
-    });
+    // Gửi mail và chờ xong mới trả response
+    await sendResetPasswordEmail(email, resetLink);
 
-    // Trả response ngay lập tức
-    res.json({ message: "Reset password email is being sent" });
+    res.json({ message: "Reset password email sent successfully" });
   } catch (err) {
     console.error("❌ Forgot password error:", err.message);
     res.status(500).json({ error: "Could not send reset email" });

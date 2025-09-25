@@ -37,12 +37,18 @@ const PriceInfo = ({ cartItems, handleCheckout }) => {
     <div className="border-b border-gray-300"/>
 
        <div className="pt-4 space-y-2 ">
-        <button
-          onClick={handleCheckout}
-          className="bg-[#FF6900] text-white w-full py-3 font-semibold rounded-full cursor-pointer "
-        >
-          Proceed to Checkout
-        </button>
+       <button
+  onClick={handleCheckout}
+  disabled={shippingFee === null || shippingFee === 0}
+  className={`w-full py-3 transition duration-300 ease-in-out font-semibold rounded-full
+    ${shippingFee === null || shippingFee === 0
+      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+      : "bg-[#FF6900] text-white cursor-pointer"}
+  `}
+>
+  Proceed to Checkout
+</button>
+
       <Link to={"/product"}>
       
       <button

@@ -121,10 +121,6 @@ export const createOrder = async (req, res) => {
 };
 
 
-
-
-  
-
 export const updateOrderStatus = async (req, res) => {
   const orderId = req.params.id;
   const { status_id } = req.body;

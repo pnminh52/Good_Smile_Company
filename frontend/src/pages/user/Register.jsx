@@ -30,14 +30,15 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    if (name !== "email") {
+    if (name !== "email" && name !== "district") {
       const regex = /^[a-zA-ZÀ-ỹ0-9\s]*$/u;
       if (!regex.test(value)) {
         toast.error("Special characters not allowed!");
         return;
       }
     }
+    
+    
   
     if (name === "phone") {
       if (!/^\d*$/.test(value)) {

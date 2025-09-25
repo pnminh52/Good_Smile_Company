@@ -58,14 +58,20 @@ const PriceTable = ({ total, shippingFee, handleCodPayment }) => {
                   >
                     Pay with VNPay
                   </button> */}
-          <button
-            onClick={handleCodPayment}
-            className="bg-[#FF6624] text-white w-full py-2 rounded-full cursor-pointer font-semibold"
-          >
-            Pay with COD
-          </button>
+        <button
+  onClick={handleCodPayment}
+  disabled={shippingFee === null || shippingFee === 0}
+  className={`w-full py-3 transition duration-300 ease-in-out rounded-full font-semibold 
+    ${shippingFee === null || shippingFee === 0
+      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+      : "bg-[#FF6624] text-white cursor-pointer"}
+  `}
+>
+  Pay with COD
+</button>
+
      
-          <button onClick={()=>navigate("/cart")} className="bg-[#FFF] text-[#FF6624]  w-full py-2 rounded-full cursor-pointer border  border-[#FF6624] font-semibold">
+          <button onClick={()=>navigate("/cart")} className="bg-[#FFF] text-[#FF6624]  w-full py-3 rounded-full cursor-pointer border  border-[#FF6624] font-semibold">
                      Back to Cart
                    </button>
          
