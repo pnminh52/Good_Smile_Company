@@ -101,14 +101,19 @@ function CategoryList() {
       align: "center",
       render: (_, record) => (
         <Space>
-          <Button icon={<EditOutlined />} onClick={() => openEdit(record.id)} />
+          <Button
+           onClick={() => openEdit(record.id)} 
+                       size="small"
+                       style={{ backgroundColor: "#facc15", borderColor: "#facc15" }}
+                       icon={<EditOutlined />}
+                     />
           <Popconfirm
             title="Delete this category?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <Button danger icon={<DeleteOutlined />} />
+            <Button danger size="small" icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),

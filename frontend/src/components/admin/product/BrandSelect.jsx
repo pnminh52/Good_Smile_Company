@@ -14,32 +14,7 @@ const BrandSelect = ({ form, setForm }) => {
   ];
 
   return (
-    <div className="flex flex-col gap-3">
-      <label className="font-semibold">Brand</label>
-      <div className="grid grid-cols-4 gap-4">
-        {brands.map((b, index) => (
-          <div
-            key={index}
-            onClick={() =>
-              setForm({ ...form, imagecopyright: b.url })
-            }
-            className={`cursor-pointer border rounded p-2 flex flex-col items-center justify-center transition 
-              ${
-                form.imagecopyright === b.url
-                  ? "border-blue-500 shadow-lg"
-                  : "border-gray-300"
-              }`}
-          >
-            <img
-              src={b.url}
-              className="w-16 h-16 object-contain mb-2"
-            />
-          </div>
-        ))}
-      </div>
-
-     
-    </div>
+   
   );
 };
 
