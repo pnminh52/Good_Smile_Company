@@ -52,26 +52,35 @@ function ProductAdd({ open, onClose }) {
     };
     fetchCategories();
   }, []);
-
+  useEffect(() => {
+    form.resetFields();
+    setUrls([""]); // reset khi mở form mới
+  }, [open]);
+  
   const handleSubmit = async (values) => {
     try {
       const payload = {
         ...values,
-        release_date: values.release_date ? values.release_date.format("YYYY-MM-DD") : "",
+        release_date: values.release_date ? values.release_date.format("YYYY-MM-DD") : null,
         price: values.price ? parseFloat(values.price) : 0,
         stock: values.stock ? parseInt(values.stock) : 0,
         sold: values.sold ? parseInt(values.sold) : 0,
+        additional_images: urls.filter(url => url), // chỉ gửi URL không rỗng
+        gift_items: values.gift_items?.filter(g => g.title) || [],
       };
+      
       await createProduct(payload);
       message.success("Thêm sản phẩm thành công!");
       form.resetFields();
+      setUrls([]); // reset ảnh phụ
       onClose();
       navigate("/admin/products");
     } catch (err) {
-      console.error("❌ Error creating product:", err);
+      console.error("❌ Error creating product:", err.response?.data || err);
       message.error("Không thể thêm sản phẩm. Thử lại sau!");
     }
   };
+  
 
   return (
     <Modal
@@ -246,7 +255,7 @@ function ProductAdd({ open, onClose }) {
         <div>
         
           {urls.length > 0 && (
-                      <div className=" mt-2 mb-2 flex gap-2 overflow-x-auto ">
+                      <div className=" mt-2 mb-4 flex gap-2 overflow-x-auto ">
                         <Image.PreviewGroup>
                           {urls.map((url, index) => url && (
                             <Image key={index} src={url} width={80} height={80} style={{ objectFit: "contain", borderRadius: 4, border:"1px solid #F3F4F6", background:"#F3F4F6" }} />
@@ -279,7 +288,6 @@ function ProductAdd({ open, onClose }) {
   </div>
 ))}
 
-{/* Nút thêm ảnh */}
 <button
   type="button"
   className="w-full flex items-center justify-center gap-2 py-2 mt-2 border border-dashed border-gray-400 rounded hover:bg-gray-100 text-gray-700"
@@ -287,6 +295,7 @@ function ProductAdd({ open, onClose }) {
 >
   <PlusOutlined /> Add Image
 </button>
+
 
 
         
