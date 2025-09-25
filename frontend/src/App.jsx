@@ -27,58 +27,69 @@ import Profile from "./pages/user/Profile";
 import Order from "./pages/user/Order";
 import Wishlist from "./pages/user/Wishlist";
 import SearchByKeyword from "./pages/user/SearchByKeyword";
-import { setLogoutCallback } from "./api/axios";
 import { useLogout } from "./hook/useLogout";
+import { setLogoutRef } from './hook/useAuth';
 
 function App() {
-  const logout = useLogout();
-  useEffect(() => {
-    setLogoutCallback(() => logout);
-  }, [logout]);
   return (
     <div className="select-none">
       <Router>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          pauseOnHover
-          draggable
-        />
-        <Routes>
-          {/* User */}
-          <Route element={<UserLayout />}>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/product" element={<ListProduct />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/search" element={<SearchByKeyword />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<CheckOut />} />
-            <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          {/* Admin */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products" element={<ProductList />} />
-            <Route path="products/add" element={<ProductAdd />} />
-            <Route path="products/edit/:id" element={<ProductEdit />} />
-            <Route path="categories" element={<CategoryList />} />
-            <Route path="categories/add" element={<CategoryAdd />} />
-            <Route path="categories/edit/:id" element={<CategoryEdit />} />
-          </Route>
-        </Routes>
+        <AppContent />
       </Router>
     </div>
   );
 }
+
+function AppContent() {
+  const logout = useLogout();
+
+  useEffect(() => {
+    setLogoutRef(() => logout);
+  }, [logout]);
+
+  return (
+    <>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
+      <Routes>
+        {/* User */}
+        <Route element={<UserLayout />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/product" element={<ListProduct />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<SearchByKeyword />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        {/* Admin */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<ProductList />} />
+          <Route path="products/add" element={<ProductAdd />} />
+          <Route path="products/edit/:id" element={<ProductEdit />} />
+          <Route path="categories" element={<CategoryList />} />
+          <Route path="categories/add" element={<CategoryAdd />} />
+          <Route path="categories/edit/:id" element={<CategoryEdit />} />
+        </Route>
+      </Routes>
+    </>
+  );
+}
+
 
 export default App;

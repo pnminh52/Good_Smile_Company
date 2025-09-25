@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { setLogoutRef } from './../hook/useAuth';
+import { setLogoutRef, getAuth } from './../hook/useAuth';
 
 export const AuthContext = createContext();
 
