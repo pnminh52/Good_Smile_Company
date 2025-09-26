@@ -24,12 +24,15 @@ const SameCategory = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto ">
-      <div className="pb-0 sm:text-xl text-lg px-4 sm:px-0 flex flex-col sm:flex-row sm:gap-2 gap-0">
-        <h2 className="font-semibold">More from this category</h2>
+      <div className="pb-0 sm:text-xl text-md px-4 sm:px-0 flex  sm:flex-row sm:gap-2 gap-2">
+        <h2 className="font-semibold hidden sm:block">More from this category</h2>
         {product.category_name && (
-          <p className="uppercase text-xl font-semibold text-blue-600">
-            #{product.category_name}
-          </p>
+         <div className="flex items-center gap-1">
+           <p className=" font-semibold text-blue-600">
+                      #{product.category_name}
+                    </p>
+                    <p className="block sm:hidden font-semibold">category</p>
+         </div>
         )}
       </div>
 

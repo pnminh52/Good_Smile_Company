@@ -70,7 +70,7 @@ const ProductCard = ({ products, columns = 4 }) => {
   {(Number(p.price)).toLocaleString("vi-VN",{
     style: "currency",
     currency: "VND",
-  })} / {p.sold} sold
+  })} / {Number(p.sold).toLocaleString("vi-VN")} sold
 </p>
 
                             </div>

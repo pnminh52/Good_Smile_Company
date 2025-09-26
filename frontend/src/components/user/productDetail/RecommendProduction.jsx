@@ -24,10 +24,13 @@ const RecommendProduction = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto">
-      <div className="sm:text-xl text-lg px-4 sm:px-0 flex flex-col sm:flex-row sm:gap-2 gap-0">
-        <h2 className="font-semibold">Recommended from the same series</h2>
+      <div className="sm:text-xl text-md px-4 sm:px-0 flex  sm:flex-row sm:gap-2 gap-0">
+        <h2 className="font-semibold hidden sm:block">Recommended from the same series</h2>
         {product.series && (
-          <p className="uppercase font-semibold text-blue-600">#{product.series}</p>
+         <div className="flex gap-1 items-center">
+           <p className="font-semibold text-blue-600">#{product.series}</p>
+           <p className="font-semibold block sm:hidden ">series</p>
+         </div>
         )}
       </div>
 

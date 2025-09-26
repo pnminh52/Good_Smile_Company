@@ -126,11 +126,12 @@ const RightSide = ({ product }) => {
                        
        <div className="py-4">
        <p className="text-black text-lg">
-          {Number(product.price).toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-          })} / {product.sold} sold
-        </p>
+  {Number(product.price).toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  })} / {Number(product.sold).toLocaleString("vi-VN")} sold
+</p>
+
         <div className="text-gray-500 text-sm ">
         <p>Limit 3 per person /  Shipping costs not included</p>
      

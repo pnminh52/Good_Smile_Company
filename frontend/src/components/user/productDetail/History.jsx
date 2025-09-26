@@ -30,7 +30,7 @@ const History = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto">
-      <h2 className="sm:text-xl text-lg font-semibold px-4 sm:px-0">
+      <h2 className="sm:text-xl text-md font-semibold px-4 sm:px-0">
         Recently Viewed
       </h2>
 

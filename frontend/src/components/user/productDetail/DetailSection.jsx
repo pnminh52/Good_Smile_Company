@@ -118,10 +118,15 @@ const DetailSection = ({ product }) => {
             <p>{product.manufacturer}</p>
           </div>
         )}
-        {product.distributedBy && (
-          <div className="flex items-center gap-10 py-6 ">
+        {product.distributedby && (
+          <div className="flex items-center gap-10 py-6 border-b border-gray-200">
             <p className="font-semibold text-black">Distributed by</p>
-            <p>{product.distributedBy}</p>
+            <p>{product.distributedby}</p>
+          </div>
+        )}
+          {product.copyrightseries && (
+          <div className="flex items-center gap-10 py-6 ">
+            <p>{product.copyrightseries}</p>
           </div>
         )}
       </Dropdown>
