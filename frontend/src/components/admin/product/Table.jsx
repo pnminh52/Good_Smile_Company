@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Image } from "antd";
+import { Table, Button, Image, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
@@ -86,12 +86,15 @@ const ProductTable = ({ filteredProducts, setSelectedProduct, handleDelete }) =>
               icon={<EditOutlined />}
             />
           </Link>
-          <Button
-            danger
-            size="small"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
-          />
+           <Popconfirm
+                      title="Delete this product?"
+                      onConfirm={() => handleDelete(record.id)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button danger size="small" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+         
         </div>
       ),
     },

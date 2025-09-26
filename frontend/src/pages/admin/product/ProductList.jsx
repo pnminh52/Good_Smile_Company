@@ -5,6 +5,10 @@ import PopupDetailTab from "../../../components/admin/product/PopupDetailTab";
 import FilterTable from "../../../components/admin/product/FilterTable";
 import Table from "../../../components/admin/product/Table";
 import ProductAdd from "./ProductAdd";
+import { Button } from "antd";
+import Title from './../../../components/admin/Title';
+import Loader from './../../../components/Loader';
+import AdminLoader from "../../../components/AdminLoader";
 function ProductList() {
   const [filters, setFilters] = useState({});
   const [products, setProducts] = useState([]);
@@ -50,14 +54,16 @@ function ProductList() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 bg-white rounded shadow">
-      <div className="flex justify-between items-center mb-4">
-        <button
+    <div className="bg-white rounded-xl shadow p-4 space-y-4">
+      <div className="flex justify-between items-center">
+       <Title />
+        <Button
+         type="primary"
+           icon={<PlusOutlined />}
           onClick={() => setOpenAddModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          <PlusOutlined /> Add Product
-        </button>
+           Add Product
+        </Button>
       </div>
 
       {/* <FilterTable
@@ -67,7 +73,7 @@ function ProductList() {
       /> */}
 
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        < ><AdminLoader /></>
       ) : (
         <Table
           filteredProducts={filteredProducts}

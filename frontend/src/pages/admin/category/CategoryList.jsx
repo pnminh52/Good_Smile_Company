@@ -4,7 +4,7 @@ import { Table, Button, Popconfirm, Image, Space, message, Modal } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import Title from './../../../components/admin/Title';
 import AddPopup from "../../../components/admin/category/AddPopup";
-
+import AdminLoader from "../../../components/AdminLoader";
 function CategoryList() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -132,7 +132,9 @@ function CategoryList() {
           Add Category
         </Button>
       </div>
-
+ {loading ? (
+        < ><AdminLoader /></>
+      ) : (
       <Table
         rowKey="id"
         columns={columns}
@@ -141,6 +143,7 @@ function CategoryList() {
         pagination={false}
         bordered
       />
+      )}
 
       {/* ✅ Modal Add */}
       <Modal
