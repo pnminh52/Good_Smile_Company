@@ -3,7 +3,7 @@ import { Table, Button, Image, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const ProductTable = ({ filteredProducts, setSelectedProduct, handleDelete }) => {
+const ProductTable = ({ handleEdit,filteredProducts, setSelectedProduct, handleDelete }) => {
   const columns = [
     {
       title: "#",
@@ -79,13 +79,12 @@ const ProductTable = ({ filteredProducts, setSelectedProduct, handleDelete }) =>
             icon={<EyeOutlined />}
             onClick={() => setSelectedProduct(record)}
           />
-          <Link to={`/admin/products/edit/${record.id}`}>
             <Button
               size="small"
               style={{ backgroundColor: "#facc15", borderColor: "#facc15" }}
               icon={<EditOutlined />}
+              onClick={() => handleEdit(record.id)}
             />
-          </Link>
            <Popconfirm
                       title="Delete this product?"
                       onConfirm={() => handleDelete(record.id)}

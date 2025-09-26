@@ -1,135 +1,112 @@
-// import { useEffect, useState } from "react";
-// import { getProductById, updateProduct } from "../../../api/products";
-// import { getCategories } from "../../../api/categories";
-// import { useNavigate, useParams } from "react-router-dom";
-// import Form from "../../../components/admin/product/Form";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getProductById, updateProduct } from "../../../api/products";
+import { getCategories } from "../../../api/categories";
+import { Form, message } from "antd";
+import FormAddAndEdit from './../../../components/admin/product/FormAddAndEdit';
 
-// function ProductEdit() {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
+function ProductEdit({ open, onClose }) {
+  const { id } = useParams(); // lấy product id từ URL
+  const [urls, setUrls] = useState([]);
+  const handleChange = (value, index) => {
+    const newUrls = [...urls];
+    newUrls[index] = value;
+    setUrls(newUrls);
+  };
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [categories, setCategories] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [brands] = useState([
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/1/logo_gsc.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/112/57_Sorarain.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/18/86_Phat.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/48/08_アニプレックス.png" },
+    { url: "https://www.goodsmile.com//gsc-webrevo-sdk-storage-prd/maker/info/2728/original/small-logo-57c579d7080e38374ef559cea6f51ac7.jpg" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/145/41_claynel.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/2/logo_mxf.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/105/120_Miyuki.png" },
+    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/3/32439f517150696bff39a2540aa44a63.png" },
+  ]);
 
-//   const [form, setForm] = useState({
-//     imagecopyright:"",
-//     name: "",
-//     title: "",
-//     series: "",
-//     release_date: "",
-//     decalProduction: "",
-//     specifications: "",
-//     sculptor: "",
-//     planningAndProduction: "",
-//     productionCooperation: "",
-//     paintwork: "",
-//     relatedInformation: "",
-//     manufacturer: "",
-//     distributedBy: "",
-//     price: "",
-//     stock: "",
-//     gift_items: [],
-//     sold:0,
-//     status: "available",
-//     base_image: "",
-//     additional_images: [""],
-//     category_id: "",
-//     description: "",
-//     copyrightSeries: "",
-//   });
+  // Lấy categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getCategories();
+        setCategories(res.data);
+      } catch (err) {
+        console.error("❌ Error fetching categories:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
-//   const [categories, setCategories] = useState([]);
-//   const [error, setError] = useState("");
+  // Lấy dữ liệu product theo id
+  useEffect(() => {
+    if (!id) return;
+    const fetchProduct = async () => {
+      try {
+        const res = await getProductById(id);
+        const product = res.data;
+        form.setFieldsValue({
+          ...product,
+          release_date: product.release_date ? moment(product.release_date) : null,
+        });
+        setUrls(product.additional_images || []);
+        setSelectedBrand(product.imagecopyright || "");
+      } catch (err) {
+        console.error("❌ Error fetching product:", err);
+        message.error("Không thể tải sản phẩm!");
+      }
+    };
+    fetchProduct();
+  }, [id, form]);
 
-//   useEffect(() => {
-//     const fetchProduct = async () => {
-//       try {
-//         const res = await getProductById(id);
-//         setForm({
-//           ...res.data,
-//           release_date: res.data.release_date
-//             ? new Date(res.data.release_date).toISOString().split("T")[0] // ép thành YYYY-MM-DD
-//             : "",
-//           additional_images: res.data.additional_images || [""],
-//         });
-//       } catch (err) {
-//         console.error("❌ Error fetching product:", err);
-//       }
-//     };
-    
+  // Reset khi mở modal
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      setUrls([]);
+    }
+  }, [open]);
 
-//     const fetchCategories = async () => {
-//       try {
-//         const res = await getCategories();
-//         setCategories(res.data);
-//       } catch (err) {
-//         console.error("❌ Error fetching categories:", err);
-//       }
-//     };
+  const handleSubmit = async (values) => {
+    try {
+      const payload = {
+        ...values,
+        release_date: values.release_date ? values.release_date.format("YYYY-MM-DD") : null,
+        price: values.price ? parseFloat(values.price) : 0,
+        stock: values.stock ? parseInt(values.stock) : 0,
+        sold: values.sold ? parseInt(values.sold) : 0,
+        additional_images: urls.filter(url => url),
+        gift_items: values.gift_items?.filter(g => g.title) || [],
+      };
+      await updateProduct(id, payload);
+      message.success("Cập nhật sản phẩm thành công!");
+      onClose();
+      navigate("/admin/products");
+    } catch (err) {
+      console.error("❌ Error updating product:", err.response?.data || err);
+      message.error("Không thể cập nhật sản phẩm. Thử lại sau!");
+    }
+  };
 
-//     fetchProduct();
-//     fetchCategories();
-//   }, [id]);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError("");
-//     try {
-//       await updateProduct(id, {
-//         ...form,
-//         price: form.price ? parseFloat(form.price) : 0,
-//         stock: form.stock ? parseInt(form.stock) : 0,
-//       });
-//       navigate("/admin/products");
-//     } catch (err) {
-//       console.error("❌ Error updating product:", err);
-//       setError("Không thể cập nhật sản phẩm. Thử lại sau!");
-//     }
-//   };
-
-//   const handleAdditionImageChange = (i, value) => {
-//     const newImages = [...form.additional_images];
-//     newImages[i] = value;
-//     setForm({ ...form, additional_images: newImages });
-//   };
-
-//   const addAdditionImage = () =>
-//     setForm({ ...form, additional_images: [...form.additional_images, ""] });
-
-//   const removeAdditionImage = (i) =>
-//     setForm({
-//       ...form,
-//       additional_images: form.additional_images.filter(
-//         (_, index) => index !== i
-//       ),
-//     });
-
-//   return (
-//     <div className="max-w-4xl mx-auto p-6">
-//       <h1 className="text-2xl font-bold mb-6">✏️ Edit Product (Figure)</h1>
-//       {error && <p className="text-red-500 mb-4">{error}</p>}
-
-//     <Form
-//      form={form}
-//      setForm={setForm}
-//      handleSubmit={handleSubmit}
-//      handleAdditionImageChange={handleAdditionImageChange}
-//      removeAdditionImage={removeAdditionImage}
-//      addAdditionImage={addAdditionImage}   
-//      categories={categories}  
-//    />
-//     </div>
-//   );
-// }
-
-// export default ProductEdit;
-
-
-
-
-import React from 'react'
-
-const ProductEdit = () => {
   return (
-    <div>ProductEdit</div>
-  )
+    <FormAddAndEdit
+      form={form}
+      open={open}
+      onClose={onClose}
+      urls={urls}
+      setUrls={setUrls}
+      categories={categories}
+      selectedBrand={selectedBrand}
+      setSelectedBrand={setSelectedBrand}
+      brands={brands}
+      handleSubmit={handleSubmit}
+      handleChange={handleChange}
+    />
+  );
 }
 
-export default ProductEdit
+export default ProductEdit;

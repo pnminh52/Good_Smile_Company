@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { getProducts, deleteProduct } from "../../../api/products";
 import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import PopupDetailTab from "../../../components/admin/product/PopupDetailTab";
-import FilterTable from "../../../components/admin/product/FilterTable";
 import Table from "../../../components/admin/product/Table";
 import ProductAdd from "./ProductAdd";
 import { Button } from "antd";
 import Title from './../../../components/admin/Title';
-import Loader from './../../../components/Loader';
 import AdminLoader from "../../../components/AdminLoader";
+import ProductEdit from "./ProductEdit";
 function ProductList() {
   const [filters, setFilters] = useState({});
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false); // state mở popup
-
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editProductId, setEditProductId] = useState(null);
   const categories = [...new Set(products.map(p => p.category_name).filter(Boolean))];
 
   const filteredProducts = products.filter((p) => {
@@ -52,7 +52,10 @@ function ProductList() {
       console.error("Error deleteProduct:", err.message);
     }
   };
-
+  const handleEdit = (productId) => {
+    setEditProductId(productId);
+    setOpenEditModal(true);
+  };
   return (
     <div className="bg-white rounded-xl shadow p-4 space-y-4">
       <div className="flex justify-between items-center">
@@ -79,6 +82,7 @@ function ProductList() {
           filteredProducts={filteredProducts}
           handleDelete={handleDelete}
           setSelectedProduct={setSelectedProduct}
+          handleEdit={handleEdit} 
         />
       )}
 
@@ -97,6 +101,17 @@ function ProductList() {
           fetchProducts(); // load lại danh sách sau khi thêm
         }}
       />
+       {editProductId && (
+        <ProductEdit
+          open={openEditModal}
+          onClose={() => {
+            setOpenEditModal(false);
+            setEditProductId(null);
+            fetchProducts();
+          }}
+          productId={editProductId} // truyền id của sản phẩm cần edit
+        />
+      )}
     </div>
   );
 }
