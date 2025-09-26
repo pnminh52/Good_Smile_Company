@@ -24,7 +24,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000", "https://good-smile-company-clone-r6f0k66wc.vercel.app", "https://good-smile-company-clone.vercel.app/"],
+  // origin: ["http://localhost:5173", "http://localhost:3000", "https://good-smile-company-clone-r6f0k66wc.vercel.app", "https://good-smile-company-clone.vercel.app/"],
+  origin:"*",
   credentials: true,
 }));
 app.use(express.json());
