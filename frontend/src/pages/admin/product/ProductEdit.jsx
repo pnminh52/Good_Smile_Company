@@ -1,20 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProductById, updateProduct } from "../../../api/products";
 import { getCategories } from "../../../api/categories";
 import { Form, message } from "antd";
 import FormAddAndEdit from './../../../components/admin/product/FormAddAndEdit';
+import moment from "moment";
 
-function ProductEdit({ open, onClose }) {
-  const { id } = useParams(); // lấy product id từ URL
+function ProductEdit({ open, onClose, productId }) {
   const [urls, setUrls] = useState([]);
-  const handleChange = (value, index) => {
-    const newUrls = [...urls];
-    newUrls[index] = value;
-    setUrls(newUrls);
-  };
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
   const [categories, setCategories] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState("");
   const [brands] = useState([
@@ -28,8 +21,16 @@ function ProductEdit({ open, onClose }) {
     { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/105/120_Miyuki.png" },
     { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/3/32439f517150696bff39a2540aa44a63.png" },
   ]);
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  // Lấy categories
+  const handleChange = (value, index) => {
+    const newUrls = [...urls];
+    newUrls[index] = value;
+    setUrls(newUrls);
+  };
+
+  // Lấy danh sách category
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -42,34 +43,27 @@ function ProductEdit({ open, onClose }) {
     fetchCategories();
   }, []);
 
-  // Lấy dữ liệu product theo id
+  // Lấy dữ liệu sản phẩm khi mở modal hoặc productId thay đổi
   useEffect(() => {
-    if (!id) return;
-    const fetchProduct = async () => {
-      try {
-        const res = await getProductById(id);
-        const product = res.data;
-        form.setFieldsValue({
-          ...product,
-          release_date: product.release_date ? moment(product.release_date) : null,
-        });
-        setUrls(product.additional_images || []);
-        setSelectedBrand(product.imagecopyright || "");
-      } catch (err) {
-        console.error("❌ Error fetching product:", err);
-        message.error("Không thể tải sản phẩm!");
-      }
-    };
-    fetchProduct();
-  }, [id, form]);
-
-  // Reset khi mở modal
-  useEffect(() => {
-    if (open) {
-      form.resetFields();
-      setUrls([]);
+    if (open && productId) {
+      const fetchProduct = async () => {
+        try {
+          const res = await getProductById(productId);
+          const product = res.data;
+          form.setFieldsValue({
+            ...product,
+            release_date: product.release_date ? moment(product.release_date) : null,
+          });
+          setUrls(product.additional_images || [""]);
+          setSelectedBrand(product.imagecopyright || "");
+        } catch (err) {
+          console.error(err);
+          message.error("Không thể tải sản phẩm!");
+        }
+      };
+      fetchProduct();
     }
-  }, [open]);
+  }, [open, productId, form]);
 
   const handleSubmit = async (values) => {
     try {
@@ -82,7 +76,7 @@ function ProductEdit({ open, onClose }) {
         additional_images: urls.filter(url => url),
         gift_items: values.gift_items?.filter(g => g.title) || [],
       };
-      await updateProduct(id, payload);
+      await updateProduct(productId, payload);
       message.success("Cập nhật sản phẩm thành công!");
       onClose();
       navigate("/admin/products");
@@ -105,6 +99,7 @@ function ProductEdit({ open, onClose }) {
       brands={brands}
       handleSubmit={handleSubmit}
       handleChange={handleChange}
+      initialValues={form.getFieldsValue()} // hiển thị dữ liệu ban đầu
     />
   );
 }

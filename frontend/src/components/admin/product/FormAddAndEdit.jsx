@@ -12,9 +12,22 @@ import {
   DatePicker,
 } from "antd";
 import { PlusOutlined, DeleteOutlined, FileImageOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import moment from "moment";
+const FormAddAndEdit = ({form,initialValues, handleChange, open, onClose, urls, setUrls, categories, selectedBrand, setSelectedBrand, brands, handleSubmit}) => {
+ 
+  useEffect(() => {
+    if(open && initialValues) {
+      form.setFieldsValue({
+        ...initialValues,
+        release_date: initialValues.release_date ? moment(initialValues.release_date) : null,
+      });
+      setUrls(initialValues.additional_images || [""]);
+      setSelectedBrand(initialValues.imagecopyright || "");
+    }
+  }, [open, initialValues]);
 
-const FormAddAndEdit = ({form, handleChange, open, onClose, urls, setUrls, categories, selectedBrand, setSelectedBrand, brands, handleSubmit}) => {
-  return <div>
+ return <div>
 
 <Modal
       title="Add New Product"
@@ -27,8 +40,7 @@ const FormAddAndEdit = ({form, handleChange, open, onClose, urls, setUrls, categ
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        initialValues={{ status: "available", additional_images: [""], gift_items: [] }}
-      >
+        initialValues={initialValues || { status: "available", additional_images: [""], gift_items: [] }}      >
        <div className="flex gap-2 py-0">
   <Form.Item label="Product Name" name="name" className="flex-1" rules={[{ required: true }]}>
     <Input />

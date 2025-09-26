@@ -13,7 +13,7 @@ function ProductList() {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [openAddModal, setOpenAddModal] = useState(false); // state mở popup
+  const [openAddModal, setOpenAddModal] = useState(false); 
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
   const categories = [...new Set(products.map(p => p.category_name).filter(Boolean))];
@@ -98,7 +98,7 @@ function ProductList() {
         open={openAddModal}
         onClose={() => {
           setOpenAddModal(false);
-          fetchProducts(); // load lại danh sách sau khi thêm
+          fetchProducts(); 
         }}
       />
        {editProductId && (
@@ -109,7 +109,8 @@ function ProductList() {
             setEditProductId(null);
             fetchProducts();
           }}
-          productId={editProductId} // truyền id của sản phẩm cần edit
+          productId={editProductId} 
+          
         />
       )}
     </div>
