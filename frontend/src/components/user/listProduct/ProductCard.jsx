@@ -35,7 +35,7 @@ const ProductCard = ({ products, columns = 4 }) => {
                             </div>
 
                             <div>
-                               <div className="flex items-center gap-2">
+                               <div className="flex items-center sm:gap-2 gap-1">
                                {p.stock > 0 && p.stock < 50 && (
                                     <p className="bg-red-200 px-2 inline-block text-xs text-red-700 rounded-full">
                                         Few left
