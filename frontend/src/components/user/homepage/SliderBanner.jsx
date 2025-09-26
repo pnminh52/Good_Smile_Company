@@ -8,6 +8,10 @@ import { useRef, useState, useEffect } from 'react';
 
 const images = [
   {
+    small: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/320/d398eed4a3f1752525355232e36de551.jpg",
+    large: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/320/2d1444a3632c24e098b6fcac0cf02f82.jpg",
+  },
+  {
     small: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/309/947a43c3fc1a0458b1db5e7906da4d39.jpg",
     large: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/309/44a9caf06ac35b96bffcad0a9f52e4e5.jpg",
   },
