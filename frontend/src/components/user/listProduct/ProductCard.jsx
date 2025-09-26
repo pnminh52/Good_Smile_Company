@@ -65,7 +65,7 @@ const ProductCard = ({ products, columns = 4 }) => {
 )}
                                </div>
 
-                                <h2 className="font-semibold text-sm py-1">{p.name}</h2>
+                                <h2 className="font-semibold text-sm pt-1 pb-0">{p.name}</h2>
                                 <p className="text-gray-600 text-sm">
   {(Number(p.price)).toLocaleString("vi-VN",{
     style: "currency",
