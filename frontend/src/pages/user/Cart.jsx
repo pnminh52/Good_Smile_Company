@@ -52,6 +52,7 @@ const Cart = () => {
     }
   };
 
+
   useEffect(() => {
     if (user && token) {
       fetchCart();
@@ -122,8 +123,10 @@ const Cart = () => {
 
   return (
     <div className="max-w-screen-xl w-full mx-auto sm:px-30 px-4">
-      <h1 className="  text-xl  font-semibold sm:py-6 py-4"> Cart ({cartItems.length})</h1>
-
+     <div className="flex justify-between items-center">
+       <h1 className="  text-xl  font-semibold sm:py-6 py-4"> Cart ({cartItems.length})</h1>
+      {/* <button className="px-4 text-sm block sm:hidden border border-red-600 text-red-600 cursor-pointer rounded-full py-1" onClick={()=>handleDeleteAll()}>Clear All</button> */}
+     </div>
       <div className="flex flex-col lg:flex-row gap-4 ">
         <div className="w-full sm:w-[70%]">
           <LeftSide

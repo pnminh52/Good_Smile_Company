@@ -129,13 +129,48 @@ const ListProduct = () => {
     sortSold,
   ]);
   
+  const handleResetAll = () => {
+    setSelectedSeries([]);
+    setSelectedCategories(categoryFromUrl ? [categoryFromUrl] : []);
+    setSelectedManufacturers([]);
+    setStockFilter("");
+    setStatusFilter("");
+    setGiftFilter(false);
+    setSortPrice("");
+    setSortAlpha("");
+    setSortSold("");
+    setPriceRange([2000000, 10000000]);
+    setSearchTerm("");
+  };
+  
+const activeFiltersCount =
+(selectedSeries.length ? 1 : 0) +
+(selectedCategories.length ? 1 : 0) +
+(selectedManufacturers.length ? 1 : 0) +
+(stockFilter ? 1 : 0) +
+(statusFilter ? 1 : 0) +
+(giftFilter ? 1 : 0) +
+(sortPrice ? 1 : 0) +
+(sortAlpha ? 1 : 0) +
+(sortSold ? 1 : 0) +
+(searchTerm ? 1 : 0) +
+(priceRange[0] !== 2000000 || priceRange[1] !== 10000000 ? 1 : 0);
+
 
   if (loading) return <Loader />;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-0">
-      <h1 className=" text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
+<div className="flex items-center justify-between">
+        <h1 className=" text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
 
+{
+  activeFiltersCount >1 && (
+    <button onClick={()=>handleResetAll()} className="px-4 text-sm block sm:hidden border border-red-600 text-red-600 cursor-pointer rounded-full py-1">Clear All</button>
+
+  )
+}
+</div>
       {/* Mobile Filter Button */}
       <div className="sm:hidden flex items-center gap-2 mb-2">
   <Input

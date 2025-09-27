@@ -67,10 +67,12 @@ const News = () => {
 
   return (
     <div className="sm:px-80 px-4 max-w-screen-xl mx-auto">
-      <h1 className="text-xl font-semibold py-4 sm:py-6">News</h1>
+      <h1 className="text-xl font-semibold py-4 sm:py-6">News ({filteredNews.length})</h1>
       <SearchBar onSearch={handleSearch} onFilter={handleFilter}/>
 
-      {filteredNews.map((n, idx, arr) => (
+      {[...filteredNews]
+      .sort((a,b)=>new Date(b.created_at)-(a.created_at))
+      .map((n, idx, arr) => (
         <div
           key={n.id}
           onClick={() => openModal(n)}
