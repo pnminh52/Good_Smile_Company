@@ -130,6 +130,22 @@ const DetailSection = ({ product }) => {
           </div>
         )}
       </Dropdown>
+      <Dropdown  title="Considerations" defaultOpen={true}>
+        <p className="font-semibold text-lg pt-4 pb-3">About This Product</p>
+        <ul className="space-y-2">
+          <li className="text-md ">Images shown are sample prototypes. Some specifications may differ from the actual product.</li>
+          <li className="text-md ">Paintwork is done partially by hand and therefore final products may vary.</li>
+          <li className="text-md ">This product does not balance on its own. Please use the included stand.</li>
+          <li className="text-md ">Important announcement: <span className="text-blue-600 underline">Cancellation of Packaging Design Change</span></li>
+        </ul>
+        <p className="font-semibold text-lg pt-4 pb-3">About Orders for This Product</p>
+        <ul className="space-y-2">
+          <li className="text-md ">Purchases are limited to 3 per person.</li>
+          <li className="text-md ">Preorders for this item may close during the preorder period without prior notice.</li>
+          <li className="text-md ">Payment for pre-ordered items made with a credit card or PayPal will be processed 2–3 weeks before the confirmed shipping date (except for Taiwan). However, for some high-priced items, payment may be required at the time of order, even if using a credit card or PayPal.</li>
+          <li className="text-md text-red-600">Items may not be available for purchase depending on your region. Please log in or check with your local partner shop for item availability.</li>
+        </ul>
+      </Dropdown>
     </div>
   );
 };

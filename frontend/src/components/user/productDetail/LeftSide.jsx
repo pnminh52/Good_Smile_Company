@@ -116,13 +116,34 @@ const LeftSide = ({ product }) => {
           {/* Ảnh chính */}
           <div className="flex-1 w-full">
             <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center">
-              <div key={mainImage} className="w-full h-full flex items-center justify-center duration-300 ease-in-out animate-fade">
+              <div key={mainImage} className="w-full  h-full flex items-center justify-center relative duration-300 ease-in-out animate-fade">
                 <Image
                   src={mainImage}
                   alt={product.name}
                   style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "cover" }}
                   preview={{ mask: <span>Click to enlarge</span> }}
                 />
+             
+
+             <button
+  onClick={()=>handlePrev()}
+  className="absolute top-1/2 -translate-y-1/2 left-0 cursor-pointer bg-white w-14 h-14 rounded-r-full text-[#F06E00] flex items-center justify-center z-10 shadow"
+>
+  <img
+    className="w-3 rotate-180"
+    src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+    alt="prev"
+  />
+</button>
+
+                <button onClick={() => handleNext()} className="absolute top-1/2 -translate-y-1/2 right-0 cursor-pointer rounded-l-full bg-white w-14 h-14 shadow   text-[#F06E00]  flex items-center justify-center z-10">
+                  <img
+                    className="w-3"
+                    src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
+                    alt="prev"
+                  />
+                </button>
+            
               </div>
             </div>
 
