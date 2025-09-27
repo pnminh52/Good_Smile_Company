@@ -1,37 +1,60 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getProductById, updateProduct } from "../../../api/products";
 import { getCategories } from "../../../api/categories";
-import { Form, message } from "antd";
-import FormAddAndEdit from './../../../components/admin/product/FormAddAndEdit';
-import moment from "moment";
+import { useNavigate, useParams } from "react-router-dom";
+import Form from "../../../components/admin/product/Form";
 
-function ProductEdit({ open, onClose, productId }) {
-  const [urls, setUrls] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [brands] = useState([
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/1/logo_gsc.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/112/57_Sorarain.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/18/86_Phat.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/48/08_アニプレックス.png" },
-    { url: "https://www.goodsmile.com//gsc-webrevo-sdk-storage-prd/maker/info/2728/original/small-logo-57c579d7080e38374ef559cea6f51ac7.jpg" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/145/41_claynel.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/2/logo_mxf.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/105/120_Miyuki.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/3/32439f517150696bff39a2540aa44a63.png" },
-  ]);
-  const [form] = Form.useForm();
+function ProductEdit() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleChange = (value, index) => {
-    const newUrls = [...urls];
-    newUrls[index] = value;
-    setUrls(newUrls);
-  };
+  const [form, setForm] = useState({
+    imagecopyright:"",
+    name: "",
+    title: "",
+    series: "",
+    release_date: "",
+    decalProduction: "",
+    specifications: "",
+    sculptor: "",
+    planningAndProduction: "",
+    productionCooperation: "",
+    paintwork: "",
+    relatedInformation: "",
+    manufacturer: "",
+    distributedBy: "",
+    price: "",
+    stock: "",
+    gift_items: [],
+    sold:0,
+    status: "available",
+    base_image: "",
+    additional_images: [""],
+    category_id: "",
+    description: "",
+    copyrightSeries: "",
+  });
 
-  // Lấy danh sách category
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState("");
+
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await getProductById(id);
+        setForm({
+          ...res.data,
+          release_date: res.data.release_date
+            ? new Date(res.data.release_date).toISOString().split("T")[0] // ép thành YYYY-MM-DD
+            : "",
+          additional_images: res.data.additional_images || [""],
+        });
+      } catch (err) {
+        console.error("❌ Error fetching product:", err);
+      }
+    };
+    
+
     const fetchCategories = async () => {
       try {
         const res = await getCategories();
@@ -40,67 +63,59 @@ function ProductEdit({ open, onClose, productId }) {
         console.error("❌ Error fetching categories:", err);
       }
     };
+
+    fetchProduct();
     fetchCategories();
-  }, []);
+  }, [id]);
 
-  // Lấy dữ liệu sản phẩm khi mở modal hoặc productId thay đổi
-  useEffect(() => {
-    if (open && productId) {
-      const fetchProduct = async () => {
-        try {
-          const res = await getProductById(productId);
-          const product = res.data;
-          form.setFieldsValue({
-            ...product,
-            release_date: product.release_date ? moment(product.release_date) : null,
-          });
-          setUrls(product.additional_images || [""]);
-          setSelectedBrand(product.imagecopyright || "");
-        } catch (err) {
-          console.error(err);
-          message.error("Không thể tải sản phẩm!");
-        }
-      };
-      fetchProduct();
-    }
-  }, [open, productId, form]);
-
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
     try {
-      const payload = {
-        ...values,
-        release_date: values.release_date ? values.release_date.format("YYYY-MM-DD") : null,
-        price: values.price ? parseFloat(values.price) : 0,
-        stock: values.stock ? parseInt(values.stock) : 0,
-        sold: values.sold ? parseInt(values.sold) : 0,
-        additional_images: urls.filter(url => url),
-        gift_items: values.gift_items?.filter(g => g.title) || [],
-      };
-      await updateProduct(productId, payload);
-      message.success("Cập nhật sản phẩm thành công!");
-      onClose();
+      await updateProduct(id, {
+        ...form,
+        price: form.price ? parseFloat(form.price) : 0,
+        stock: form.stock ? parseInt(form.stock) : 0,
+      });
       navigate("/admin/products");
     } catch (err) {
-      console.error("❌ Error updating product:", err.response?.data || err);
-      message.error("Không thể cập nhật sản phẩm. Thử lại sau!");
+      console.error("❌ Error updating product:", err);
+      setError("Không thể cập nhật sản phẩm. Thử lại sau!");
     }
   };
 
+  const handleAdditionImageChange = (i, value) => {
+    const newImages = [...form.additional_images];
+    newImages[i] = value;
+    setForm({ ...form, additional_images: newImages });
+  };
+
+  const addAdditionImage = () =>
+    setForm({ ...form, additional_images: [...form.additional_images, ""] });
+
+  const removeAdditionImage = (i) =>
+    setForm({
+      ...form,
+      additional_images: form.additional_images.filter(
+        (_, index) => index !== i
+      ),
+    });
+
   return (
-    <FormAddAndEdit
-      form={form}
-      open={open}
-      onClose={onClose}
-      urls={urls}
-      setUrls={setUrls}
-      categories={categories}
-      selectedBrand={selectedBrand}
-      setSelectedBrand={setSelectedBrand}
-      brands={brands}
-      handleSubmit={handleSubmit}
-      handleChange={handleChange}
-      initialValues={form.getFieldsValue()} // hiển thị dữ liệu ban đầu
-    />
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">✏️ Edit Product (Figure)</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+    <Form
+     form={form}
+     setForm={setForm}
+     handleSubmit={handleSubmit}
+     handleAdditionImageChange={handleAdditionImageChange}
+     removeAdditionImage={removeAdditionImage}
+     addAdditionImage={addAdditionImage}   
+     categories={categories}  
+   />
+    </div>
   );
 }
 

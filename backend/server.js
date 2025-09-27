@@ -13,6 +13,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import shippingRoutes from "./routes/shippingRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js"
+import newRoutes from "./routes/newRoutes.js"
 
 
 
@@ -76,6 +77,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/shipping", shippingRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/news", newRoutes)
 
 
 
@@ -92,6 +94,13 @@ async function initDB() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
+    await sql`
+      CREATE TABLE IF NOT EXISTS news (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`
 
     // 2. Products (schema mới)
     await sql`

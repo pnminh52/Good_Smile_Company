@@ -1,32 +1,14 @@
 import { useEffect, useState } from "react";
 import { getProducts, deleteProduct } from "../../../api/products";
-import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { Table, Button, Popconfirm, Image, Space, message } from "antd";
+import { PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import PopupDetailTab from "../../../components/admin/product/PopupDetailTab";
-import Table from "../../../components/admin/product/Table";
-import ProductAdd from "./ProductAdd";
-import { Button } from "antd";
-import Title from './../../../components/admin/Title';
-import AdminLoader from "../../../components/AdminLoader";
-import ProductEdit from "./ProductEdit";
+
 function ProductList() {
-  const [filters, setFilters] = useState({});
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [openAddModal, setOpenAddModal] = useState(false); 
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [editProductId, setEditProductId] = useState(null);
-  const categories = [...new Set(products.map(p => p.category_name).filter(Boolean))];
-
-  const filteredProducts = products.filter((p) => {
-    if (filters.name && !p.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
-    if (filters.category && p.category_name !== filters.category) return false;
-    if (filters.priceMin !== undefined && p.price < filters.priceMin) return false;
-    if (filters.priceMax !== undefined && p.price > filters.priceMax) return false;
-    if (filters.stockMin !== undefined && p.stock < filters.stockMin) return false;
-    if (filters.stockMax !== undefined && p.stock > filters.stockMax) return false;
-    return true;
-  });
 
   useEffect(() => {
     fetchProducts();
@@ -38,7 +20,8 @@ function ProductList() {
       const res = await getProducts();
       setProducts(res.data);
     } catch (err) {
-      console.error("Error fetchProducts:", err.message);
+      message.error("❌ Lỗi khi tải sản phẩm");
+      console.error("❌ Error fetchProducts:", err.message);
     } finally {
       setLoading(false);
     }
@@ -47,70 +30,119 @@ function ProductList() {
   const handleDelete = async (id) => {
     try {
       await deleteProduct(id);
+      message.success("🗑️ Xóa sản phẩm thành công");
       fetchProducts();
     } catch (err) {
-      console.error("Error deleteProduct:", err.message);
+      message.error("❌ Lỗi khi xóa sản phẩm");
+      console.error("❌ Error deleteProduct:", err.message);
     }
   };
-  const handleEdit = (productId) => {
-    setEditProductId(productId);
-    setOpenEditModal(true);
-  };
+
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      render: (_, __, index) => index + 1,
+      width: 60,
+      align: "center",
+    },
+    {
+      title: "Image",
+      dataIndex: "base_image",
+      render: (img, record) => (
+        <Image
+          src={img}
+          alt={record.name}
+          width={50}
+          height={50}
+          className="object-cover rounded"
+        />
+      ),
+      width: 80,
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      render: (text) => <strong>{text}</strong>,
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      render: (price) =>
+        new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(price),
+      width: 150,
+    },    
+    {
+      title: "Category",
+      dataIndex: "category_name",
+      render: (text) => text || "None",
+      width: 150,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      align: "center",
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            icon={<EyeOutlined />}
+            onClick={() => setSelectedProduct(record)}
+          >
+            
+          </Button>
+          <Link to={`/admin/products/edit/${record.id}`}>
+            <Button
+              type="default"
+              icon={<EditOutlined />}
+              style={{ backgroundColor: "#fadb14", color: "#000" }}
+            >
+              
+            </Button>
+          </Link>
+          <Popconfirm
+            title="Bạn có chắc muốn xóa sản phẩm này?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger icon={<DeleteOutlined />}>
+              
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   return (
-    <div className="bg-white rounded-xl shadow p-4 space-y-4">
-      <div className="flex justify-between items-center">
-       <Title />
-        <Button
-         type="primary"
-           icon={<PlusOutlined />}
-          onClick={() => setOpenAddModal(true)}
-        >
-           Add Product
-        </Button>
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded shadow">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <Link to="/admin/products/add">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Add Product
+          </Button>
+        </Link>
       </div>
 
-      {/* <FilterTable
-        categories={categories}
-        products={products}
-        onFilterChange={(vals) => setFilters(vals)}
-      /> */}
+      <Table
+        rowKey="id"
+        columns={columns}
+        dataSource={products}
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+        bordered
+      />
 
-      {loading ? (
-        < ><AdminLoader /></>
-      ) : (
-        <Table
-          filteredProducts={filteredProducts}
-          handleDelete={handleDelete}
-          setSelectedProduct={setSelectedProduct}
-          handleEdit={handleEdit} 
-        />
-      )}
-
+      {/* Popup chi tiết */}
       {selectedProduct && (
         <PopupDetailTab
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
-        />
-      )}
-
-      {/* Popup ProductAdd */}
-      <ProductAdd
-        open={openAddModal}
-        onClose={() => {
-          setOpenAddModal(false);
-          fetchProducts(); 
-        }}
-      />
-       {editProductId && (
-        <ProductEdit
-          open={openEditModal}
-          onClose={() => {
-            setOpenEditModal(false);
-            setEditProductId(null);
-            fetchProducts();
-          }}
-          productId={editProductId} 
-          
         />
       )}
     </div>

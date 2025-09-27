@@ -10,6 +10,9 @@ import ProductEdit from "./pages/admin/product/ProductEdit";
 import CategoryList from "./pages/admin/category/CategoryList";
 import CategoryAdd from "./pages/admin/category/CategoryAdd";
 import CategoryEdit from "./pages/admin/category/CategoryEdit";
+import NewAdd from "./pages/admin/new/NewAdd";
+import NewUpdate from "./pages/admin/new/NewUpdate";
+
 import Homepage from "./pages/user/Homepage";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
@@ -21,6 +24,7 @@ import ProductDetails from "./pages/user/ProductDetails";
 import ListProduct from "./pages/user/ListProduct";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
+import News from "./pages/user/News";
 import Cart from "./pages/user/Cart";
 import CheckOut from "./pages/user/CheckOut";
 import Profile from "./pages/user/Profile";
@@ -29,6 +33,7 @@ import Wishlist from "./pages/user/Wishlist";
 import SearchByKeyword from "./pages/user/SearchByKeyword";
 import { useLogout } from "./hook/useLogout";
 import { setLogoutRef } from './hook/useAuth';
+import NewList from "./pages/admin/new/NewList";
 
 function App() {
   return (
@@ -68,6 +73,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/search" element={<SearchByKeyword />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/new" element={<News />} />
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/order" element={<Order />} />
@@ -79,6 +85,9 @@ function AppContent() {
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="news" element={<NewList />} />
+          <Route path="news/add" element={<NewAdd />} />
+          <Route path="news/edit/:id" element={<NewUpdate />} />
           <Route path="products" element={<ProductList />} />
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />

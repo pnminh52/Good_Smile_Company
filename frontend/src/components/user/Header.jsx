@@ -26,7 +26,9 @@ const Header = () => {
         </Link>
         <div className="hidden sm:block">
           <ul className=" flex items-center gap-6">
-            <li className="flex items-center cursor-pointer gap-2 font-semibold ">
+           <Link to={"/new"}>
+           
+           <li className="flex items-center cursor-pointer gap-2 font-semibold ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -49,6 +51,7 @@ const Header = () => {
               </svg>{" "}
               News/Shipping Info
             </li>
+           </Link>
             <li className="flex items-center cursor-pointer gap-2 font-semibold ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

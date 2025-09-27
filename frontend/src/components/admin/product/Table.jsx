@@ -79,12 +79,14 @@ const ProductTable = ({ handleEdit,filteredProducts, setSelectedProduct, handleD
             icon={<EyeOutlined />}
             onClick={() => setSelectedProduct(record)}
           />
+            <Link to={`/admin/products/edit/${record.id}`}>
             <Button
-              size="small"
-              style={{ backgroundColor: "#facc15", borderColor: "#facc15" }}
-              icon={<EditOutlined />}
-              onClick={() => handleEdit(record.id)}
-            />
+                          size="small"
+                          style={{ backgroundColor: "#facc15", borderColor: "#facc15" }}
+                          icon={<EditOutlined />}
+                        
+                        />
+            </Link>
            <Popconfirm
                       title="Delete this product?"
                       onConfirm={() => handleDelete(record.id)}

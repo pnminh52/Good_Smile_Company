@@ -1,35 +1,42 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../api/products";
 import { getCategories } from "../../../api/categories";
-import {
-  Form,
-  message,
-} from "antd";
-import FormAddAndEdit from './../../../components/admin/product/FormAddAndEdit';
+import { useNavigate } from "react-router-dom";
+import BrandSelect from './../../../components/admin/product/BrandSelect';
+import Form from './../../../components/admin/product/Form';
 
-function ProductAdd({ open, onClose }) {
-  const [urls, setUrls] = useState([]);
-  const handleChange = (value, index) => {
-    const newUrls = [...urls];
-    newUrls[index] = value;
-    setUrls(newUrls);
-  };
+function ProductAdd() {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+
+  const [form, setForm] = useState({
+    name: "",
+    imagecopyright:"",
+    title: "",
+    series: "",
+    release_date: "",
+    decalProduction: "",
+    specifications: "",
+    sculptor: "",
+    planningAndProduction: "",
+    productionCooperation: "",
+    paintwork: "",
+    relatedInformation: "",
+    manufacturer: "",
+    distributedBy: "",
+    price: "",
+    stock: "",
+    sold:0,
+    status: "available",
+    base_image: "",
+    additional_images: [""],
+    gift_items: [],
+    category_id: "",
+    description: "",
+    copyrightSeries: "",
+  });
+
   const [categories, setCategories] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [brands] = useState([
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/1/logo_gsc.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/112/57_Sorarain.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/18/86_Phat.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/48/08_アニプレックス.png" },
-    { url: "https://www.goodsmile.com//gsc-webrevo-sdk-storage-prd/maker/info/2728/original/small-logo-57c579d7080e38374ef559cea6f51ac7.jpg" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/145/41_claynel.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/2/logo_mxf.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/105/120_Miyuki.png" },
-    { url: "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/maker/3/32439f517150696bff39a2540aa44a63.png" },
-  ]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,53 +49,56 @@ function ProductAdd({ open, onClose }) {
     };
     fetchCategories();
   }, []);
-  useEffect(() => {
-    form.resetFields();
-    setUrls([""]); // reset khi mở form mới
-  }, [open]);
-  
-  const handleSubmit = async (values) => {
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
     try {
-      const payload = {
-        ...values,
-        release_date: values.release_date ? values.release_date.format("YYYY-MM-DD") : null,
-        price: values.price ? parseFloat(values.price) : 0,
-        stock: values.stock ? parseInt(values.stock) : 0,
-        sold: values.sold ? parseInt(values.sold) : 0,
-        additional_images: urls.filter(url => url), // chỉ gửi URL không rỗng
-        gift_items: values.gift_items?.filter(g => g.title) || [],
-      };
-      
-      await createProduct(payload);
-      message.success("Thêm sản phẩm thành công!");
-      form.resetFields();
-      setUrls([]); // reset ảnh phụ
-      onClose();
+      await createProduct({
+        ...form,
+        price: form.price ? parseFloat(form.price) : 0,
+        stock: form.stock ? parseInt(form.stock) : 0,
+      });
       navigate("/admin/products");
     } catch (err) {
-      console.error("❌ Error creating product:", err.response?.data || err);
-      message.error("Không thể thêm sản phẩm. Thử lại sau!");
+      console.error("❌ Error creating product:", err);
+      setError("Không thể thêm sản phẩm. Thử lại sau!");
     }
   };
-  
+
+  const handleAdditionImageChange = (i, value) => {
+    const newImages = [...form.additional_images];
+    newImages[i] = value;
+    setForm({ ...form, additional_images: newImages });
+  };
+
+  const addAdditionImage = () =>
+    setForm({ ...form, additional_images: [...form.additional_images, ""] });
+
+  const removeAdditionImage = (i) =>
+    setForm({
+      ...form,
+      additional_images: form.additional_images.filter(
+        (_, index) => index !== i
+      ),
+    });
 
   return (
-   <div>
-     <FormAddAndEdit
-    form={form}
-    open={open}
-    onClose={onClose}
-    urls={urls}
-    setUrls={setUrls}
-    categories={categories}
-    selectedBrand={selectedBrand}
-    setSelectedBrand={setSelectedBrand}
-    brands={brands}
-    handleSubmit={handleSubmit}
-    handleChange={handleChange}
-    
-  />
-   </div>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">➕ Add New Product (Figure)</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      <Form
+  form={form}
+  setForm={setForm}
+  handleSubmit={handleSubmit}
+  handleAdditionImageChange={handleAdditionImageChange}
+  removeAdditionImage={removeAdditionImage}
+  addAdditionImage={addAdditionImage}   
+  categories={categories}  
+/>
+
+    </div>
   );
 }
 
