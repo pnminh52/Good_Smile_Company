@@ -21,6 +21,7 @@ const ListProduct = () => {
   const [selectedCategories, setSelectedCategories] = useState(
     categoryFromUrl ? [categoryFromUrl] : []
   );
+  const [visibleCount, setVisibleCount]=useState(10)
   const [sortSold, setSortSold]=useState("")
   const [giftFilter, setGiftFilter] = useState(false);
   const [selectedManufacturers, setSelectedManufacturers] = useState([]);
@@ -156,6 +157,22 @@ const activeFiltersCount =
 (searchTerm ? 1 : 0) +
 (priceRange[0] !== 2000000 || priceRange[1] !== 10000000 ? 1 : 0);
 
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth < 640) {
+      setVisibleCount(10); 
+    } else {
+      setVisibleCount(60); 
+    }
+  };
+
+  handleResize();
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+const handleLoadMore = () => {
+  setVisibleCount((prev) => prev + 10);
+};
 
   if (loading) return <Loader />;
 
@@ -248,7 +265,18 @@ const activeFiltersCount =
           {filteredProducts.length === 0 ? (
           <NoResult />
           ) : (
-            <ProductCard products={filteredProducts} />
+           <>
+            <ProductCard products={filteredProducts.slice(0, visibleCount)} />
+                       {visibleCount < filteredProducts.length && (
+                         <div className="flex justify-center mt-4">
+                           <button
+                             onClick={handleLoadMore}
+                             className="px-14 py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
+                           >
+                             Load More
+                           </button>
+                         </div>
+                       )}</>
           )}
         </div>
 
