@@ -17,7 +17,7 @@ const FilterSideBar = ({
   products,
   giftFilter, setGiftFilter,
   setSortSold, sortSold,
-  searchTerm, setSearchTerm,
+  searchTerm, setSearchTerm, handleResetAll, activeFiltersCount
 }) => {
 
   const seriesOptions = [...new Set(products.map((p) => p.series).filter(Boolean))];
@@ -112,9 +112,17 @@ const FilterSideBar = ({
           <Option value="asc">Low → High</Option>
           <Option value="desc">High → Low</Option>
         </Select>
+        {
+  activeFiltersCount >1 && (
+        <button onClick={()=>handleResetAll()} className="border py-1 border-red-600 text-red-600 cursor-pointer hidden sm:block rounded-full ">
+          Clear All
+        </button>
+  )}
         <div className="py-2">
         <label
-  className="flex items-center gap-2 cursor-pointer"
+  className={`flex ${activeFiltersCount>1&&(
+    "pt-2"
+  )} items-center gap-2 cursor-pointer`}
   onClick={() => setGiftFilter(!giftFilter)}
 >
   {/* Custom checkbox */}

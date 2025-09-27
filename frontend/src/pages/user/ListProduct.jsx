@@ -280,6 +280,8 @@ const activeFiltersCount =
   setPriceRange={setPriceRange}
   giftFilter={giftFilter}
   setGiftFilter={setGiftFilter}
+  activeFiltersCount={activeFiltersCount}
+  handleResetAll={handleResetAll}
  
 />
 
