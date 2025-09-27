@@ -14,7 +14,7 @@ import shippingRoutes from "./routes/shippingRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js"
 import newRoutes from "./routes/newRoutes.js"
-
+import bannerRoutes from "./routes/bannerRoutes.js"
 
 
 
@@ -78,7 +78,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/shipping", shippingRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/news", newRoutes)
-
+app.use("/api/banners", bannerRoutes)
 
 
 
@@ -193,8 +193,21 @@ CREATE TABLE IF NOT EXISTS password_resets (
   quantity INT NOT NULL,
   price DECIMAL(10,2) NOT NULL              -- giá tại thời điểm đặt (fix, không phụ thuộc thay đổi sau này)
 );
-
   `;
+
+  await sql`
+  CREATE TABLE IF NOT EXISTS banners (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),         
+    image_mobile TEXT NOT NULL,   -- ảnh cho mobile
+    image_desktop TEXT NOT NULL,  -- ảnh cho laptop/desktop
+    link TEXT,                    
+    status VARCHAR(50) DEFAULT 'active', 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  `;
+  
+
 // order_status
 await sql`
   CREATE TABLE IF NOT EXISTS order_status (
