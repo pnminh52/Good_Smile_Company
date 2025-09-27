@@ -62,7 +62,7 @@ const SliderBanner = () => {
           slidesPerView={1.5}
           breakpoints={{
             0: {
-              slidesPerView: 1.2,
+              slidesPerView: 1.3,
             },
             768: {
               slidesPerView: 1.5,
@@ -87,7 +87,7 @@ const SliderBanner = () => {
                   />
                   {/* Overlay */}
                   {!isActive && (
-                    <div className="absolute inset-0 bg-black/40 bg-opacity-50 transition-all duration-300"></div>
+                    <div className="absolute inset-0 bg-black/40  transition-all duration-300"></div>
                   )}
                 </div>
               )}

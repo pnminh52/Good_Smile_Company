@@ -124,7 +124,7 @@ const LeftSide = ({ product }) => {
                 />
              
 
-             <button
+             {/* <button
   onClick={()=>handlePrev()}
   className="absolute top-1/2 -translate-y-1/2 -left-2 cursor-pointer bg-white w-14 h-14 rounded-r-full text-[#F06E00] flex items-center justify-center z-10 shadow"
 >
@@ -141,7 +141,7 @@ const LeftSide = ({ product }) => {
                     src="https://www.goodsmile.com/img/icon/arrow-paging.svg"
                     alt="prev"
                   />
-                </button>
+                </button> */}
             
               </div>
             </div>
@@ -157,7 +157,7 @@ const LeftSide = ({ product }) => {
                     onClick={() => {
                       setMainImage(img);
                       setCurrentIndex(i);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      // window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
 
                   >
