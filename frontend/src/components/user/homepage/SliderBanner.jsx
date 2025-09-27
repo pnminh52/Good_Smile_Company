@@ -63,6 +63,7 @@ const ResponsiveImage = ({ small, large }) => (
 );
 const SliderBanner = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef =useRef(null)
   const progressRefs = useRef([]);
   useEffect(() => {
     let interval;
@@ -92,6 +93,7 @@ const SliderBanner = () => {
             nextEl: ".custom-next",
             prevEl: ".custom-prev",
           }}
+          onSwiper={(swiper) => (swiperRef.current = swiper)} 
           onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           slidesPerView={1.5}
           breakpoints={{
@@ -113,6 +115,7 @@ const SliderBanner = () => {
           {images.map((img, i) => (
             <SwiperSlide
               key={i}
+              
               className="transition-all duration-300 relative"
             >
               {({ isActive }) => (
@@ -149,11 +152,13 @@ const SliderBanner = () => {
   {images.map((_, i) => (
     <div
       key={i}
-      className={`h-2 rounded-full transition-all duration-500 ease-in-out 
-                  ${activeIndex === i ? 'w-10 bg-[#F06E00]' : 'w-2 bg-white'}`}
+      onClick={() => swiperRef.current?.slideToLoop(i)} 
+      className={`h-2 cursor-pointer rounded-full transition-all duration-500 ease-in-out 
+        ${activeIndex === i ? "w-10 bg-[#F06E00]" : "w-2 bg-white"}`}
     ></div>
   ))}
 </div>
+
 
 
       </div>
