@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import NoResult from "../../components/user/NoResult";
 import Loader from "../../components/Loader";
 import useToast from "../../hook/useToast";
-import { getAllNews } from './../../api/new';
+import { getAllNews } from "./../../api/new";
 import SearchBar from "../../components/user/new/SearchBar";
 import { Modal } from "antd";
 
@@ -11,8 +11,15 @@ const News = () => {
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
-  const [selectedNews, setSelectedNews] = useState(null); 
+  const [selectedNews, setSelectedNews] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleFilter = (type) => {
+    if (!type) {
+      setFilteredNews(news);
+    } else {
+      setFilteredNews(news.filter((n) => n.type.toLowerCase() === type));
+    }
+  };
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -61,7 +68,7 @@ const News = () => {
   return (
     <div className="sm:px-80 px-4 max-w-screen-xl mx-auto">
       <h1 className="text-xl font-semibold py-4 sm:py-6">News</h1>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} onFilter={handleFilter}/>
 
       {filteredNews.map((n, idx, arr) => (
         <div
@@ -84,7 +91,9 @@ const News = () => {
                 </p>
                 <div className="flex items-center gap-1">
                   <p className="w-2 h-2 bg-[#F06E00] rounded-full"></p>
-                  <p className="font-semibold text-gray-500 text-sm">{n.type}</p>
+                  <p className="font-semibold text-gray-500 text-sm">
+                    {n.type}
+                  </p>
                 </div>
               </div>
               <p className="font-semibold text-[15px] hover:text-[#F06E00] transition duration-300 ease-in-out text-black">
@@ -98,36 +107,32 @@ const News = () => {
       {filteredNews.length === 0 && <NoResult />}
 
       {/* Modal hiển thị chi tiết */}
-      <Modal
-        open={isModalVisible}
-        onCancel={closeModal}
-        footer={null}
-       
-      >
+      <Modal open={isModalVisible} onCancel={closeModal} footer={null}>
         {selectedNews && (
           <div>
-          <div className="flex items-center gap-2">
-          <p className="text-black text-md font-semibold ">
-              {new Date(selectedNews.created_at).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}{" "}
-           
+            <div className="flex items-center gap-2">
+              <p className="text-black text-md font-semibold ">
+                {new Date(selectedNews.created_at).toLocaleDateString("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}{" "}
+              </p>
+              <div className="flex items-center gap-1">
+                <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>
+                <p className="text-gray-500 font-semibold">
+                  {selectedNews.type}
+                </p>
+              </div>
+            </div>
+            <p className="text-black py-4 text-lg font-semibold">
+              {selectedNews.title}
             </p>
-           <div className="flex items-center gap-1">
-           <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>
-            <p className="text-gray-500 font-semibold">
-               {selectedNews.type}
-            </p>
-           </div>
-          </div>
-          <p className="text-black py-4 text-lg font-semibold">{selectedNews.title}</p>
             <div className="text-base text-black whitespace-pre-line">
               {selectedNews.content}
             </div>
             <p className=" flex items-center justify-end mx-auto ">
-      Good Smile Company
+              Good Smile Company
             </p>
           </div>
         )}
