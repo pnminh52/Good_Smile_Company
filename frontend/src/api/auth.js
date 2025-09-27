@@ -32,3 +32,9 @@ export const getProfile = (token) =>
   api.get("/profile", {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  export const changePassword = (data, token)=>{
+    return api.put("chnage-password", data, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
+  }

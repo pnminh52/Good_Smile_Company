@@ -166,3 +166,30 @@ export const getProfile = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  const userId = req.user?.id;
+  const { oldPassword, newPassword } = req.body;
+
+  if (!userId) return res.status(401).json({ error: "Not authorized" });
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ error: "Old and new password are required" });
+  }
+
+  try {
+    const user = await sql`SELECT password FROM users WHERE id = ${userId}`;
+    if (!user.length) return res.status(404).json({ error: "User not found" });
+
+    const validPass = await bcrypt.compare(oldPassword, user[0].password);
+    if (!validPass) return res.status(400).json({ error: "Old password is incorrect" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await sql`UPDATE users SET password = ${hashedPassword} WHERE id = ${userId}`;
+
+    res.json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error("❌ Change password error:", err.message);
+    res.status(500).json({ error: "Could not change password" });
+  }
+};
+

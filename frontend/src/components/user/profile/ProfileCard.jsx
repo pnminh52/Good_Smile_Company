@@ -93,7 +93,7 @@ const ProfileCard = ({handdleLogOut}) => {
 
   return (
     <Card
-      
+     
        className=" mx-auto px-4 justify-center [&_.ant-card-cover]:flex [&_.ant-card-cover]:justify-center [&_.ant-card-cover]:items-center"
       
     
@@ -101,7 +101,7 @@ const ProfileCard = ({handdleLogOut}) => {
       
       
     >
-   <Form.Item   layout="vertical" label="Avatar" name="avatar">
+   <Form.Item style={{padding:"0px"}}   layout="vertical" label="Avatar" name="avatar">
   <Upload
     customRequest={handleUploadAvatar}
     listType="picture-card"
@@ -135,6 +135,7 @@ const ProfileCard = ({handdleLogOut}) => {
         <Form.Item label="Name" name="name">
           <Input />
         </Form.Item>
+       
 
         <Form.Item label="Email" name="email">
           <Input disabled />

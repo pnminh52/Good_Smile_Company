@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useToast from "../../hook/useToast";
 import ProfileCard from './../../components/user/profile/ProfileCard';
 import UserMenu from './../../components/user/profile/UserMenu';
+import Security from './../../components/user/profile/Security';
 const Profile = () => {
   const toast = useToast();
   const { logout } = useAuth();
@@ -21,6 +22,7 @@ const Profile = () => {
         <p className=" text-xl  font-semibold sm:py-6  py-4"> Account</p>
        <div className="space-y-2">
        <UserMenu />
+       <Security />
        <ProfileCard handdleLogOut={handdleLogOut}/>
        </div>
     
