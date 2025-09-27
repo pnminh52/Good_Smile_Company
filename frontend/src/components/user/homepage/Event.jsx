@@ -18,6 +18,8 @@ const Event = () => {
   <img className="sm:rounded-lg cursor-pointer rounded-sm" src="https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/recommend/23/footerbanner.jpg" alt="" />
   <img className="sm:rounded-lg cursor-pointer rounded-sm" src="https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/recommend/25/トップページブランドバナー_hello.jpg" alt="" />
   <img className="sm:rounded-lg cursor-pointer rounded-sm" src="https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/recommend/29/top_banner.jpg" alt="" />
+  <img className="sm:rounded-lg cursor-pointer rounded-sm" src="https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/recommend/21/5170530e4a5e402858c24e37cc2e57a9.jpg" alt="" />
+
 </div>
 
 

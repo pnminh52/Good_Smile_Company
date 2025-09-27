@@ -122,7 +122,7 @@ const Cart = () => {
 
   return (
     <div className="max-w-screen-xl w-full mx-auto sm:px-30 px-4">
-      <h1 className="  text-xl  font-semibold sm:py-6 py-4"> Cart</h1>
+      <h1 className="  text-xl  font-semibold sm:py-6 py-4"> Cart ({cartItems.length})</h1>
 
       <div className="flex flex-col lg:flex-row gap-4 ">
         <div className="w-full sm:w-[70%]">

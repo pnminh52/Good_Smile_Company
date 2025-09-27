@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCategories } from "../../../api/categories";
+import { getCategories } from "./frontend/src/api/categories";
 
 const SearchBar = ({ filteredProducts }) => {
   const { categoryId } = useParams();

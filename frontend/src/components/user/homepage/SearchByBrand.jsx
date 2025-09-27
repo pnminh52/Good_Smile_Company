@@ -25,9 +25,7 @@ const SearchByBrand = () => {
 
   return (
     <div>
-      {loading ? (
-        <Loader />
-      ) : (
+     
         <div className="space-y-4 py-4">
           <div className="flex flex-col items-center">
             <img
@@ -59,7 +57,7 @@ const SearchByBrand = () => {
             </div>
           </div>
         </div>
-      )}
+    
     </div>
   );
 };

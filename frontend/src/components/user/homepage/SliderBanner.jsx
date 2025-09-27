@@ -9,6 +9,18 @@ import { useRef, useState, useEffect } from "react";
 const images = [
   {
     small:
+      "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/321/14faa0d2f05307b0dea9a4d566930fbf.jpg",
+    large:
+      "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/321/1ff3e79cfd69e7d431bb0a062c6727a6.jpg",
+  },
+  {
+    small:
+      "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/322/c647b72b06761d1cff83abf1944f1384.jpg",
+    large:
+      "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/322/63dd663e29e0c8b9b3ccbdd9c0499f33.jpg",
+  },
+  {
+    small:
       "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/320/d398eed4a3f1752525355232e36de551.jpg",
     large:
       "https://www.goodsmile.com/gsc-webrevo-sdk-storage-prd/carousel/320/2d1444a3632c24e098b6fcac0cf02f82.jpg",

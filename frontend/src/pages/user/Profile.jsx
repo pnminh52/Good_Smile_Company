@@ -17,10 +17,12 @@ const Profile = () => {
 
   return (
     <div className="max-w-screen-xl sm:px-60 px-4 mx-auto ">
-      <div className="py-6 space-y-6 ">
-        <p className=" font-semibold">My Account</p>
-        <UserMenu />
-        <ProfileCard handdleLogOut={handdleLogOut}/>
+      <div className=" ">
+        <p className=" text-xl  font-semibold sm:py-6  py-4"> Account</p>
+       <div className="space-y-2">
+       <UserMenu />
+       <ProfileCard handdleLogOut={handdleLogOut}/>
+       </div>
     
       </div>
     

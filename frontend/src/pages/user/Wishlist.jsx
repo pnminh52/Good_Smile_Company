@@ -3,6 +3,7 @@ import ProductCard from "../../components/user/listProduct/ProductCard";
 import { getWishlistApi } from "../../api/wishlist";
 import useToast from "../../hook/useToast";
 import Loader from "../../components/Loader";
+import NoResult from './../../components/user/NoResult';
 
 const Wishlist = () => {
   const [loading, setLoading] = useState(true);
@@ -40,8 +41,8 @@ const Wishlist = () => {
 
   if (wishlistProducts.length === 0) {
     return (
-      <div className="text-center py-20 text-gray-500">
-        Your wishlist is empty
+      <div >
+       <NoResult />
       </div>
     );
   }

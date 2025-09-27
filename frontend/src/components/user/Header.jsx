@@ -6,6 +6,9 @@ const Header = () => {
   const { user } = useAuth();
 
   const navigate = useNavigate();
+  const upcomingAlert =()=>{
+    toast.info("Feature coming soon!")
+  }
 
   const handleCartClick = (e) => {
     if (!user) {
@@ -52,7 +55,7 @@ const Header = () => {
               News/Shipping Info
             </li>
            </Link>
-            <li className="flex items-center cursor-pointer gap-2 font-semibold ">
+            <li onClick={()=>upcomingAlert()} className="flex items-center cursor-pointer gap-2 font-semibold ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -71,7 +74,7 @@ const Header = () => {
               </svg>
               User Guide
             </li>
-            <li className="flex items-center cursor-pointer gap-2 font-semibold ">
+            <li onClick={()=>upcomingAlert()} className="flex items-center cursor-pointer gap-2 font-semibold ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -161,7 +164,8 @@ const Header = () => {
       </div>
       <div className="block sm:hidden h-16 flex items-center justify-center border-t border-gray-300">
   <ul className=" flex items-center gap-6">
-            <li className="flex items-center flex-col cursor-pointer gap-0 font- text-sm ">
+           <Link to={"/new"}>
+           <li className="flex items-center flex-col cursor-pointer gap-0 font- text-sm ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -183,8 +187,8 @@ const Header = () => {
                 ></path>
               </svg>{" "}
             Shipping Info
-            </li>
-            <li className="flex items-center flex-col cursor-pointer gap-0 text-sm ">
+            </li></Link>
+            <li onClick={()=>upcomingAlert()} className="flex items-center flex-col cursor-pointer gap-0 text-sm ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -203,7 +207,7 @@ const Header = () => {
               </svg>
               User Guide
             </li>
-            <li className="flex items-center flex-col cursor-pointer gap-0 text-sm ">
+            <li onClick={()=>upcomingAlert()} className="flex items-center flex-col cursor-pointer gap-0 text-sm ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"

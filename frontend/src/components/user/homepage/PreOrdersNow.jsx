@@ -33,11 +33,6 @@ const PreOrdersNow = () => {
         <p className="sm:text-lg text-sm font-semibold">Preorders Open Now</p>
       </div>
 
-      {loading ? (
-        <>
-          <Loader  />
-        </>
-      ) : (
        <div className='sm:px-0   px-4'>
        <ProductCard products={products.slice(0, 10)} columns={5} />
 <div className='py-2 block sm:hidden'>
@@ -46,7 +41,7 @@ const PreOrdersNow = () => {
 
 </Link></div>       </div>
 
-      )}
+    
     </div>
   );
 };
