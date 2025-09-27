@@ -34,9 +34,9 @@ const PreOrdersNow = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-10">
-          <Loader size={14} />
-        </div>
+        <>
+          <Loader  />
+        </>
       ) : (
        <div className='sm:px-0   px-4'>
        <ProductCard products={products.slice(0, 10)} columns={5} />

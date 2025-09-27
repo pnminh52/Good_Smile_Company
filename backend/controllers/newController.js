@@ -14,15 +14,15 @@ export const getAllNews = async (req, res) => {
 // Thêm tin tức
 export const createNews = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, type } = req.body;
 
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title và content là bắt buộc" });
+    if (!title || !content || !type) {
+      return res.status(400).json({ error: "Title, content và type là bắt buộc" });
     }
 
     const [newNews] = await sql`
-      INSERT INTO news (title, content, created_at)
-      VALUES (${title}, ${content}, NOW())
+      INSERT INTO news (title, content, type, created_at)
+      VALUES (${title}, ${content}, ${type}, NOW())
       RETURNING *
     `;
 
@@ -37,11 +37,11 @@ export const createNews = async (req, res) => {
 export const updateNews = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const { title, content, type } = req.body;
 
     const [updatedNews] = await sql`
       UPDATE news
-      SET title = ${title}, content = ${content}
+      SET title = ${title}, content = ${content}, type=${type}
       WHERE id = ${id}
       RETURNING *
     `;
