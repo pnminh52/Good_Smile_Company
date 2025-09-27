@@ -27,18 +27,21 @@ const Security = () => {
       toast.error("New password and confirm password do not match");
       return;
     }
-
+  
     try {
-      const res = await changePassword({
-        oldPassword,
-        newPassword,
-      });
-      toast.success(res.message || "Password changed successfully");
+      const token = localStorage.getItem("token"); // hoặc lấy từ context/store
+      const res = await changePassword(
+        { oldPassword, newPassword },
+        token
+      );
+  
+      toast.success(res.data?.message || "Password changed successfully");
       handleCloseModal();
     } catch (err) {
       toast.error(err.response?.data?.error || "Change password failed");
     }
   };
+  
 
   return (
     <div className="space-y-2 ">

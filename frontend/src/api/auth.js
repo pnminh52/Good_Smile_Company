@@ -33,8 +33,9 @@ export const getProfile = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  export const changePassword = (data, token)=>{
-    return api.put("chnage-password", data, {
-      headers: { Authorization: `Bearer ${token}`}
-    })
-  }
+  export const changePassword = (data, token) => {
+    return api.put("/change-password", data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  };
+  
