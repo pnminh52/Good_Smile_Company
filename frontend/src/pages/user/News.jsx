@@ -102,21 +102,33 @@ const News = () => {
         open={isModalVisible}
         onCancel={closeModal}
         footer={null}
-        title={selectedNews?.title}
+       
       >
         {selectedNews && (
           <div>
-            <p className="text-gray-500 text-sm mb-2">
+          <div className="flex items-center gap-2">
+          <p className="text-black text-md font-semibold ">
               {new Date(selectedNews.created_at).toLocaleDateString("vi-VN", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
               })}{" "}
-              - {selectedNews.type}
+           
             </p>
+           <div className="flex items-center gap-1">
+           <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>
+            <p className="text-gray-500 font-semibold">
+               {selectedNews.type}
+            </p>
+           </div>
+          </div>
+          <p className="text-black py-4 text-lg font-semibold">{selectedNews.title}</p>
             <div className="text-base text-black whitespace-pre-line">
               {selectedNews.content}
             </div>
+            <p className=" flex items-center justify-end mx-auto ">
+      Good Smile Company
+            </p>
           </div>
         )}
       </Modal>
