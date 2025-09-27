@@ -136,7 +136,7 @@ const Cart = () => {
           />
         </div>
         <div className="w-full sm:w-[30%] sticky top-4 self-start">
-          <PriceInfo handleCheckout={handleCheckout} cartItems={cartItems} />
+          <PriceInfo handleCheckout={handleCheckout} cartItems={cartItems} handleDeleteAll={handleDeleteAll}/>
         </div>
       </div>
 

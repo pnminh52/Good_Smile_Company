@@ -268,10 +268,10 @@ const handleLoadMore = () => {
            <>
             <ProductCard products={filteredProducts.slice(0, visibleCount)} />
                        {visibleCount < filteredProducts.length && (
-                         <div className="flex justify-center mt-4">
+                         <div className="flex w-full  justify-center mt-4">
                            <button
                              onClick={handleLoadMore}
-                             className="px-14 py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
+                             className="sm:w-48 w-full py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
                            >
                              Load More
                            </button>
