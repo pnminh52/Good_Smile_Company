@@ -97,7 +97,7 @@ const LeftSide = ({ product }) => {
       <div className="block sm:hidden">
         <div className="flex flex-col sm:flex-row gap-4">
           {/* List ảnh phụ */}
-          <div className="hidden sm:flex sm:flex-col lg:flex-col w-16 h-[400px] lg:h-[500px] hide-scrollbar overflow-y-auto gap-2">
+          {/* <div className="hidden sm:flex sm:flex-col lg:flex-col w-16 h-[400px] lg:h-[500px] hide-scrollbar overflow-y-auto gap-2">
             {product.additional_images?.map((img, i) => (
               <div
                 key={i}
@@ -111,8 +111,7 @@ const LeftSide = ({ product }) => {
                 />
               </div>
             ))}
-          </div>
-
+          </div> */}
           {/* Ảnh chính */}
           <div className="flex-1 w-full">
             <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center">
@@ -127,7 +126,7 @@ const LeftSide = ({ product }) => {
 
              <button
   onClick={()=>handlePrev()}
-  className="absolute top-1/2 -translate-y-1/2 left-0 cursor-pointer bg-white w-14 h-14 rounded-r-full text-[#F06E00] flex items-center justify-center z-10 shadow"
+  className="absolute top-1/2 -translate-y-1/2 -left-2 cursor-pointer bg-white w-14 h-14 rounded-r-full text-[#F06E00] flex items-center justify-center z-10 shadow"
 >
   <img
     className="w-3 rotate-180"
@@ -136,7 +135,7 @@ const LeftSide = ({ product }) => {
   />
 </button>
 
-                <button onClick={() => handleNext()} className="absolute top-1/2 -translate-y-1/2 right-0 cursor-pointer rounded-l-full bg-white w-14 h-14 shadow   text-[#F06E00]  flex items-center justify-center z-10">
+                <button onClick={() => handleNext()} className="absolute top-1/2 -translate-y-1/2 -right-2 cursor-pointer rounded-l-full bg-white w-14 h-14 shadow   text-[#F06E00]  flex items-center justify-center z-10">
                   <img
                     className="w-3"
                     src="https://www.goodsmile.com/img/icon/arrow-paging.svg"

@@ -27,7 +27,7 @@ const ProductDetails = () => {
   }, [id]);
 
   if (loading) {
-    return <p className="text-center mt-10"><Loader /></p>;
+    return <p ><Loader /></p>;
   }
 
   if (!product) {
