@@ -3,7 +3,7 @@ import { getProducts, deleteProduct } from "../../../api/products";
 import { Link } from "react-router-dom";
 import { Table, Button, Popconfirm, Image, Space, message } from "antd";
 import { PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getAllNews } from "../../../api/new";
+import { getAllNews, deleteNews } from "../../../api/new";
 import useToast from "../../../hook/useToast";
 const NewList = () => {
   const [news, setNews] = useState([]);
@@ -20,6 +20,18 @@ const NewList = () => {
       setLoading(false);
     }
   };
+  const handleDelete = async (id) => {
+    try {
+      await deleteNews(id); 
+      message.success("News deleted successfully!");
+
+      fetchNews();
+    } catch (err) {
+      console.error("❌ Lỗi xóa news:", err);
+      message.error("Delete news failed!");
+    }
+  };
+  
   useEffect(() => {
     fetchNews();
   }, []);
@@ -36,12 +48,8 @@ const NewList = () => {
          title: "Title",
          dataIndex: "title",
          render: (text) => <strong>{text}</strong>,
-       },
-       {
-        title: "content",
-        dataIndex: "content",
-        render: (text) => <strong>{text}</strong>,
-      },
+       }
+,      
       {
         title: "type",
         dataIndex: "type",
@@ -85,8 +93,10 @@ const NewList = () => {
   ]
 
   return <div>
+<Link to={"/admin/news/add"}>
+<button >Add news</button>
 
-  <Table
+</Link>  <Table
          rowKey="id"
          columns={columns}
          dataSource={news}

@@ -30,7 +30,7 @@ const NewsSection = () => {
      <div className="px-4 bg-white">
      {news.slice(0, 5).map((n, idx, arr) => (
   <Link
-    to={`/news/${n.id}`}
+    to={`/new`}
     key={n.id}
     className="flex relative flex-col items-center cursor-pointer group w-full last:border-b-0"
   >

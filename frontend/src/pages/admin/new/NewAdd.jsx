@@ -1,72 +1,70 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import useToast from "../../../hook/useToast";
+import React, { useState } from "react";
+import { Form, Input, Select, Button, Card, message } from "antd";
 import { createNews } from "../../../api/new";
+import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+const { Option } = Select;
+
 const NewAdd = () => {
-  const [form, setForm] = useState({ title: "", content: "" });
-  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const toast = useToast();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.title.trim()) {
-      toast.error("Title is required!");
-      return;
-    }
-    if (!form.content.trim()) {
-      toast.error("Title is required!");
-      return;
-    }
-    if (!form.type.trim()) {
-      toast.error("Type is required!");
-      return;
-    }
+  const [content, setContent] = useState(""); // <-- state cho ReactQuill
+
+  const handleFinish = async (values) => {
     try {
-      setLoading(true);
-      await createNews(form);
-      toast.success("New created successfully!");
-      setForm({ title: "", content: "" });
+      await createNews({ ...values, content }); // gộp content vào form values
+      message.success("News added successfully!");
       navigate("/admin/news");
-    } catch (error) {
-      toast.error("Failed to add news, please try again!");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error("❌ Lỗi thêm news:", err);
+      message.error("Add news failed!");
     }
   };
+
   return (
-    <div>
-      <h1>Add new page</h1>
-      <form action="" onSubmit={handleSubmit}>
-        <label htmlFor="">title</label>
-        <input
-          type="text"
-          placeholder="title"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-        />
-        <label htmlFor="">content</label>
-        <input
-          type="text"
-          placeholder="content"
-          value={form.content}
-          onChange={(e) => setForm({ ...form, content: e.target.value })}
-        />
-        <select
-          name="  
-        
-        type
-        "
-          id="
-          type
-          "
+    <Card title="Add New News">
+      <Form form={form} layout="vertical" onFinish={handleFinish}>
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[{ required: true, message: "Please input news title!" }]}
         >
-          <option value="1">Type 1</option>
-          <option value="2">Type 2</option>
-        </select>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+          <Input placeholder="News title" />
+        </Form.Item>
+
+        <Form.Item
+          label="Content"
+          rules={[{ required: true, message: "Please input news content!" }]}
+        >
+          <ReactQuill value={content} onChange={setContent} />
+        </Form.Item>
+
+        <Form.Item
+          label="Type"
+          name="type"
+          rules={[{ required: true, message: "Please select news type!" }]}
+        >
+          <Select placeholder="Select type">
+            <Option value="Shipping info">Shipping info</Option>
+            <Option value="Notice">Notice</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Add News
+          </Button>
+          <Button
+            style={{ marginLeft: 8 }}
+            onClick={() => navigate("/admin/news")}
+          >
+            Cancel
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 

@@ -130,9 +130,11 @@ const News = () => {
             <p className="text-black py-4 text-lg font-semibold">
               {selectedNews.title}
             </p>
-            <div className="text-base text-black whitespace-pre-line">
-              {selectedNews.content}
-            </div>
+            <div
+  className="text-base text-black"
+  dangerouslySetInnerHTML={{ __html: selectedNews.content }}
+></div>
+
             <p className=" flex items-center justify-end mx-auto ">
               Good Smile Company
             </p>

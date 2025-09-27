@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { getBanners } from './../../../api/banner';
+import { useNavigate } from "react-router-dom";
 
 const ResponsiveImage = ({ small, large }) => (
   <picture>
@@ -19,6 +20,18 @@ const ResponsiveImage = ({ small, large }) => (
 );
 
 const SliderBanner = () => {
+  
+  const navigate =useNavigate()
+  const handleClickBanner = (link, navigate) => {
+    if (!link) return;
+  
+    if (link.startsWith("http://") || link.startsWith("https://")) {
+      window.open(link, "_blank"); 
+    } else {
+      navigate(link);
+    }
+  };
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const [banners, setBanners] = useState([]);
   const swiperRef = useRef(null);
@@ -62,10 +75,12 @@ const SliderBanner = () => {
             delay: 5000,
           }}
         >
-          {banners.map((banner, i) => (
+          {banners
+          .filter((banner)=>banner.status==="active")
+          .map((banner, i) => (
             <SwiperSlide key={banner.id || i} className="transition-all duration-300 relative">
               {({ isActive }) => (
-                <div className="relative transition duration-300 ease-in-out cursor-pointer border-3 border-transparent rounded-lg hover:border-[#EE7800] overflow-hidden">
+                <div onClick={()=>handleClickBanner(banner.link, navigate)} className="relative transition duration-300 ease-in-out cursor-pointer border-3 border-transparent rounded-lg hover:border-[#EE7800] overflow-hidden">
                   <ResponsiveImage
                     small={banner.image_mobile}
                     large={banner.image_desktop}
@@ -100,7 +115,9 @@ const SliderBanner = () => {
 
         {/* Chấm progress */}
         <div className="absolute -bottom-4.5 left-0 right-0 flex justify-center z-50 gap-2 px-4">
-          {banners.map((_, i) => (
+          {banners
+          .filter((banner)=>banner.status==="active")
+          .map((_, i) => (
             <div
               key={i}
               onClick={() => swiperRef.current?.slideToLoop(i)}

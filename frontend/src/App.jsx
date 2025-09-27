@@ -34,6 +34,9 @@ import SearchByKeyword from "./pages/user/SearchByKeyword";
 import { useLogout } from "./hook/useLogout";
 import { setLogoutRef } from './hook/useAuth';
 import NewList from "./pages/admin/new/NewList";
+import BannerEdit from "./pages/admin/banner/BannerEdit";
+import BannerList from "./pages/admin/banner/BannerList";
+import BannerAdd from './pages/admin/banner/BannerAdd';
 
 function App() {
   return (
@@ -91,6 +94,10 @@ function AppContent() {
           <Route path="products" element={<ProductList />} />
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />
+                <Route path="banners" element={<BannerList />} />
+                    <Route path="banners/add" element={<BannerAdd />} />
+                    <Route path="banners/edit/:id" element={<BannerEdit />} />
+                    
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<CategoryAdd />} />
           <Route path="categories/edit/:id" element={<CategoryEdit />} />
