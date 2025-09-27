@@ -13,6 +13,10 @@ const News = () => {
   const [filteredNews, setFilteredNews] = useState([]);
   const [selectedNews, setSelectedNews] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [visibleCount, setVisibleCount]=useState(5)
+  const handleLoadMore=()=>{
+    setVisibleCount((prev)=>prev+5)
+  }
   const handleFilter = (type) => {
     if (!type) {
       setFilteredNews(news);
@@ -72,6 +76,7 @@ const News = () => {
 
       {[...filteredNews]
       .sort((a,b)=>new Date(b.created_at)-(a.created_at))
+      .slice(0, visibleCount)
       .map((n, idx, arr) => (
         <div
           key={n.id}
@@ -105,6 +110,16 @@ const News = () => {
           </div>
         </div>
       ))}
+        {visibleCount < filteredNews.length && (
+    <div className="flex justify-center my-4">
+        <button
+                             onClick={handleLoadMore}
+                             className="sm:w-48 w-full py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
+                           >
+                             Load More
+                           </button>
+    </div>
+  )}
 
       {filteredNews.length === 0 && <NoResult />}
 

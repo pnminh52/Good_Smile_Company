@@ -80,7 +80,7 @@ const SliderBanner = () => {
           .map((banner, i) => (
             <SwiperSlide key={banner.id || i} className="transition-all duration-300 relative">
               {({ isActive }) => (
-                <div onClick={()=>handleClickBanner(banner.link, navigate)} className="relative transition duration-300 ease-in-out cursor-pointer border-3 border-transparent rounded-lg hover:border-[#EE7800] overflow-hidden">
+                <div  className="relative transition duration-300 ease-in-out cursor-pointer border-3 border-transparent rounded-lg hover:border-[#EE7800] overflow-hidden">
                   <ResponsiveImage
                     small={banner.image_mobile}
                     large={banner.image_desktop}
