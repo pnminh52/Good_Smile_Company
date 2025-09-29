@@ -1,8 +1,8 @@
 import OpenAI from "openai";
-import {sql} from "../config/db";
-import { dotenv } from 'dotenv';
+import {sql} from "../config/db.js";
 
-dotenv.config()
+
+
 
 const client = new OpenAI({
     apiKey: process.env.OPEN_API_KEY
