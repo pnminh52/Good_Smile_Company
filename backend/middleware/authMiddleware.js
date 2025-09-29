@@ -1,0 +1,26 @@
+import { sql } from "../config/db.js";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+export const protect = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Not authorized" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Kiểm tra user z
+    const user = await sql`SELECT id, role FROM users WHERE id = ${decoded.id}`;
+    if (!user.length) {
+      return res.status(401).json({ error: "User does not exist. Please log in again!" });
+    }
+
+    // Gắn thông tin user vào req
+    req.user = { id: user[0].id, role: user[0].role };
+    next();
+  } catch (err) {
+    console.error("❌ Auth middleware error:", err.message);
+    return res.status(401).json({ error: "Token is invalid or expired!" });
+  }
+};
