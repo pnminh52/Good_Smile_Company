@@ -1,14 +1,23 @@
-import React, { useState } from "react";
-import { Table, Button, Tag, Tooltip, ConfigProvider } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Button, Tag, Tooltip } from "antd";
 import { EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 import PopupDetails from "./PopupDetails";
 import { getOrderDetail } from "../../../api/orders";
 import Pagination from "../Pagination";
+
 const OrderTable = ({ orders, token, reloadOrders }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(window.innerWidth <= 768 ? 5 : 10);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPageSize(window.innerWidth <= 768 ? 5 : 10);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const paginatedOrders = orders.slice(
     (currentPage - 1) * pageSize,
@@ -28,12 +37,7 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
   };
 
   const columns = [
-    {
-      title: "Order ID",
-      dataIndex: "id",
-      key: "id",
-      align: "center",
-    },
+    { title: "Order ID", dataIndex: "id", key: "id", align: "center" },
     {
       title: "Total",
       dataIndex: "total",
@@ -53,7 +57,7 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       key: "status",
       align: "center",
       render: (status) => {
-        let color =
+        const color =
           status === "Pending"
             ? "orange"
             : status === "Processing"
@@ -69,13 +73,8 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       key: "address",
       align: "center",
       render: (_, record) => {
-        const fullAddress = [record.address, record.district]
-          .filter(Boolean)
-          .join(", ");
-        const shortAddress =
-          fullAddress.length > 20
-            ? fullAddress.slice(0, 20) + "..."
-            : fullAddress;
+        const fullAddress = [record.address, record.district].filter(Boolean).join(", ");
+        const shortAddress = fullAddress.length > 20 ? fullAddress.slice(0, 20) + "..." : fullAddress;
         return <Tooltip title={fullAddress}>{shortAddress}</Tooltip>;
       },
     },
@@ -93,13 +92,7 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
       render: (_, record) => (
         <Button
           type="text"
-          icon={
-            loadingId === record.id ? (
-              <LoadingOutlined spin />
-            ) : (
-              <EyeOutlined />
-            )
-          }
+          icon={loadingId === record.id ? <LoadingOutlined spin /> : <EyeOutlined />}
           onClick={() => handleViewDetails(record.id)}
         />
       ),
@@ -107,23 +100,17 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
   ];
 
   return (
-
     <div className="overflow-x-auto">
-    <Table
-        dataSource={paginatedOrders}
-        columns={columns}
-        rowKey="id"
-        pagination={false}
-      />
-{orders.length > pageSize && (
-  <Pagination
-    currentPage={currentPage}
-    totalPages={Math.ceil(orders.length / pageSize)}
-    onPageChange={setCurrentPage}
-  />
-)}
+      <Table dataSource={paginatedOrders} columns={columns} rowKey="id" pagination={false} />
 
-  
+      {orders.length > pageSize && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(orders.length / pageSize)}
+          onPageChange={setCurrentPage}
+        />
+      )}
+
       {selectedOrder && (
         <PopupDetails
           order={selectedOrder}
@@ -133,10 +120,7 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
         />
       )}
     </div>
-
-  
   );
-  
 };
 
 export default OrderTable;
