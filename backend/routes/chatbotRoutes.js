@@ -1,7 +1,9 @@
-import express from "express"
-import { chatWithBot } from '../controllers/chatbotController.js';
+import express from "express";
+import { chatWithBot } from "../controllers/chatbotController.js";
+
 const router = express.Router();
 
-router.post("/", chatWithBot)
+// Chỉ POST, không GET
+router.post("/", chatWithBot);
 
-export default router
+export default router;

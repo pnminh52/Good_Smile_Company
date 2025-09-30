@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Drawer, Button, Input, message as antdMessage } from "antd";
+import { useState, useRef, useEffect } from "react";
+import { Drawer, Button, Input, message as antdMessage, Spin } from "antd";
 import { MessageOutlined } from "@ant-design/icons";
 import { getChatBot } from "../api/chatbot";
 
@@ -9,9 +9,17 @@ const ChatPopup = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false); // ✅ thêm loading
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef(null);
 
   const toggleDrawer = () => setOpen(!open);
+
+  // Auto scroll khi có tin nhắn mới
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -22,7 +30,7 @@ const ChatPopup = () => {
     setLoading(true);
 
     try {
-      const data = await getChatBot(text);
+      const { data } = await getChatBot(text);
       setMessages((prev) => [...prev, { from: "bot", text: data.reply }]);
     } catch (err) {
       console.error(err);
@@ -34,7 +42,6 @@ const ChatPopup = () => {
 
   return (
     <>
-      {/* Nút mở chat */}
       <Button
         type="primary"
         shape="circle"
@@ -44,7 +51,6 @@ const ChatPopup = () => {
         onClick={toggleDrawer}
       />
 
-      {/* Drawer chat */}
       <Drawer
         title="Chat với Bot"
         placement="right"
@@ -53,13 +59,14 @@ const ChatPopup = () => {
         open={open}
       >
         <div className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto mb-3 border border-gray-200 rounded p-2">
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto mb-3 border border-gray-200 rounded p-2"
+          >
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`my-1 ${
-                  msg.from === "user" ? "text-right" : "text-left"
-                }`}
+                className={`my-1 ${msg.from === "user" ? "text-right" : "text-left"}`}
               >
                 <span
                   className={`inline-block px-3 py-1 rounded-lg ${
@@ -72,6 +79,7 @@ const ChatPopup = () => {
                 </span>
               </div>
             ))}
+            {loading && <Spin />}
           </div>
 
           <div className="flex gap-2">
