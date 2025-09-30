@@ -48,6 +48,8 @@ const News = () => {
         toast.error("Failed to load news!");
       }
     };
+    window.scrollTo(0, 0);
+
     fetchNews();
   }, []);
 

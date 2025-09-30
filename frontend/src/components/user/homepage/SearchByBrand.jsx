@@ -20,6 +20,7 @@ const SearchByBrand = () => {
         setLoading(false);
       }
     };
+    
     fetchData();
   }, []);
 

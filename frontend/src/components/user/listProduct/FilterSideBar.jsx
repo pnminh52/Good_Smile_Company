@@ -4,6 +4,7 @@ import PopupFilters from "./PopupFilters";
 import PriceFilter from './PriceFilter';
 
 const { Option } = Select;
+const { Search } = Input;
 
 const FilterSideBar = ({
   priceRange, setPriceRange,
@@ -35,14 +36,14 @@ const FilterSideBar = ({
     <div className="space-y-3">
 
       <div className="hidden sm:block">
-        <Input
-          placeholder="Search..."
-          allowClear
-          size="large"
-          onSearch={(value) => setSearchTerm(value)}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
+      <Input
+  placeholder="Search..."
+  allowClear
+  size="large"
+  onChange={(e) => setSearchTerm(e.target.value)} 
+  value={searchTerm}
+/>
+
 
       </div>
 

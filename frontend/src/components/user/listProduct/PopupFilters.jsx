@@ -128,7 +128,7 @@ const PopupFilters = ({
         onCancel={handleClose}
         footer={null}
         centered
-        destroyOnClose
+        destroyOnHidden
         width={400}
         style={{ borderRadius: "15px", overflow: "hidden" }}
       >

@@ -170,6 +170,9 @@ useEffect(() => {
   window.addEventListener("resize", handleResize);
   return () => window.removeEventListener("resize", handleResize);
 }, []);
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [categoryFromUrl, keyword]);
 const handleLoadMore = () => {
   setVisibleCount((prev) => prev + 10);
 };

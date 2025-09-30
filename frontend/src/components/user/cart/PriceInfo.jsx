@@ -1,28 +1,15 @@
 import { useEffect, useState } from "react";
 import useShippingFee from "../../../hook/useShippingFee";
 import { Link } from "react-router-dom";
-import { Modal, Button } from "antd";
 
 const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
   const { shippingFee } = useShippingFee();
-  const [open, setOpen] = useState(false);
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
   const grandTotal = subtotal + (shippingFee ?? 0);
-
-
-  const handleOk = () => {
-    handleDeleteAll();
-    setOpen(false);
-  };
-  // useEffect(()=>{
-  //   console.log(address);
-    
-  // },[address])
-  
 
   return (
     <div>
@@ -40,14 +27,14 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
 
         <div className="flex items-center justify-between">
           <p>Shipping</p>
-          <p>
+          
           <p>
   {shippingFee === null
     ? "..."
     : shippingFee.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
 </p>
 
-          </p>
+         
         </div>
 
         <div className="flex font-semibold items-center justify-between">
@@ -94,36 +81,7 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
         </button> */}
       </div>
 
-      {/* Antd Confirm Modal */}
-      <Modal
-      width={400}
-  title="Clear Cart"
-  open={open}
-  footer={null} // bỏ footer mặc định
-  onCancel={() => setOpen(false)}
-  centered
->
-  <p>Are you sure you want to clear the cart?</p>
-  <p className="text-red-600">
-     There are few left in stock,
-     this action will permanently removed all items in your cart and can't be undone!  
-  </p>
-
-  <div className="flex gap-2 pt-4">
-    <button
-      onClick={() => setOpen(false)}
-      className="w-full cursor-pointer py-2 rounded-md border border-gray-300 text-gray-700"
-    >
-      Cancel
-    </button>
-    <button
-      onClick={handleOk}
-      className="w-full cursor-pointer py-2 rounded-md bg-red-600 text-white font-semibold"
-    >
-      Clear
-    </button>
-  </div>
-</Modal>
+     
 
     </div>
   );

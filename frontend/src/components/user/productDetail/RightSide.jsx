@@ -135,10 +135,10 @@ const RightSide = ({ product }) => {
   })} / {Number(product.sold).toLocaleString("vi-VN")} sold
 </p>
 
-        <div className="text-gray-500 text-sm ">
-        <p>Limit 3 per person /  Shipping costs not included</p>
+    
+        <p className="text-gray-500 text-sm ">Limit 3 per person /  Shipping costs not included</p>
      
-        </div>
+       
        
        </div>
 

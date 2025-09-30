@@ -6,8 +6,6 @@ import { getOrderDetail } from "../../../api/orders";
 import Pagination from "../Pagination";
 import NoResult from "../NoResult";
 
-const { Panel } = Collapse;
-
 const MobileOrder = ({ orders, token, reloadOrders }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
@@ -43,27 +41,23 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
     return <Tag color={color}>{status}</Tag>;
   };
 
-  if (orders.length===0) {
-   return(
-    <NoResult />
-   )
-    
-  }
+  if (orders.length === 0) return <NoResult />;
+
   return (
-    <div className="sm:hidden block"> 
-      <Collapse accordion>
-        {paginatedOrders.map((order) => (
-          <Panel
-            key={order.id}
-            header={
-              <div className="flex flex-col">
-                <span className="font-semibold">Order #{order.id}</span>
-                <span className="text-sm text-gray-500">
-                  {new Date(order.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            }
-          >
+    <div className="sm:hidden block">
+      <Collapse
+        accordion
+        items={paginatedOrders.map((order) => ({
+          key: order.id,
+          label: (
+            <div className="flex flex-col">
+              <span className="font-semibold">Order #{order.id}</span>
+              <span className="text-sm text-gray-500">
+                {new Date(order.created_at).toLocaleDateString()}
+              </span>
+            </div>
+          ),
+          children: (
             <div className="space-y-2">
               <p>
                 <span className="font-medium">Total</span>{" "}
@@ -81,31 +75,32 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
               </p>
 
               <Button
-  type="primary"
-  icon={loadingId === order.id ? <Spin size="small" /> : <EyeOutlined />}
-  onClick={() => handleViewDetails(order.id)}
-  style={{
-    backgroundColor: "#FFF7E6",
-    borderColor: "#EA9108",
-    color: "#EA9108",
-  }}
->
-  View Details
-</Button>
-
+                type="primary"
+                icon={loadingId === order.id ? <Spin size="small" /> : <EyeOutlined />}
+                onClick={() => handleViewDetails(order.id)}
+                style={{
+                  backgroundColor: "#FFF7E6",
+                  borderColor: "#EA9108",
+                  color: "#EA9108",
+                }}
+              >
+                View Details
+              </Button>
             </div>
-          </Panel>
-        ))}
-      </Collapse>
+          ),
+        }))}
+      />
 
-      {/* Pagination dưới cùng */}
-      <div className="mt-4">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(orders.length / pageSize)}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+      {/* Pagination chỉ hiện khi tổng orders > pageSize */}
+      {orders.length > pageSize && (
+        <div className="mt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(orders.length / pageSize)}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
 
       {selectedOrder && (
         <PopupDetails

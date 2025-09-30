@@ -39,7 +39,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
       title={`Order #${order.id}`}
       centered
       width={600} 
-      bodyStyle={{
+      styles={{
         maxHeight: "70vh",
         overflowY: "auto",
       }}

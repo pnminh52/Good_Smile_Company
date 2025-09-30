@@ -119,9 +119,9 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <p >
+      < >
         <Loader />
-      </p>
+      </>
     );
   }
   if (cartItems.length === 0) return <><NoResult /></>;

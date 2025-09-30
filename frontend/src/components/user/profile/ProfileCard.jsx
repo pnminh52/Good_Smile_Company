@@ -111,19 +111,33 @@ const ProfileCard = ({handdleLogOut}) => {
       
       
     >
-   <Form.Item style={{padding:"0px"}}   layout="vertical" label="Avatar" name="avatar">
+  
+
+
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={user}
+        onFinish={handleSave}
+        
+      >
+<Form.Item
+  name="avatar"
+  label="Avatar"
+  valuePropName="fileList"
+  getValueFromEvent={(e) => {
+    if (Array.isArray(e)) return e;
+    return e?.fileList || [];
+  }}
+>
   <Upload
     customRequest={handleUploadAvatar}
     listType="picture-card"
-    showUploadList={false} 
+    showUploadList={false}
     accept="image/*"
   >
     {user.avatar ? (
-      <img
-        src={user.avatar}
-        alt="avatar"
-        style={{ width: "100%" }}
-      />
+      <img src={user.avatar} alt="avatar" style={{ width: "100%" }} />
     ) : (
       <div>
         <UploadOutlined />
@@ -132,14 +146,6 @@ const ProfileCard = ({handdleLogOut}) => {
     )}
   </Upload>
 </Form.Item>
-
-
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={user}
-        onFinish={handleSave}
-      >
 
 
         <Form.Item label="Name" name="name">
