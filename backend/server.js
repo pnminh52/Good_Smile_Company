@@ -29,7 +29,7 @@ app.use(cors({
      "http://localhost:3000", 
      "https://good-smile-company.vercel.app",
     "https://good-smile-company-1.onrender.com"],
-  // credentials: true,
+  credentials: true,
 }));
 app.use(express.json());
 app.use(helmet());
