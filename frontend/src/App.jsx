@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import NotFound from "./pages/user/NotFound";
 import UserLayout from "./layouts/UserLayout";
+import ChatPopup from "./components/ChatPopup";
 
 import AdminLayout from "./layouts/AdminLayout";
 import ProductDetails from "./pages/user/ProductDetails";
@@ -64,25 +65,29 @@ function AppContent() {
         pauseOnHover
         draggable
       />
+        <ChatPopup/>
       <Routes>
         {/* User */}
-        <Route element={<UserLayout />}>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/product" element={<ListProduct />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/search" element={<SearchByKeyword />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/new" element={<News />} />
-          <Route path="/checkout" element={<CheckOut />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
+      
+           <Route element={<UserLayout />}>
+                    <Route path="/" element={<Homepage />} />
+                    <Route path="/product" element={<ListProduct />} />
+                    <Route path="/product/:id" element={<ProductDetails />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/search" element={<SearchByKeyword />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/new" element={<News />} />
+                    <Route path="/checkout" element={<CheckOut />} />
+                    <Route path="/profile/:id" element={<Profile />} />
+                    <Route path="/order" element={<Order />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
+        
+       
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />

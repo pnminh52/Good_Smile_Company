@@ -15,7 +15,7 @@ import wishlistRoutes from "./routes/wishlistRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js"
 import newRoutes from "./routes/newRoutes.js"
 import bannerRoutes from "./routes/bannerRoutes.js"
-import chatbotRoutes from"./routes/chatboRoutes.js"
+import chatbotRoutes from"./routes/chatbotRoutes.js"
 
 
 import { sql } from "./config/db.js";
