@@ -21,7 +21,7 @@ const SearchBar = ({ onSearch, onFilter }) => {
   
   return (
     <div className="w-full mx-auto space-y-2">
-      <Search
+      <Input
         placeholder="Search..."
         allowClear
         size="large"
