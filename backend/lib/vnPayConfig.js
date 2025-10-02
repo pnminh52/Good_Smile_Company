@@ -1,67 +1,67 @@
-import qs from "qs";
-import crypto from "crypto";
+import express from "express";
+import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
 
-export const vnp_TmnCode = process.env.VNP_TMNCODE;
-export const vnp_HashSecret = process.env.VNP_HASH_SECRET;
-export const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "http://localhost:5173/payment-return";
-export const vnp_IpnUrl = process.env.VNP_IPNURL || "http://localhost:3000/api/payment/ipn";
+const router = express.Router();
 
-export function sortObject(obj) {
-  return Object.keys(obj)
-    .sort()
-    .reduce((result, key) => {
-      result[key] = obj[key];
-      return result;
-    }, {});
-}
+// Tạo link thanh toán VNPay
+router.post("/create-payment", (req, res) => {
+  try {
+    const { amount, orderId, orderInfo } = req.body;
 
-export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
-  let vnp_Params = {};
-  vnp_Params["vnp_Version"] = "2.1.0";
-  vnp_Params["vnp_Command"] = "pay";
-  vnp_Params["vnp_TmnCode"] = vnp_TmnCode;
-  vnp_Params["vnp_Locale"] = "vn";
-  vnp_Params["vnp_CurrCode"] = "VND";
-  vnp_Params["vnp_TxnRef"] = orderId;
-  vnp_Params["vnp_OrderInfo"] = orderInfo;
-  vnp_Params["vnp_OrderType"] = "other";
-  vnp_Params["vnp_Amount"] = amount * 100;
-  vnp_Params["vnp_ReturnUrl"] = vnp_ReturnUrl;
-  vnp_Params["vnp_IpnUrl"] = vnp_IpnUrl;
-  vnp_Params["vnp_IpAddr"] = ipAddr;
-  vnp_Params["vnp_CreateDate"] = new Date()
-    .toISOString()
-    .replace(/[-:TZ.]/g, "")
-    .slice(0, 14);
+    // Validate
+    if (!amount || amount < 1000 || !orderId) {
+      return res.status(400).json({ message: "Invalid amount or orderId" });
+    }
 
-  vnp_Params = sortObject(vnp_Params);
+    const ipAddr = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1";
 
-  const signData = qs.stringify(vnp_Params, { encode: false });
-  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
-  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
-  vnp_Params["vnp_SecureHash"] = signed;
+    const paymentUrl = createPaymentUrl({
+      amount: Math.floor(amount), // số nguyên
+      orderId,
+      orderInfo,
+      ipAddr,
+    });
 
-  return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
-}
+    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
 
-/**
- * Verify callback từ VNPay
- * @param {Object} queryParams req.query từ VNPay gửi về
- * @returns {boolean} true nếu hợp lệ
- */
-export function verifyVnpayReturn(queryParams) {
-  let vnp_Params = { ...queryParams };
-  const secureHash = vnp_Params["vnp_SecureHash"];
+    res.json({ paymentUrl });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Cannot create payment URL" });
+  }
+});
 
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
+// Khi VNPay redirect về frontend
+router.get("/payment-return", (req, res) => {
+  try {
+    const isValid = verifyVnpayReturn(req.query);
+    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
 
-  vnp_Params = sortObject(vnp_Params);
+    if (req.query.vnp_ResponseCode === "00") {
+      res.json({ success: true, message: "Payment successful", data: req.query });
+    } else {
+      res.json({ success: false, message: "Payment failed", data: req.query });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "VNPay return error" });
+  }
+});
 
-  const signData = qs.stringify(vnp_Params, { encode: false });
-  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
-  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+// IPN (server to server)
+router.post("/payment/ipn", (req, res) => {
+  try {
+    const isValid = verifyVnpayReturn(req.body);
+    if (!isValid) return res.status(400).json({ RspCode: "97", Message: "Invalid signature" });
 
-  return secureHash === signed;
-}
+    if (req.body.vnp_ResponseCode === "00") {
+      // TODO: update DB, mark order as paid
+      return res.json({ RspCode: "00", Message: "Confirm Success" });
+    } else {
+      return res.json({ RspCode: "01", Message: "Payment Failed" });
+    }
+  } catch (err) {
+    res.status(500).json({ RspCode: "99", Message: "Server error" });
+  }
+});
+
+export default router;
