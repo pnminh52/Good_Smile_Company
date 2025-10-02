@@ -29,7 +29,7 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_Amount: Math.floor(amount) * 100,
     vnp_ReturnUrl,
    vnp_IpnUrl: vnp_IpnUrl.trim(),
-    vnp_IpAddr: ipAddr.split(",")[0].trim(),  // chỉ lấy IP đầu tiên
+    // vnp_IpAddr: ipAddr.split(",")[0].trim(),  // chỉ lấy IP đầu tiên
     vnp_CreateDate: new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14),
   };
 
