@@ -26,10 +26,10 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_TxnRef: orderId,
     vnp_OrderInfo: orderInfo,
     vnp_OrderType: "other",
-    vnp_Amount: amount * 100, // VNPay nhân 100
+    vnp_Amount: Math.floor(amount) * 100,
     vnp_ReturnUrl,
     vnp_IpnUrl,
-    vnp_IpAddr: ipAddr,
+    vnp_IpAddr: ipAddr.split(",")[0].trim(),  // chỉ lấy IP đầu tiên
     vnp_CreateDate: new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14),
   };
 
@@ -42,6 +42,7 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
 
   return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
 }
+
 
 export function verifyVnpayReturn(queryParams) {
   let vnp_Params = { ...queryParams };
