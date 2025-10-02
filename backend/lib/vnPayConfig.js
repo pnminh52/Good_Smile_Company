@@ -5,7 +5,7 @@ export const vnp_TmnCode = process.env.VNP_TMNCODE;
 export const vnp_HashSecret = process.env.VNP_HASH_SECRET;
 export const vnp_Url = process.env.VNP_URL || "https://pay.vnpay.vn/vpcpay.html";
 export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
-export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-api.onrender.com/api/payment/ipn";
+export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
 export function sortObject(obj) {
   return Object.keys(obj)
