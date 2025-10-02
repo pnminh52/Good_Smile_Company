@@ -26,7 +26,7 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_TxnRef: orderId,
     vnp_OrderInfo: orderInfo,
     vnp_OrderType: "other",
-    vnp_Amount: Math.round(50000),
+    vnp_Amount: Math.round(amount * 100),
     vnp_ReturnUrl,
    vnp_IpnUrl: vnp_IpnUrl.trim(),
     // vnp_IpAddr: ipAddr.split(",")[0].trim(),  // chỉ lấy IP đầu tiên
