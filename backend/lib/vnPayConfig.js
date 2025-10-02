@@ -1,67 +1,56 @@
-import express from "express";
-import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
+import qs from "qs";
+import crypto from "crypto";
 
-const router = express.Router();
+export const vnp_TmnCode = process.env.VNP_TMNCODE;
+export const vnp_HashSecret = process.env.VNP_HASH_SECRET;
+export const vnp_Url = process.env.VNP_URL || "https://pay.vnpay.vn/vpcpay.html";
+export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
+export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-company.vercel.app/api/payment/ipn";
 
-// Tạo link thanh toán VNPay
-router.post("/create-payment", (req, res) => {
-  try {
-    const { amount, orderId, orderInfo } = req.body;
+export function sortObject(obj) {
+  return Object.keys(obj)
+    .sort()
+    .reduce((result, key) => {
+      result[key] = obj[key];
+      return result;
+    }, {});
+}
 
-    // Validate
-    if (!amount || amount < 1000 || !orderId) {
-      return res.status(400).json({ message: "Invalid amount or orderId" });
-    }
+export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
+  let vnp_Params = {
+    vnp_Version: "2.1.0",
+    vnp_Command: "pay",
+    vnp_TmnCode,
+    vnp_Locale: "vn",
+    vnp_CurrCode: "VND",
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: orderInfo,
+    vnp_OrderType: "other",
+    vnp_Amount: amount * 100, // VNPay nhân 100
+    vnp_ReturnUrl,
+    vnp_IpnUrl,
+    vnp_IpAddr: ipAddr,
+    vnp_CreateDate: new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14),
+  };
 
-    const ipAddr = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1";
+  vnp_Params = sortObject(vnp_Params);
 
-    const paymentUrl = createPaymentUrl({
-      amount: Math.floor(amount), // số nguyên
-      orderId,
-      orderInfo,
-      ipAddr,
-    });
+  const signData = qs.stringify(vnp_Params, { encode: false });
+  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
+  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+  vnp_Params["vnp_SecureHash"] = signed;
 
-    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
+  return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
+}
 
-    res.json({ paymentUrl });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Cannot create payment URL" });
-  }
-});
-
-// Khi VNPay redirect về frontend
-router.get("/payment-return", (req, res) => {
-  try {
-    const isValid = verifyVnpayReturn(req.query);
-    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
-
-    if (req.query.vnp_ResponseCode === "00") {
-      res.json({ success: true, message: "Payment successful", data: req.query });
-    } else {
-      res.json({ success: false, message: "Payment failed", data: req.query });
-    }
-  } catch (err) {
-    res.status(500).json({ message: "VNPay return error" });
-  }
-});
-
-// IPN (server to server)
-router.post("/payment/ipn", (req, res) => {
-  try {
-    const isValid = verifyVnpayReturn(req.body);
-    if (!isValid) return res.status(400).json({ RspCode: "97", Message: "Invalid signature" });
-
-    if (req.body.vnp_ResponseCode === "00") {
-      // TODO: update DB, mark order as paid
-      return res.json({ RspCode: "00", Message: "Confirm Success" });
-    } else {
-      return res.json({ RspCode: "01", Message: "Payment Failed" });
-    }
-  } catch (err) {
-    res.status(500).json({ RspCode: "99", Message: "Server error" });
-  }
-});
-
-export default router;
+export function verifyVnpayReturn(queryParams) {
+  let vnp_Params = { ...queryParams };
+  const secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
+  vnp_Params = sortObject(vnp_Params);
+  const signData = qs.stringify(vnp_Params, { encode: false });
+  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
+  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+  return secureHash === signed;
+}

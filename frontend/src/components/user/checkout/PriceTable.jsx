@@ -6,34 +6,24 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, orderId }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleVnpayPayment = async () => {
-    if (!shippingFee) return;
-    
+const handleVnpayPayment = async () => {
+  const orderId = `ORDER${Date.now()}`; // tạo orderId duy nhất
+  const orderInfo = "Payment for order " + orderId;
+  const amount = total + shippingFee;
 
-    try {
-      setLoading(true);
-      const orderInfo = "Payment for order " + orderId;
-      const amount = total + shippingFee;
-
-      const response = await createVnpayPayment({
-        amount,
-        orderId,
-        orderInfo,
-      });
-
-      if (response.data.paymentUrl) {
-        // Redirect sang VNPay
-        window.location.href = response.data.paymentUrl;
-      } else {
-        alert("Cannot create VNPay payment link.");
-      }
-    } catch (error) {
-      console.error("VNPay Payment Error:", error);
-      alert("Payment failed. Please try again.");
-    } finally {
-      setLoading(false);
+  try {
+    const response = await createVnpayPayment({ amount, orderId, orderInfo });
+    if (response.data.paymentUrl) {
+      window.location.href = response.data.paymentUrl;
+    } else {
+      toast.error("Cannot create VNPay payment link.");
     }
-  };
+  } catch (err) {
+    toast.error("Payment failed. Please try again.");
+    console.error(err);
+  }
+};
+
 
   return (
     <div>
