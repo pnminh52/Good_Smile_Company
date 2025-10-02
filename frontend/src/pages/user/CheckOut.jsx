@@ -15,6 +15,7 @@ import Loader from './../../components/Loader';
 const Checkout = () => {
   const toast = useToast();
   const location = useLocation();
+  const orderId = `ORDER${Date.now()}`; 
   const navigate = useNavigate();
   const cartItems = location.state?.cartItems || [];
   const { address, shippingFee } = useShippingFee();
@@ -80,6 +81,7 @@ const Checkout = () => {
           shippingFee={shippingFee}
           handleCodPayment={handleCodPayment}
           loading={loading}   // truyền xuống PriceTable
+           orderId={orderId} 
         />
       </div>
 
