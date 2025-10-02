@@ -6,22 +6,15 @@ const router = express.Router();
 // Tạo link thanh toán VNPay
 router.post("/create-payment", (req, res) => {
   try {
-    const { amount, orderId, orderInfo } = req.body;
+    const { amount, orderInfo } = req.body;
 
-    if (!amount || amount < 1000 || !orderId)
-      return res.status(400).json({ message: "Invalid amount or orderId" });
+    if (!amount || amount < 1000)
+      return res.status(400).json({ message: "Invalid amount" });
 
-    const ipAddr = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1";
+    const { paymentUrl, orderId } = createPaymentUrl({ amount, orderInfo });
 
-    const paymentUrl = createPaymentUrl({
-      amount: Math.floor(amount),
-      orderId,
-      orderInfo,
-      ipAddr,
-    });
-
-    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
-    res.json({ paymentUrl });
+    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, paymentUrl });
+    res.json({ paymentUrl, orderId });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Cannot create payment URL" });
