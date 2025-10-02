@@ -24,13 +24,14 @@ import { aj } from "./lib/arcjetConfig.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(cors({
-  origin: ["http://localhost:5173",
-     "http://localhost:3000", 
-     "https://good-smile-company.vercel.app",
-    "https://good-smile-company-1.onrender.com"],
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: ["http://localhost:5173",
+//      "http://localhost:3000", 
+//      "https://good-smile-company.vercel.app",
+//     "https://good-smile-company-1.onrender.com"],
+//   credentials: true,
+// }));
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
