@@ -7,10 +7,15 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, orderId }) => {
   const [loading, setLoading] = useState(false);
 
 const handleVnpayPayment = async () => {
-  const orderId = `ORDER${Date.now()}`; // tạo orderId duy nhất
+  if (!orderId) {
+    toast.error("Order ID is missing.");
+    return;
+  }
+
   const orderInfo = "Payment for order " + orderId;
   const amount = total + shippingFee;
 
+  setLoading(true);
   try {
     const response = await createVnpayPayment({ amount, orderId, orderInfo });
     if (response.data.paymentUrl) {
@@ -21,8 +26,11 @@ const handleVnpayPayment = async () => {
   } catch (err) {
     toast.error("Payment failed. Please try again.");
     console.error(err);
+  } finally {
+    setLoading(false);
   }
 };
+
 
 
   return (
