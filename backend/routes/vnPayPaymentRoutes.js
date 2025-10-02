@@ -46,7 +46,7 @@ router.get("/payment-return", (req, res) => {
 });
 
 // IPN (server to server)
-router.post("/payment/ipn", (req, res) => {
+router.post("/ipn", (req, res) => {
   try {
     const isValid = verifyVnpayReturn(req.body);
     if (!isValid) return res.status(400).json({ RspCode: "97", Message: "Invalid signature" });
