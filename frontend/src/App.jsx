@@ -34,6 +34,7 @@ import SearchByKeyword from "./pages/user/SearchByKeyword";
 import { useLogout } from "./hook/useLogout";
 import { setLogoutRef } from './hook/useAuth';
 import NewList from "./pages/admin/new/NewList";
+import PaymentReturn from "./pages/user/PaymentReturn";
 
 
 function App() {
@@ -84,6 +85,7 @@ function AppContent() {
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/payment-return" element={<PaymentReturn />} />
                   </Route>
         
        
