@@ -3,7 +3,7 @@ import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
 
 const router = express.Router();
 
-// Tạo link thanh toán VNPay
+// --- Tạo link thanh toán VNPay ---
 router.post("/create-payment", (req, res) => {
   try {
     const { amount } = req.body;
@@ -12,7 +12,6 @@ router.post("/create-payment", (req, res) => {
       return res.status(400).json({ message: "Invalid amount" });
     }
 
-    // Lấy IP client
     const ipAddr =
       (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1")
         .split(",")[0]
@@ -36,21 +35,19 @@ router.post("/create-payment", (req, res) => {
   }
 });
 
-// Khi VNPay redirect về frontend
+// --- Redirect về frontend sau khi thanh toán ---
 router.get("/payment-return", (req, res) => {
   try {
-    // Decode tất cả params trước khi verify
+    const isValid = verifyVnpayReturn(req.query);
+
+    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
+
     const decodedParams = Object.fromEntries(
       Object.entries(req.query).map(([k, v]) => [k, decodeURIComponent(v)])
     );
 
-    // Trước đây có decode hoặc làm gì khác => xóa hết
-const isValid = verifyVnpayReturn(req.query); // giữ nguyên query VNPay gửi
-
-    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
-
     if (decodedParams.vnp_ResponseCode === "00") {
-      // TODO: update DB, mark order as paid
+      // TODO: update DB trạng thái đơn hàng thành paid
       res.json({ success: true, message: "Payment successful", data: decodedParams });
     } else {
       res.json({ success: false, message: "Payment failed", data: decodedParams });
@@ -61,31 +58,32 @@ const isValid = verifyVnpayReturn(req.query); // giữ nguyên query VNPay gửi
   }
 });
 
-// IPN callback từ VNPay
-router.post("/ipn", (req, res) => {
-  try {
-    // Decode tất cả params trước khi verify
-    const decodedParams = Object.fromEntries(
-      Object.entries(req.body).map(([k, v]) => [k, decodeURIComponent(v)])
-    );
+// --- IPN callback từ VNPay ---
+router.post(
+  "/ipn",
+  express.urlencoded({ extended: false }), // parse body x-www-form-urlencoded
+  express.json(),
+  (req, res) => {
+    try {
+      const decodedParams = req.body;
 
-   const isValid = verifyVnpayReturn(req.body); // giữ nguyên body VNPay gửi
+      const isValid = verifyVnpayReturn(decodedParams);
 
+      if (!isValid) {
+        return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
+      }
 
-    if (!isValid) {
-      return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
+      if (decodedParams.vnp_ResponseCode === "00") {
+        // TODO: update DB trạng thái đơn hàng thành paid
+        return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
+      } else {
+        return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
+      }
+    } catch (err) {
+      console.error("IPN error:", err);
+      return res.status(200).json({ RspCode: "99", Message: "Server error" });
     }
-
-    if (decodedParams.vnp_ResponseCode === "00") {
-      // TODO: cập nhật trạng thái đơn hàng thành công
-      return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
-    } else {
-      return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
-    }
-  } catch (err) {
-    console.error("IPN error:", err);
-    return res.status(200).json({ RspCode: "99", Message: "Server error" });
   }
-});
+);
 
 export default router;
