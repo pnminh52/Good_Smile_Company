@@ -22,14 +22,16 @@ function formatDateVN(date = new Date()) {
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj).sort().forEach(key => {
-    // Encode đặc biệt: khoảng trắng -> '+'
-    sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, '+');
+    if (key === "vnp_ReturnUrl" || key === "vnp_IpnUrl") {
+      // giữ nguyên URL cho chữ ký
+      sorted[key] = obj[key];
+    } else {
+      sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, '+');
+    }
   });
   return sorted;
 }
 
-
-// EXPORT ĐÚNG
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   const vnp_Params = {
     vnp_Version: "2.1.0",
@@ -48,14 +50,25 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   };
 
   const sortedParams = sortObject(vnp_Params);
-  const signData = qs.stringify(sortedParams, { encode: false });
+
+  const signData = Object.keys(sortedParams)
+    .map(k => `${k}=${sortedParams[k]}`)
+    .join('&');
+
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
-                       .update(Buffer.from(signData, "utf-8"))
+                       .update(signData, "utf-8")
                        .digest("hex");
 
   sortedParams["vnp_SecureHash"] = signed;
-  return `${vnp_Url}?${qs.stringify(sortedParams, { encode: true })}`;
+
+  // encode lần cuối khi build URL trả về VNPay
+  const queryString = Object.keys(sortedParams)
+    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
+    .join('&');
+
+  return `${vnp_Url}?${queryString}`;
 }
+
 
 export function verifyVnpayReturn(params) {
   console.log(params);
