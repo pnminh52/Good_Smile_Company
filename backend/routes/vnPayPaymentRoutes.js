@@ -44,7 +44,9 @@ router.get("/payment-return", (req, res) => {
       Object.entries(req.query).map(([k, v]) => [k, decodeURIComponent(v)])
     );
 
-    const isValid = verifyVnpayReturn(decodedParams);
+    // Trước đây có decode hoặc làm gì khác => xóa hết
+const isValid = verifyVnpayReturn(req.query); // giữ nguyên query VNPay gửi
+
     if (!isValid) return res.status(400).json({ message: "Invalid signature" });
 
     if (decodedParams.vnp_ResponseCode === "00") {
@@ -67,7 +69,8 @@ router.post("/ipn", (req, res) => {
       Object.entries(req.body).map(([k, v]) => [k, decodeURIComponent(v)])
     );
 
-    const isValid = verifyVnpayReturn(decodedParams);
+   const isValid = verifyVnpayReturn(req.body); // giữ nguyên body VNPay gửi
+
 
     if (!isValid) {
       return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });

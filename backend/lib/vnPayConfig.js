@@ -19,14 +19,14 @@ function formatDateVN(date = new Date()) {
   );
 }
 
-// Sắp xếp key alphabet, giữ nguyên value
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj).sort().forEach(key => {
-    sorted[key] = obj[key];
+    sorted[key] = obj[key]; // giữ nguyên giá trị gốc
   });
   return sorted;
 }
+
 
 // Decode tất cả giá trị VNPay trước khi verify
 function decodeVnpParams(params) {
@@ -73,26 +73,20 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode,
 
   sortedParams["vnp_SecureHash"] = signed;
 
-  // Encode query string
-  const queryString = Object.keys(sortedParams)
-    .map(k => `${k}=${encodeURIComponent(sortedParams[k]).replace(/%20/g, "+")}`)
-    .join('&');
+const queryString = Object.keys(sortedParams)
+  .map(k => `${k}=${encodeURIComponent(sortedParams[k]).replace(/%20/g, "+")}`)
+  .join('&');
+
 
   return `${vnp_Url}?${queryString}`;
 }
-
-/**
- * Verify trả về từ VNPay
- */
 export function verifyVnpayReturn(params) {
-  // Decode params trước khi hash
-  const vnp_Params = decodeVnpParams({ ...params });
+  const vnp_Params = { ...params };
   const secureHash = vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
 
   const sortedParams = sortObject(vnp_Params);
-
   const signData = Object.keys(sortedParams)
     .map(k => `${k}=${sortedParams[k]}`)
     .join('&');
