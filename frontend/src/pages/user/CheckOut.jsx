@@ -52,39 +52,25 @@ const Checkout = () => {
 
   // VNPay payment
 const handleVnpayPayment = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) return toast.error("Please login!");
+const token = localStorage.getItem("token");
 
-  setLoading(true);
-  try {
-    // 1. Tạo order
-    const createdOrder = await createOrder({
-      items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
-      address: userInfo.address,
-      selectedDistrict: userInfo.selectedDistrict,
-      shippingFee
-    }, token);
+// 1. Tạo order trước
+const createdOrder = await createOrder({
+  items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
+  address: userInfo.address,
+  selectedDistrict: userInfo.selectedDistrict,
+  shippingFee
+}, token);
 
-    // 2. Dùng đúng orderId từ DB
-    const orderId = createdOrder.id;
+const orderId = createdOrder.id; // Lấy orderId từ DB
 
-    // 3. Tạo VNPay link
-    const { data } = await createVnpayPayment({
-      amount: total + shippingFee,
-      orderId
-    });
+// 2. Gọi API tạo link VNPay
+const { data } = await createVnpayPayment({
+  amount: total + shippingFee, // đảm bảo amount > 1000
+  orderId
+});
+if (data.paymentUrl) window.location.href = data.paymentUrl;
 
-    if (data.paymentUrl) {
-      window.location.href = data.paymentUrl;
-    } else {
-      toast.error("Cannot create VNPay payment link.");
-    }
-  } catch (err) {
-    console.error(err);
-    toast.error("Payment failed");
-  } finally {
-    setLoading(false);
-  }
 };
 
 
