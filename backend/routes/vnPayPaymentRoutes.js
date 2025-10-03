@@ -12,7 +12,7 @@ router.post("/create-payment", (req, res) => {
 
     const ipAddr = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1").split(",")[0].trim();
 
-     const orderId = `ORDER${Date.now()}`; 
+     const orderId = `ORDER${Date.now().toString()}`; 
 const orderInfo = `Payment for order ${orderId}`;
     const paymentUrl = createPaymentUrl({
       amount: Math.floor(amount),

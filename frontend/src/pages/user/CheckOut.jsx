@@ -15,7 +15,7 @@ import Loader from './../../components/Loader';
 const Checkout = () => {
   const toast = useToast();
   const location = useLocation();
-  const orderId = `ORDER${Date.now()}`; 
+  const orderId = `ORDER${Date.now().toString()}`; 
   const navigate = useNavigate();
   const cartItems = location.state?.cartItems || [];
   const { address, shippingFee } = useShippingFee();
