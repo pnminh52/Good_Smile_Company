@@ -47,23 +47,34 @@ router.get("/payment-return", (req, res) => {
   }
 });
 
-// IPN (server to server)
 router.get("/ipn", (req, res) => {
-  try {
-    const isValid = verifyVnpayReturn(req.query); // dùng query, không phải body
-    if (!isValid) return res.status(400).json({ RspCode: "97", Message: "Invalid signature" });
+  const vnp_Params = { ...req.query };
+  const secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
 
-    if (req.query.vnp_ResponseCode === "00") {
-      // TODO: update DB, mark order as paid
-      return res.json({ RspCode: "00", Message: "Confirm Success" });
-    } else {
-      return res.json({ RspCode: "01", Message: "Payment Failed" });
-    }
-  } catch (err) {
-    console.error("IPN error:", err);
-    res.status(500).json({ RspCode: "99", Message: "Server error" });
+  const sorted = sortObject(vnp_Params);
+  const signData = qs.stringify(sorted, { encode: false });
+  const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                      .update(Buffer.from(signData, "utf-8"))
+                      .digest("hex");
+
+  console.log("👉 vnp_Params:", sorted);
+  console.log("👉 signData:", signData);
+  console.log("👉 signed (server):", signed);
+  console.log("👉 secureHash (from VNPay):", secureHash);
+
+  if (secureHash !== signed) {
+    return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
+  }
+
+  if (vnp_Params.vnp_ResponseCode === "00") {
+    return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
+  } else {
+    return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
   }
 });
+
 
 
 export default router;
