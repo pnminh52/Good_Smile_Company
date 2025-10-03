@@ -84,6 +84,9 @@ app.use("/api/news", newRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/chatbot", chatbotRoutes)
 
+console.log("TMN:", `"${process.env.VNP_TMNCODE}"`);
+console.log("HASH:", `"${process.env.VNP_HASH_SECRET}"`);
+
 
 
 async function initDB() {
