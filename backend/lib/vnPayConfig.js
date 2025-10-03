@@ -20,13 +20,14 @@ function formatDateVN(date = new Date()) {
 }
 
 function sortObject(obj) {
-  return Object.keys(obj)
-    .sort()
-    .reduce((res, key) => {
-      res[key] = obj[key];
-      return res;
-    }, {});
+  const sorted = {};
+  Object.keys(obj).sort().forEach(key => {
+    // Encode đặc biệt: khoảng trắng -> '+'
+    sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, '+');
+  });
+  return sorted;
 }
+
 
 // EXPORT ĐÚNG
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
