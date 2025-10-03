@@ -57,6 +57,8 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
 }
 
 export function verifyVnpayReturn(params) {
+  console.log(params);
+  
   const vnp_Params = { ...params };
   const secureHash = vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHash"];
