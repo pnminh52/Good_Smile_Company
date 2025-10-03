@@ -32,14 +32,18 @@ const PORT = process.env.PORT || 3000;
 //     "https://good-smile-company-1.onrender.com"],
 //   credentials: true,
 // }));
+
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Backend run successfully!");
 });
+
 
 app.use(async (req, res, next) => {
   try {
@@ -70,8 +74,7 @@ app.use(async (req, res, next) => {
     next(error);
   }
 });
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+
 
 // Dùng route
 app.use("/api/products", productRoutes);
