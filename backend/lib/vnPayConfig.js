@@ -1,77 +1,70 @@
+import crypto from "crypto";
+import qs from "qs";
 
-import express from "express";
-import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
+export const vnp_TmnCode = process.env.VNP_TMNCODE?.trim() || "";
+export const vnp_HashSecret = process.env.VNP_HASH_SECRET?.trim() || "";
+export const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
+export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
-const router = express.Router();
+function formatDateVN(date = new Date()) {
+  const pad = (n) => (n < 10 ? "0" + n : n);
+  return (
+    date.getFullYear().toString() +
+    pad(date.getMonth() + 1) +
+    pad(date.getDate()) +
+    pad(date.getHours()) +
+    pad(date.getMinutes()) +
+    pad(date.getSeconds())
+  );
+}
 
-// Tạo link thanh toán VNPay
-router.post("/create-payment", (req, res) => {
-  try {
-    const { amount } = req.body;
-    if (!amount || amount < 1000) {
-      return res.status(400).json({ message: "Invalid amount" });
-    }
+function sortObject(obj) {
+  return Object.keys(obj)
+    .sort()
+    .reduce((res, key) => {
+      res[key] = obj[key];
+      return res;
+    }, {});
+}
 
-    // Lấy IP client (Vercel trả x-forwarded-for)
-    const ipAddr =
-      (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1")
-        .split(",")[0]
-        .trim();
+// EXPORT ĐÚNG
+export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
+  const vnp_Params = {
+    vnp_Version: "2.1.0",
+    vnp_Command: "pay",
+    vnp_TmnCode,
+    vnp_Amount: Math.round(amount * 100),
+    vnp_CurrCode: "VND",
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: orderInfo,
+    vnp_OrderType: "other",
+    vnp_ReturnUrl,
+    vnp_IpnUrl,
+    vnp_IpAddr: ipAddr,
+    vnp_Locale: "vn",
+    vnp_CreateDate: formatDateVN(),
+  };
 
-    const orderId = `ORDER${Date.now()}`;
-    const orderInfo = `Payment for order ${orderId}`;
+  const sortedParams = sortObject(vnp_Params);
+  const signData = qs.stringify(sortedParams, { encode: false });
+  const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                       .update(Buffer.from(signData, "utf-8"))
+                       .digest("hex");
 
-    const paymentUrl = createPaymentUrl({
-      amount: Math.floor(amount),
-      orderId,
-      orderInfo,
-      ipAddr,
-    });
+  sortedParams["vnp_SecureHash"] = signed;
+  return `${vnp_Url}?${qs.stringify(sortedParams, { encode: true })}`;
+}
 
-    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
-    res.json({ paymentUrl });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Cannot create payment URL" });
-  }
-});
-
-// Khi VNPay redirect về frontend
-router.get("/payment-return", (req, res) => {
-  try {
-    const isValid = verifyVnpayReturn(req.query);
-    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
-
-    if (req.query.vnp_ResponseCode === "00") {
-      // TODO: update DB, đánh dấu đơn đã thanh toán
-      res.json({ success: true, message: "Payment successful", data: req.query });
-    } else {
-      res.json({ success: false, message: "Payment failed", data: req.query });
-    }
-  } catch (err) {
-    console.error("Payment return error:", err);
-    res.status(500).json({ message: "VNPay return error" });
-  }
-});
-
-// IPN (VNPay gọi server để xác nhận)
-router.get("/ipn", (req, res) => {
-  try {
-    const isValid = verifyVnpayReturn(req.query);
-
-    if (!isValid) {
-      return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
-    }
-
-    if (req.query.vnp_ResponseCode === "00") {
-      return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
-    } else {
-      return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
-    }
-  } catch (err) {
-    console.error("IPN error:", err);
-    return res.status(200).json({ RspCode: "99", Message: "Server error" });
-  }
-});
-
-export default router;
+export function verifyVnpayReturn(params) {
+  const vnp_Params = { ...params };
+  const secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
+  const sortedParams = sortObject(vnp_Params);
+  const signData = qs.stringify(sortedParams, { encode: false });
+  const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                       .update(Buffer.from(signData, "utf-8"))
+                       .digest("hex");
+  return secureHash?.toLowerCase() === signed.toLowerCase();
+}
