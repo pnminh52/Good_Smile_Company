@@ -48,20 +48,22 @@ router.get("/payment-return", (req, res) => {
 });
 
 // IPN (server to server)
-router.post("/ipn", (req, res) => {
+router.get("/ipn", (req, res) => {
   try {
-    const isValid = verifyVnpayReturn(req.body);
+    const isValid = verifyVnpayReturn(req.query); // dùng query, không phải body
     if (!isValid) return res.status(400).json({ RspCode: "97", Message: "Invalid signature" });
 
-    if (req.body.vnp_ResponseCode === "00") {
+    if (req.query.vnp_ResponseCode === "00") {
       // TODO: update DB, mark order as paid
       return res.json({ RspCode: "00", Message: "Confirm Success" });
     } else {
       return res.json({ RspCode: "01", Message: "Payment Failed" });
     }
   } catch (err) {
+    console.error("IPN error:", err);
     res.status(500).json({ RspCode: "99", Message: "Server error" });
   }
 });
+
 
 export default router;
