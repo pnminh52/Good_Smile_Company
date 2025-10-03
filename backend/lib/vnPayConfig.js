@@ -66,3 +66,21 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   // 3. Trả URL encode đầy đủ cho VNPay
   return `${vnp_Url}?${qs.stringify(sortedParams, { encode: true })}`;
 }
+
+// Verify return từ VNPay (return URL hoặc IPN)
+export function verifyVnpayReturn(params) {
+  const vnp_Params = { ...params };
+  const secureHash = vnp_Params["vnp_SecureHash"];
+
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
+
+  const sortedParams = sortObject(vnp_Params);
+  const signData = qs.stringify(sortedParams, { encode: false });
+  const signed = crypto
+    .createHmac("sha512", vnp_HashSecret)
+    .update(Buffer.from(signData, "utf-8"))
+    .digest("hex");
+
+  return secureHash?.toLowerCase() === signed.toLowerCase();
+}
