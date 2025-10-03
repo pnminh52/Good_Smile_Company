@@ -11,4 +11,4 @@ export const verifyVnpayPaymentReturn = (params) =>
   axios.get(`${API}/payment-return`, { params });
 
 export const vnpayIpn = (params) =>
-  axios.get(`${API}/payment/ipn`, { params });
+  axios.get(`${API}/ipn`, { params });

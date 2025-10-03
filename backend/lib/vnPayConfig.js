@@ -38,7 +38,7 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_OrderType: "other",
     vnp_Amount: Math.round(amount * 100),
     vnp_ReturnUrl,
-    vnp_IpnUrl: vnp_IpnUrlEnv.trim(),
+    
     vnp_IpAddr: ipAddr.split(",")[0].trim(),
     vnp_CreateDate: formatDateVN(),
   };
