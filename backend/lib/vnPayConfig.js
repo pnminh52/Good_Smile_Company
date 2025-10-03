@@ -5,7 +5,7 @@ export const vnp_TmnCode = process.env.VNP_TMNCODE;
 export const vnp_HashSecret = process.env.VNP_HASH_SECRET;
 export const vnp_Url = process.env.VNP_URL || "https://pay.vnpay.vn/vpcpay.html";
 export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
-export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
+export const vnp_IpnUrlEnv = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
 export function sortObject(obj) {
   return Object.keys(obj)
@@ -14,6 +14,16 @@ export function sortObject(obj) {
       result[key] = obj[key];
       return result;
     }, {});
+}
+
+function formatDateVN(date = new Date()) {
+  const yyyy = date.getFullYear().toString();
+  const MM = (date.getMonth() + 1).toString().padStart(2, "0");
+  const dd = date.getDate().toString().padStart(2, "0");
+  const HH = date.getHours().toString().padStart(2, "0");
+  const mm = date.getMinutes().toString().padStart(2, "0");
+  const ss = date.getSeconds().toString().padStart(2, "0");
+  return `${yyyy}${MM}${dd}${HH}${mm}${ss}`;
 }
 
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
@@ -28,9 +38,9 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_OrderType: "other",
     vnp_Amount: Math.round(amount * 100),
     vnp_ReturnUrl,
-   vnp_IpnUrl: vnp_IpnUrl.trim(),
-    // vnp_IpAddr: ipAddr.split(",")[0].trim(),  // chỉ lấy IP đầu tiên
-    vnp_CreateDate: new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14),
+    vnp_IpnUrl: vnp_IpnUrlEnv.trim(),
+    vnp_IpAddr: ipAddr.split(",")[0].trim(),
+    vnp_CreateDate: formatDateVN(),
   };
 
   vnp_Params = sortObject(vnp_Params);
@@ -42,7 +52,6 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
 
   return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
 }
-
 
 export function verifyVnpayReturn(queryParams) {
   let vnp_Params = { ...queryParams };
