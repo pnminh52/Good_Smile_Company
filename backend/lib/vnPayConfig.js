@@ -61,10 +61,15 @@ export function verifyVnpayReturn(params) {
   const secureHash = vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
-  const sortedParams = sortObject(vnp_Params);
-  const signData = qs.stringify(sortedParams, { encode: false });
-  const signed = crypto.createHmac("sha512", vnp_HashSecret)
-                       .update(Buffer.from(signData, "utf-8"))
-                       .digest("hex");
+const sortedParams = sortObject(vnp_Params);
+const signData = qs.stringify(sortedParams, { encode: false });
+const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                     .update(Buffer.from(signData, "utf-8"))
+                     .digest("hex");
+
+console.log("VNPay Params for hash:", signData);
+console.log("Generated hash:", signed);
+sortedParams["vnp_SecureHash"] = signed;
+
   return secureHash?.toLowerCase() === signed.toLowerCase();
 }
