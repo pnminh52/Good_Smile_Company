@@ -27,16 +27,6 @@ function sortObject(obj) {
   return sorted;
 }
 
-
-// Decode tất cả giá trị VNPay trước khi verify
-function decodeVnpParams(params) {
-  const newParams = {};
-  Object.keys(params).forEach(key => {
-    newParams[key] = decodeURIComponent(params[key]);
-  });
-  return newParams;
-}
-
 /**
  * Tạo URL thanh toán VNPay
  */
@@ -80,8 +70,19 @@ const queryString = Object.keys(sortedParams)
 
   return `${vnp_Url}?${queryString}`;
 }
+function decodeVnpParams(params) {
+  const newParams = {};
+  Object.keys(params).forEach(key => {
+    newParams[key] = decodeURIComponent(params[key]);
+  });
+  return newParams;
+}
+
+// Trong verify
 export function verifyVnpayReturn(params) {
-  const vnp_Params = { ...params };
+  const decodedParams = decodeVnpParams(params); // decode trước khi hash
+
+  const vnp_Params = { ...decodedParams };
   const secureHash = vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
