@@ -7,6 +7,7 @@ export const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paym
 export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
 export const vnp_IpnUrl = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
+// Format date YYYYMMDDHHmmss
 function formatDateVN(date = new Date()) {
   const pad = (n) => (n < 10 ? "0" + n : n);
   return (
@@ -19,32 +20,77 @@ function formatDateVN(date = new Date()) {
   );
 }
 
+// Sắp xếp key của object theo thứ tự alphabet
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj).sort().forEach(key => {
-    sorted[key] = String(obj[key]); // giữ nguyên, không replace
+    sorted[key] = String(obj[key]);
   });
   return sorted;
 }
 
+/**
+ * Tạo URL thanh toán VNPay
+ * @param {number} amount - số tiền VND (ví dụ 3494000)
+ * @param {string} orderId - mã đơn hàng
+ * @param {string} orderInfo - thông tin thanh toán (không dấu, chỉ chữ, số, space)
+ * @param {string} ipAddr - IP client
+ * @param {string} [bankCode] - tùy chọn mã ngân hàng
+ * @param {Date} [expireDate] - tùy chọn thời gian hết hạn
+ */
+export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode, expireDate }) {
+  // sanitize orderInfo: space -> +, loại bỏ ký tự đặc biệt
+  const sanitizedOrderInfo = orderInfo.replace(/ /g, '+').replace(/[^a-zA-Z0-9+]/g, '');
 
-
-export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   const vnp_Params = {
     vnp_Version: "2.1.0",
     vnp_Command: "pay",
     vnp_TmnCode,
-    vnp_Amount: Math.round(amount * 100),
-    vnp_CurrCode: "VND",
+    vnp_Amount: Math.round(amount * 100), // VNPay nhân thêm 100
     vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
+    vnp_OrderInfo: sanitizedOrderInfo,
     vnp_OrderType: "other",
     vnp_ReturnUrl,
     vnp_IpnUrl,
-    vnp_IpAddr: ipAddr,
-    vnp_Locale: "vn",
     vnp_CreateDate: formatDateVN(),
+    vnp_CurrCode: "VND",
+    vnp_Locale: "vn",
+    vnp_IpAddr: ipAddr,
   };
+
+  if (bankCode) vnp_Params.vnp_BankCode = bankCode;
+  if (expireDate) vnp_Params.vnp_ExpireDate = formatDateVN(expireDate);
+
+  const sortedParams = sortObject(vnp_Params);
+
+  // Tạo chuỗi dữ liệu để hash
+  const signData = Object.keys(sortedParams)
+    .map(k => `${k}=${sortedParams[k]}`)
+    .join('&');
+
+  // Tạo HMAC SHA512
+  const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                       .update(signData, "utf-8")
+                       .digest("hex");
+
+  sortedParams["vnp_SecureHash"] = signed;
+
+  // Build URL cuối cùng
+  const queryString = Object.keys(sortedParams)
+    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
+    .join('&');
+
+  return `${vnp_Url}?${queryString}`;
+}
+
+/**
+ * Verify trả về từ VNPay
+ */
+export function verifyVnpayReturn(params) {
+  const vnp_Params = { ...params };
+  const secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
 
   const sortedParams = sortObject(vnp_Params);
 
@@ -55,34 +101,6 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
                        .update(signData, "utf-8")
                        .digest("hex");
-
-  sortedParams["vnp_SecureHash"] = signed;
-
-  // encode lần cuối khi build URL trả về VNPay
-  const queryString = Object.keys(sortedParams)
-    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
-    .join('&');
-
-  return `${vnp_Url}?${queryString}`;
-}
-
-
-export function verifyVnpayReturn(params) {
-  console.log(params);
-  
-  const vnp_Params = { ...params };
-  const secureHash = vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
-const sortedParams = sortObject(vnp_Params);
-const signData = qs.stringify(sortedParams, { encode: false });
-const signed = crypto.createHmac("sha512", vnp_HashSecret)
-                     .update(Buffer.from(signData, "utf-8"))
-                     .digest("hex");
-
-console.log("VNPay Params for hash:", signData);
-console.log("Generated hash:", signed);
-sortedParams["vnp_SecureHash"] = signed;
 
   return secureHash?.toLowerCase() === signed.toLowerCase();
 }
