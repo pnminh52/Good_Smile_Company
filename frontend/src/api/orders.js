@@ -15,6 +15,7 @@ export const getOrderDetail = (id, token) =>
   api.get(`/orders/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  
   export const createOrder = (data, token) =>
     api.post("/orders/create", data, {
       headers: {

@@ -50,33 +50,39 @@ const Checkout = () => {
     }
   };
 
- const handleVnpayPayment = async () => {
+const handleVnpayPayment = async () => {
   const token = localStorage.getItem("token");
   if (!token) return toast.error("Please login!");
 
   setLoading(true);
   try {
-    // 1. Tạo order trước
-    const createdOrder = await createOrder({
-      items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
-      address: userInfo.address,
-      selectedDistrict: userInfo.selectedDistrict,
-      shippingFee
-    }, token);
-    console.log("Cart total:", total);
-console.log("Shipping fee:", shippingFee);
-console.log("Amount sent to VNPay:", Math.floor(total + shippingFee));
-console.log("Order ID sent to VNPay:", createdOrder.id);
+   const createdOrder = await createOrder(
+  {
+    items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
+    address: userInfo.address,
+    selectedDistrict: userInfo.selectedDistrict,
+    shippingFee
+  },
+  token
+);
 
+const orderId = createdOrder.data.orderId; // ✅ Lấy đúng orderId từ response server
+console.log("Order ID sent to VNPay:", orderId);
 
-    const orderId = createdOrder.id;
-
-  const { data } = await createVnpayPayment({
-  amount: Math.floor(total + shippingFee), // bỏ phần thập phân
-  orderId: createdOrder.id
-  
+const { data } = await createVnpayPayment({
+  amount: Math.floor(total + shippingFee),
+  orderId
 });
 
+if (data.paymentUrl) window.location.href = data.paymentUrl;
+
+
+    console.log("Cart total:", total);
+    console.log("Shipping fee:", shippingFee);
+    console.log("Amount sent to VNPay:", Math.floor(total + shippingFee));
+    console.log("Order ID sent to VNPay:", orderId);
+
+ 
 
     if (data.paymentUrl) window.location.href = data.paymentUrl;
 

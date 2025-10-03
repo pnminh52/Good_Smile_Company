@@ -13,7 +13,7 @@ const News = () => {
   const [filteredNews, setFilteredNews] = useState([]);
   const [selectedNews, setSelectedNews] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [visibleCount, setVisibleCount]=useState(5)
+  const [visibleCount, setVisibleCount]=useState(10)
   const handleLoadMore=()=>{
     setVisibleCount((prev)=>prev+5)
   }
