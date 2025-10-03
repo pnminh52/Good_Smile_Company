@@ -67,6 +67,8 @@ const orderId = createdOrder.id; // Lấy orderId từ DB
 // 2. Gọi API tạo link VNPay
 const { data } = await createVnpayPayment({
   amount: total + shippingFee, // đảm bảo amount > 1000
+    ipAddr: "127.0.0.1",
+      orderInfo: `Payment for order ${orderId}`,
   orderId
 });
 if (data.paymentUrl) window.location.href = data.paymentUrl;
