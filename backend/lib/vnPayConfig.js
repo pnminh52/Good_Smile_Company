@@ -12,7 +12,7 @@ export const vnp_IpnUrl =
   process.env.VNP_IPNURL ||
   "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
-// Hàm format ngày giờ theo VNPay yêu cầu (yyyyMMddHHmmss)
+// Format ngày giờ yyyyMMddHHmmss
 function formatDateVN(date = new Date()) {
   const pad = (n) => (n < 10 ? "0" + n : n);
   return (
@@ -25,8 +25,8 @@ function formatDateVN(date = new Date()) {
   );
 }
 
-// Sắp xếp object theo thứ tự alphabet key
-export function sortObject(obj) {
+// Sắp xếp object theo key alphabet
+function sortObject(obj) {
   return Object.keys(obj)
     .sort()
     .reduce((res, key) => {
@@ -35,16 +35,16 @@ export function sortObject(obj) {
     }, {});
 }
 
-// Tạo URL thanh toán
+// Tạo URL thanh toán VNPay
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   let vnp_Params = {
     vnp_Version: "2.1.0",
     vnp_Command: "pay",
     vnp_TmnCode,
-    vnp_Amount: Math.round(amount * 100), // VNPay yêu cầu *100
+    vnp_Amount: Math.round(amount * 100), // nhân 100
     vnp_CurrCode: "VND",
     vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
+    vnp_OrderInfo: orderInfo, // giữ nguyên để tạo chữ ký
     vnp_OrderType: "other",
     vnp_ReturnUrl,
     vnp_IpnUrl,
@@ -53,36 +53,16 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_CreateDate: formatDateVN(),
   };
 
-  // Sắp xếp tham số
-  vnp_Params = sortObject(vnp_Params);
-
-  // Tạo chữ ký
-  const signData = qs.stringify(vnp_Params, { encode: false });
-  const signed = crypto
-    .createHmac("sha512", vnp_HashSecret)
-    .update(Buffer.from(signData, "utf-8"))
-    .digest("hex");
-
-  vnp_Params["vnp_SecureHash"] = signed;
-
-  // Trả về link thanh toán
-  return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
-}
-
-// Verify return từ VNPay (return URL hoặc IPN)
-export function verifyVnpayReturn(params) {
-  const vnp_Params = { ...params };
-  const secureHash = vnp_Params["vnp_SecureHash"];
-
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
-
+  // 1. Sort params trước khi tạo chữ ký
   const sortedParams = sortObject(vnp_Params);
-  const signData = qs.stringify(sortedParams, { encode: false });
-  const signed = crypto
-    .createHmac("sha512", vnp_HashSecret)
-    .update(Buffer.from(signData, "utf-8"))
-    .digest("hex");
 
-  return secureHash?.toLowerCase() === signed.toLowerCase();
+  // 2. Tạo chữ ký SHA512
+  const signData = qs.stringify(sortedParams, { encode: false });
+  const signed = crypto.createHmac("sha512", vnp_HashSecret)
+                       .update(Buffer.from(signData, "utf-8"))
+                       .digest("hex");
+  sortedParams["vnp_SecureHash"] = signed;
+
+  // 3. Trả URL encode đầy đủ cho VNPay
+  return `${vnp_Url}?${qs.stringify(sortedParams, { encode: true })}`;
 }
