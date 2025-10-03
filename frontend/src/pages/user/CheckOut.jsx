@@ -50,30 +50,40 @@ const Checkout = () => {
     }
   };
 
-  // VNPay payment
-const handleVnpayPayment = async () => {
-const token = localStorage.getItem("token");
+ const handleVnpayPayment = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return toast.error("Please login!");
 
-// 1. Tạo order trước
-const createdOrder = await createOrder({
-  items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
-  address: userInfo.address,
-  selectedDistrict: userInfo.selectedDistrict,
-  shippingFee
-}, token);
+  setLoading(true);
+  try {
+    // 1. Tạo order trước
+    const createdOrder = await createOrder({
+      items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
+      address: userInfo.address,
+      selectedDistrict: userInfo.selectedDistrict,
+      shippingFee
+    }, token);
 
-const orderId = createdOrder.id; // Lấy orderId từ DB
+    const orderId = createdOrder.id;
 
-// 2. Gọi API tạo link VNPay
-const { data } = await createVnpayPayment({
-  amount: total + shippingFee, // đảm bảo amount > 1000
-    ipAddr: "127.0.0.1",
+    // 2. Gọi API tạo link VNPay với đầy đủ params
+    const { data } = await createVnpayPayment({
+      amount: Math.floor(total + shippingFee), // số nguyên
+      orderId,
       orderInfo: `Payment for order ${orderId}`,
-  orderId
-});
-if (data.paymentUrl) window.location.href = data.paymentUrl;
+      ipAddr: "127.0.0.1" // hoặc lấy IP client nếu cần
+    });
 
+    if (data.paymentUrl) window.location.href = data.paymentUrl;
+
+  } catch (err) {
+    console.error("VNPay payment error:", err.response?.data || err.message);
+    toast.error("Payment failed");
+  } finally {
+    setLoading(false);
+  }
 };
+
 
 
   if (cartItems.length === 0) return <NotFound />;
