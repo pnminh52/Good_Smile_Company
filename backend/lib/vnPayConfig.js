@@ -20,16 +20,6 @@ function formatDateVN(date = new Date()) {
   );
 }
 
-function sortObject(obj) {
-  const sorted = {};
-  const keys = Object.keys(obj).map(k => encodeURIComponent(k));
-  keys.sort();
-  keys.forEach(k => {
-    sorted[k] = encodeURIComponent(obj[k]).replace(/%20/g, "+");
-  });
-  return sorted;
-}
-
 /**
  * Tạo URL thanh toán VNPay
  * @param {number} amount - số tiền VND (ví dụ 3494000)
@@ -39,17 +29,23 @@ function sortObject(obj) {
  * @param {string} [bankCode] - tùy chọn mã ngân hàng
  * @param {Date} [expireDate] - tùy chọn thời gian hết hạn
  */
-export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode, expireDate }) {
-  // sanitize orderInfo: space -> +, loại bỏ ký tự đặc biệt
-  const sanitizedOrderInfo = orderInfo.replace(/ /g, '+').replace(/[^a-zA-Z0-9+]/g, '');
+// Chỉ sắp xếp key alphabet, giữ nguyên value
+function sortObject(obj) {
+  const sorted = {};
+  Object.keys(obj).sort().forEach(key => {
+    sorted[key] = obj[key]; // giữ nguyên giá trị chưa encode
+  });
+  return sorted;
+}
 
+export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode, expireDate }) {
   const vnp_Params = {
     vnp_Version: "2.1.0",
     vnp_Command: "pay",
     vnp_TmnCode,
-    vnp_Amount: Math.round(amount * 100), // VNPay nhân thêm 100
+    vnp_Amount: Math.round(amount * 100),
     vnp_TxnRef: orderId,
-    vnp_OrderInfo: sanitizedOrderInfo,
+    vnp_OrderInfo: orderInfo, // giữ nguyên để hash
     vnp_OrderType: "other",
     vnp_ReturnUrl,
     vnp_IpnUrl,
@@ -64,24 +60,25 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode,
 
   const sortedParams = sortObject(vnp_Params);
 
-  // Tạo chuỗi dữ liệu để hash
+  // Hash dùng giá trị chưa encode
   const signData = Object.keys(sortedParams)
     .map(k => `${k}=${sortedParams[k]}`)
     .join('&');
 
-  // Tạo HMAC SHA512
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
                        .update(signData, "utf-8")
                        .digest("hex");
 
   sortedParams["vnp_SecureHash"] = signed;
 
-const queryString = Object.keys(sortedParams)
-  .map(k => `${k}=${sortedParams[k]}`)
-  .join('&');
+  // Encode giá trị để build URL gửi sang VNPay
+  const queryString = Object.keys(sortedParams)
+    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
+    .join('&');
 
-return `${vnp_Url}?${queryString}`;
+  return `${vnp_Url}?${queryString}`;
 }
+
 
 /**
  * Verify trả về từ VNPay
