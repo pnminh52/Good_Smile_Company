@@ -1,73 +1,77 @@
-import qs from "qs";
-import crypto from "crypto";
-import dotenv from "dotenv";
+import express from "express";
+import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
 
-dotenv.config();
+const router = express.Router();
 
-export const vnp_TmnCode = process.env.VNP_TMNCODE;
-export const vnp_HashSecret = process.env.VNP_HASH_SECRET;
-export const vnp_Url = process.env.VNP_URL;
-export const vnp_ReturnUrl = process.env.VNP_RETURNURL;
-export const vnp_IpnUrl = process.env.VNP_IPNURL;
+// Tạo link thanh toán VNPay
+router.post("/create-payment", (req, res) => {
+  try {
+    const { amount } = req.body;
 
-// Hàm sort object theo key (VNPay yêu cầu)
-export function sortObject(obj) {
-  const sorted = {};
-  const keys = Object.keys(obj).sort();
-  for (const key of keys) {
-    sorted[key] = obj[key];
+    if (!amount || amount < 1000) {
+      return res.status(400).json({ message: "Invalid amount" });
+    }
+
+    // Lấy IP client
+    const ipAddr =
+      (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1")
+        .split(",")[0]
+        .trim();
+
+    const orderId = `ORDER${Date.now()}`;
+    const orderInfo = `Payment for order ${orderId}`;
+
+    const paymentUrl = createPaymentUrl({
+      amount: Math.floor(amount),
+      orderId,
+      orderInfo,
+      ipAddr,
+    });
+
+    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
+    res.json({ paymentUrl });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Cannot create payment URL" });
   }
-  return sorted;
-}
+});
 
-// Tạo URL thanh toán
-export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
-  const date = new Date();
-  const createDate = date.toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
+// Khi VNPay redirect về frontend
+router.get("/payment-return", (req, res) => {
+  try {
+    const isValid = verifyVnpayReturn(req.query);
+    if (!isValid) return res.status(400).json({ message: "Invalid signature" });
 
-  let vnp_Params = {
-    vnp_Version: "2.1.0",
-    vnp_Command: "pay",
-    vnp_TmnCode: vnp_TmnCode,
-    vnp_Locale: "vn",
-    vnp_CurrCode: "VND",
-    vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
-    vnp_OrderType: "other",
-    vnp_Amount: amount * 100, // nhân 100
-    vnp_ReturnUrl: vnp_ReturnUrl,
-    vnp_IpnUrl: vnp_IpnUrl,
-    vnp_CreateDate: createDate,
-    vnp_IpAddr: ipAddr,
-  };
+    if (req.query.vnp_ResponseCode === "00") {
+      // TODO: update DB, mark order as paid
+      res.json({ success: true, message: "Payment successful", data: req.query });
+    } else {
+      res.json({ success: false, message: "Payment failed", data: req.query });
+    }
+  } catch (err) {
+    console.error("Payment return error:", err);
+    res.status(500).json({ message: "VNPay return error" });
+  }
+});
 
-  // Sort params
-  vnp_Params = sortObject(vnp_Params);
+// IPN (VNPay gọi server để xác nhận)
+router.get("/ipn", (req, res) => {
+  try {
+    const isValid = verifyVnpayReturn(req.query);
 
-  // Tạo chuỗi query
-  const signData = qs.stringify(vnp_Params, { encode: false });
+    if (!isValid) {
+      return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
+    }
 
-  // Hash SHA512
-  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
-  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+    if (req.query.vnp_ResponseCode === "00") {
+      return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
+    } else {
+      return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
+    }
+  } catch (err) {
+    console.error("IPN error:", err);
+    return res.status(200).json({ RspCode: "99", Message: "Server error" });
+  }
+});
 
-  vnp_Params["vnp_SecureHash"] = signed;
-
-  return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: true })}`;
-}
-
-// Xác thực chữ ký khi VNPay redirect / gọi IPN
-export function verifyVnpayReturn(query) {
-  const vnp_Params = { ...query };
-  const secureHash = vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
-
-  const sortedParams = sortObject(vnp_Params);
-  const signData = qs.stringify(sortedParams, { encode: false });
-
-  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
-  const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
-
-  return secureHash === signed;
-}
+export default router;
