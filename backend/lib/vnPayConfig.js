@@ -84,14 +84,14 @@ export function verifyVnpayReturn(params) {
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
 
-  // decode mọi value từ VNPay trước khi hash
+  // Decode tất cả params từ VNPay trước khi hash
   Object.keys(vnp_Params).forEach(k => {
     vnp_Params[k] = decodeURIComponent(vnp_Params[k]);
   });
 
   const sortedParams = sortObject(vnp_Params);
   const signData = Object.keys(sortedParams)
-    .map(k => `${k}=${sortedParams[k]}`)
+    .map(k => `${k}=${vnp_Params[k]}`)
     .join('&');
 
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
@@ -100,4 +100,3 @@ export function verifyVnpayReturn(params) {
 
   return secureHash?.toLowerCase() === signed.toLowerCase();
 }
-
