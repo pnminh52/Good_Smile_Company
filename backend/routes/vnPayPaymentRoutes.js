@@ -1,5 +1,8 @@
 import express from "express";
 import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
+import crypto from "crypto";
+import qs from "qs";
+import { sortObject, vnp_HashSecret } from "../lib/vnPayConfig.js";
 
 const router = express.Router();
 
@@ -49,26 +52,13 @@ router.get("/payment-return", (req, res) => {
 
 router.get("/ipn", (req, res) => {
   try {
-    const vnp_Params = { ...req.query };
+    const isValid = verifyVnpayReturn(req.query);
 
-    // Lấy hash từ VNPay và xóa đi
-    const secureHash = vnp_Params["vnp_SecureHash"];
-    delete vnp_Params["vnp_SecureHash"];
-    delete vnp_Params["vnp_SecureHashType"];
-
-    // Sort params + tạo chữ ký lại
-    const sortedParams = sortObject(vnp_Params);
-    const signData = qs.stringify(sortedParams, { encode: false });
-    const signed = crypto
-      .createHmac("sha512", vnp_HashSecret)
-      .update(Buffer.from(signData, "utf-8"))
-      .digest("hex");
-
-    if (secureHash !== signed) {
+    if (!isValid) {
       return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
     }
 
-    if (vnp_Params["vnp_ResponseCode"] === "00") {
+    if (req.query.vnp_ResponseCode === "00") {
       return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
     } else {
       return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
