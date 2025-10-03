@@ -22,10 +22,11 @@ function formatDateVN(date = new Date()) {
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj).sort().forEach(key => {
-    sorted[key] = String(obj[key]).replace(/ /g, '+'); 
+    sorted[key] = String(obj[key]); // giữ nguyên, không replace
   });
   return sorted;
 }
+
 
 
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {

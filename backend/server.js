@@ -70,8 +70,9 @@ app.use(async (req, res, next) => {
     next(error);
   }
 });
-app.use(bodyParser.urlencoded({ extended: false })); // VNPay gửi x-www-form-urlencoded
-app.use(bodyParser.json()); // chỉ để phòng
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 // Dùng route
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -88,6 +89,8 @@ app.use("/api/chatbot", chatbotRoutes)
 
 console.log("TMN:", `"${process.env.VNP_TMNCODE}"`);
 console.log("HASH:", `"${process.env.VNP_HASH_SECRET}"`);
+
+
 
 
 
