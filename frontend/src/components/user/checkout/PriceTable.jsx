@@ -13,7 +13,7 @@ const handleVnpayPayment = async () => {
   }
 
   const orderInfo = "Payment for order " + orderId;
-  const amount = total + shippingFee;
+  const amount = Number(total) + Number(shippingFee);
 
   setLoading(true);
   try {
