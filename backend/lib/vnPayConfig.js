@@ -7,6 +7,19 @@ export const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paym
 export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
 export const vnp_IpnUrlEnv = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
+// Hàm format ngày theo VNPay yêu cầu
+function formatDateVN(date = new Date()) {
+  const pad = (n) => (n < 10 ? "0" + n : n);
+  return (
+    date.getFullYear().toString() +
+    pad(date.getMonth() + 1) +
+    pad(date.getDate()) +
+    pad(date.getHours()) +
+    pad(date.getMinutes()) +
+    pad(date.getSeconds())
+  );
+}
+
 // Hàm sắp xếp object theo thứ tự alphabet key (VNPay yêu cầu)
 export function sortObject(obj) {
   const sorted = {};
