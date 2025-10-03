@@ -66,13 +66,11 @@ const Checkout = () => {
 
     const orderId = createdOrder.id;
 
-    // 2. Gọi API tạo link VNPay với đầy đủ params
-    const { data } = await createVnpayPayment({
-      amount: Math.floor(total + shippingFee), // số nguyên
-      orderId,
-      orderInfo: `Payment for order ${orderId}`,
-      ipAddr: "127.0.0.1" // hoặc lấy IP client nếu cần
-    });
+  const { data } = await createVnpayPayment({
+  amount: Math.floor(total + shippingFee), // bỏ phần thập phân
+  orderId: createdOrder.id
+});
+
 
     if (data.paymentUrl) window.location.href = data.paymentUrl;
 
