@@ -1,91 +1,107 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/orders";
 import { clearCart } from "../../api/cart";
+import { createVnpayPayment } from "../../api/payment";
 import UserInfoCard from './../../components/user/checkout/UserInfoCard';
-import useToast from "../../hook/useToast";
-import useShippingFee from "../../hook/useShippingFee";
 import CheckOutItem from './../../components/user/checkout/CheckOutItem';
 import PriceTable from "../../components/user/checkout/PriceTable";
 import NotFound from './NotFound';
-import { useState, useEffect } from "react";
 import Loader from './../../components/Loader';
-
+import useToast from "../../hook/useToast";
+import useShippingFee from "../../hook/useShippingFee";
 
 const Checkout = () => {
   const toast = useToast();
-  const location = useLocation();
-  const orderId = `ORDER${Date.now().toString()}`; 
   const navigate = useNavigate();
+  const location = useLocation();
   const cartItems = location.state?.cartItems || [];
   const { address, shippingFee } = useShippingFee();
-  const [userInfo, setUserInfo] = useState({ selectedDistrict: "", district: [] });
-  const [loading, setLoading] = useState(false); 
+  const [userInfo, setUserInfo] = useState({ selectedDistrict: "", district: [], address: "" });
+  const [loading, setLoading] = useState(false);
 
- useEffect(() => {
-    if (address) setUserInfo(prev => ({ ...prev, selectedDistrict: address }));
+  useEffect(() => {
+    if (address) setUserInfo(prev => ({ ...prev, selectedDistrict: address, address }));
   }, [address]);
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity,
-    0
-  );
+  const total = cartItems.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 
+  // COD payment
   const handleCodPayment = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("Please login before ordering!");
-      return;
-    }
-
-    setLoading(true); // bật loader
-    setTimeout(async () => {
+    if (!token) return toast.error("Please login before ordering!");
+    setLoading(true);
+    try {
       const orderData = {
-        items: cartItems.map(item => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-        })),
+        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity })),
         address: userInfo.address,
         selectedDistrict: userInfo.selectedDistrict,
         shippingFee
       };
-
-      try {
-        await createOrder(orderData, token);
-        await clearCart(token);
-        toast.success("Order placed successfully!");
-        navigate("/order");
-      } catch (err) {
-        console.error("COD error:", err.response?.data || err.message);
-        toast.error("Order failed");
-      } finally {
-        setLoading(false); // tắt loader
-      }
-    }, 1000); // delay 1 giây
+      await createOrder(orderData, token);
+      await clearCart(token);
+      toast.success("Order placed successfully!");
+      navigate("/order");
+    } catch (err) {
+      console.error("COD error:", err.response?.data || err.message);
+      toast.error("Order failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (cartItems.length === 0) return <><NotFound /></>;
-  if (loading) {
-    return <Loader />;
-  }
-   return (
-    <div className="max-w-screen-lg w-full mx-auto lg:px-30 px-4 ">
-      <h1 className="   text-xl font-semibold sm:py-6 py-4">Checkout</h1>
+  // VNPay payment
+  const handleVnpayPayment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Please login before ordering!");
+    setLoading(true);
+    try {
+      // 1. Tạo order trước trên backend
+      const orderData = {
+        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity })),
+        address: userInfo.address,
+        selectedDistrict: userInfo.selectedDistrict,
+        shippingFee
+      };
+      const createdOrder = await createOrder(orderData, token);
+      const orderId = createdOrder.id; // lấy orderId từ backend
+
+      // 2. Tạo VNPay payment URL
+      const { data } = await createVnpayPayment({
+        amount: total + shippingFee,
+        orderId
+      });
+
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      } else {
+        toast.error("Cannot create VNPay payment link.");
+      }
+    } catch (err) {
+      console.error("VNPay error:", err.response?.data || err.message);
+      toast.error("Payment failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (cartItems.length === 0) return <NotFound />;
+  if (loading) return <Loader />;
+
+  return (
+    <div className="max-w-screen-lg w-full mx-auto lg:px-30 px-4">
+      <h1 className="text-xl font-semibold sm:py-6 py-4">Checkout</h1>
       <div className="flex flex-col">
         <CheckOutItem cartItems={cartItems} />
-
         <UserInfoCard onChange={setUserInfo} />
-
         <PriceTable
           total={total}
           shippingFee={shippingFee}
           handleCodPayment={handleCodPayment}
-          loading={loading}   // truyền xuống PriceTable
-           orderId={orderId} 
+          handleVnpayPayment={handleVnpayPayment}
+          loading={loading} // truyền trạng thái loader
         />
       </div>
-
-     
     </div>
   );
 };
