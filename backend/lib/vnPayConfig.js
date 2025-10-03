@@ -17,35 +17,39 @@ export function sortObject(obj) {
   return sorted;
 }
 
-// Tạo URL thanh toán
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
-  const createDate = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
-
   let vnp_Params = {
     vnp_Version: "2.1.0",
     vnp_Command: "pay",
-    vnp_TmnCode: vnp_TmnCode,
+    vnp_TmnCode,
     vnp_Locale: "vn",
     vnp_CurrCode: "VND",
     vnp_TxnRef: orderId,
     vnp_OrderInfo: orderInfo,
     vnp_OrderType: "other",
-    vnp_Amount: amount * 100, // VNPay tính theo đơn vị = VND * 100
-    vnp_ReturnUrl: vnp_ReturnUrl,
-    vnp_IpAddr: ipAddr,
-    vnp_CreateDate: createDate,
+    vnp_Amount: Math.round(amount * 100),
+    vnp_ReturnUrl,
+    vnp_IpnUrl: vnp_IpnUrlEnv,
+    vnp_IpAddr: ipAddr.split(",")[0].trim(),
+    vnp_CreateDate: formatDateVN(),
   };
 
   vnp_Params = sortObject(vnp_Params);
 
   const signData = qs.stringify(vnp_Params, { encode: false });
-  const hmac = crypto.createHmac("sha512", vnp_HashSecret);
+  const hmac = crypto.createHmac("sha512", vnp_HashSecret.trim());
   const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+
+  console.log("=== VNPay Debug ===");
+  console.log("SignData:", signData);
+  console.log("HashSecret:", `"${vnp_HashSecret}"`);
+  console.log("Generated Hash:", signed);
 
   vnp_Params["vnp_SecureHash"] = signed;
 
   return `${vnp_Url}?${qs.stringify(vnp_Params, { encode: false })}`;
 }
+
 
 // Verify return từ VNPay (return URL / ipn)
 export function verifyVnpayReturn(params) {
@@ -57,10 +61,13 @@ export function verifyVnpayReturn(params) {
 
   const sortedParams = sortObject(vnp_Params);
   const signData = qs.stringify(sortedParams, { encode: false });
-  const signed = crypto.createHmac("sha512", vnp_HashSecret).update(Buffer.from(signData, "utf-8")).digest("hex");
+  const signed = crypto
+  .createHmac("sha512", vnp_HashSecret.trim())
+  .update(Buffer.from(signData, "utf-8"))
+  .digest("hex");
 
   console.log("👉 SecureHash from VNPay:", secureHash);
   console.log("👉 Signed from server  :", signed);
 
-  return secureHash === signed;
+return secureHash?.toLowerCase() === signed.toLowerCase();
 }
