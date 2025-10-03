@@ -44,7 +44,7 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
     vnp_Amount: Math.round(amount * 100), // VNPay yêu cầu *100
     vnp_CurrCode: "VND",
     vnp_TxnRef: orderId,
-    vnp_OrderInfo: orderInfo,
+    vnp_OrderInfo: encodeURIComponent(orderInfo),
     vnp_OrderType: "other",
     vnp_ReturnUrl,
     vnp_IpnUrl,

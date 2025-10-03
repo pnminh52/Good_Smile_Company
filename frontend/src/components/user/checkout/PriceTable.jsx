@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createVnpayPayment } from "../../../api/payment";
-
+import useToast from "../../../hook/useToast";
 const PriceTable = ({ total, shippingFee, handleCodPayment, orderId }) => {
+  const toast=useToast()
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
