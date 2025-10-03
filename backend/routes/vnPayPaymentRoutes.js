@@ -3,36 +3,26 @@ import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
 
 const router = express.Router();
 
-// --- Tạo link thanh toán VNPay ---
 router.post("/create-payment", (req, res) => {
-  try {
-    const { amount, orderId } = req.body; // nhận orderId từ frontend
+  const { amount, orderId } = req.body;
+  console.log("Received from frontend:", { amount, orderId });
 
-    if (!amount || !orderId || amount < 1000) {
-      return res.status(400).json({ message: "Invalid params" });
-    }
-
-    const ipAddr =
-      (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1")
-        .split(",")[0]
-        .trim();
-
-    const orderInfo = `Payment for order ${orderId}`;
-
-    const paymentUrl = createPaymentUrl({
-      amount: Math.floor(amount),
-      orderId,
-      orderInfo,
-      ipAddr,
-    });
-
-    console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
-    res.json({ paymentUrl });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Cannot create payment URL" });
+  if (!amount || !orderId || amount < 1000) {
+    console.log("Invalid params detected!");
+    return res.status(400).json({ message: "Invalid params" });
   }
+
+  const ipAddr = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1")
+    .split(",")[0]
+    .trim();
+
+  const orderInfo = `Payment for order ${orderId}`;
+  const paymentUrl = createPaymentUrl({ amount: Math.floor(amount), orderId, orderInfo, ipAddr });
+
+  console.log("VNPay Payment Params:", { amount, orderId, orderInfo, ipAddr, paymentUrl });
+  res.json({ paymentUrl });
 });
+
 
 // --- Redirect về frontend sau khi thanh toán ---
 router.get("/payment-return", (req, res) => {

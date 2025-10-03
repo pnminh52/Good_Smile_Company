@@ -63,12 +63,18 @@ const Checkout = () => {
       selectedDistrict: userInfo.selectedDistrict,
       shippingFee
     }, token);
+    console.log("Cart total:", total);
+console.log("Shipping fee:", shippingFee);
+console.log("Amount sent to VNPay:", Math.floor(total + shippingFee));
+console.log("Order ID sent to VNPay:", createdOrder.id);
+
 
     const orderId = createdOrder.id;
 
   const { data } = await createVnpayPayment({
   amount: Math.floor(total + shippingFee), // bỏ phần thập phân
   orderId: createdOrder.id
+  
 });
 
 
