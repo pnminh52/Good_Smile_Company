@@ -51,39 +51,42 @@ const Checkout = () => {
   };
 
   // VNPay payment
-  const handleVnpayPayment = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return toast.error("Please login before ordering!");
-    setLoading(true);
-    try {
-      // 1. Tạo order trước trên backend
-      const orderData = {
-        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity })),
-        address: userInfo.address,
-        selectedDistrict: userInfo.selectedDistrict,
-        shippingFee
-      };
-      const createdOrder = await createOrder(orderData, token);
-      const orderId = createdOrder.id; // lấy orderId từ backend
+const handleVnpayPayment = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return toast.error("Please login!");
 
-      // 2. Tạo VNPay payment URL
-      const { data } = await createVnpayPayment({
-        amount: total + shippingFee,
-        orderId
-      });
+  setLoading(true);
+  try {
+    // 1. Tạo order
+    const createdOrder = await createOrder({
+      items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
+      address: userInfo.address,
+      selectedDistrict: userInfo.selectedDistrict,
+      shippingFee
+    }, token);
 
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl;
-      } else {
-        toast.error("Cannot create VNPay payment link.");
-      }
-    } catch (err) {
-      console.error("VNPay error:", err.response?.data || err.message);
-      toast.error("Payment failed.");
-    } finally {
-      setLoading(false);
+    // 2. Dùng đúng orderId từ DB
+    const orderId = createdOrder.id;
+
+    // 3. Tạo VNPay link
+    const { data } = await createVnpayPayment({
+      amount: total + shippingFee,
+      orderId
+    });
+
+    if (data.paymentUrl) {
+      window.location.href = data.paymentUrl;
+    } else {
+      toast.error("Cannot create VNPay payment link.");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("Payment failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   if (cartItems.length === 0) return <NotFound />;
   if (loading) return <Loader />;

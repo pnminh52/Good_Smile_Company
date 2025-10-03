@@ -6,10 +6,10 @@ const router = express.Router();
 // --- Tạo link thanh toán VNPay ---
 router.post("/create-payment", (req, res) => {
   try {
-    const { amount } = req.body;
+    const { amount, orderId } = req.body; // nhận orderId từ frontend
 
-    if (!amount || amount < 1000) {
-      return res.status(400).json({ message: "Invalid amount" });
+    if (!amount || !orderId || amount < 1000) {
+      return res.status(400).json({ message: "Invalid params" });
     }
 
     const ipAddr =
@@ -17,7 +17,6 @@ router.post("/create-payment", (req, res) => {
         .split(",")[0]
         .trim();
 
-    const orderId = `ORDER${Date.now()}`;
     const orderInfo = `Payment for order ${orderId}`;
 
     const paymentUrl = createPaymentUrl({
