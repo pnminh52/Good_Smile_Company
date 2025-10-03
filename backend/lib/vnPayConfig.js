@@ -70,11 +70,11 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode,
                        .digest("hex");
 
   sortedParams["vnp_SecureHash"] = signed;
+const queryString = Object.keys(sortedParams)
+  .map(k => `${k}=${encodeURIComponent(sortedParams[k]).replace(/%20/g, "+")}`)
+  .join('&');
 
-  // Encode giá trị để build URL gửi sang VNPay
-  const queryString = Object.keys(sortedParams)
-    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
-    .join('&');
+
 
   return `${vnp_Url}?${queryString}`;
 }
