@@ -20,11 +20,12 @@ function formatDateVN(date = new Date()) {
   );
 }
 
-// Sắp xếp key của object theo thứ tự alphabet
 function sortObject(obj) {
   const sorted = {};
-  Object.keys(obj).sort().forEach(key => {
-    sorted[key] = String(obj[key]);
+  const keys = Object.keys(obj).map(k => encodeURIComponent(k));
+  keys.sort();
+  keys.forEach(k => {
+    sorted[k] = encodeURIComponent(obj[k]).replace(/%20/g, "+");
   });
   return sorted;
 }
