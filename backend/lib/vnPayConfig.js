@@ -12,18 +12,20 @@ export const vnp_IpnUrl =
   process.env.VNP_IPNURL ||
   "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
-// Format ngày giờ yyyyMMddHHmmss
 function formatDateVN(date = new Date()) {
+  // Chuyển sang giờ VN
+  const vnDate = new Date(date.getTime() + 7 * 60 * 60 * 1000);
   const pad = (n) => (n < 10 ? "0" + n : n);
   return (
-    date.getFullYear().toString() +
-    pad(date.getMonth() + 1) +
-    pad(date.getDate()) +
-    pad(date.getHours()) +
-    pad(date.getMinutes()) +
-    pad(date.getSeconds())
+    vnDate.getFullYear().toString() +
+    pad(vnDate.getMonth() + 1) +
+    pad(vnDate.getDate()) +
+    pad(vnDate.getHours()) +
+    pad(vnDate.getMinutes()) +
+    pad(vnDate.getSeconds())
   );
 }
+
 
 // Sắp xếp object theo key alphabet
 function sortObject(obj) {
