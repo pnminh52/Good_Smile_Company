@@ -22,15 +22,11 @@ function formatDateVN(date = new Date()) {
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj).sort().forEach(key => {
-    if (key === "vnp_ReturnUrl" || key === "vnp_IpnUrl") {
-      // giữ nguyên URL cho chữ ký
-      sorted[key] = obj[key];
-    } else {
-      sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, '+');
-    }
+    sorted[key] = String(obj[key]).replace(/ /g, '+'); 
   });
   return sorted;
 }
+
 
 export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr }) {
   const vnp_Params = {
