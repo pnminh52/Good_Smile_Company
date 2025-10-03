@@ -5,15 +5,15 @@ const router = express.Router();
 
 router.post("/create-payment", (req, res) => {
   try {
-    const { amount, orderInfo } = req.body;
+    const { amount } = req.body;
 
     if (!amount || amount < 1000)
       return res.status(400).json({ message: "Invalid amount" });
 
     const ipAddr = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "127.0.0.1").split(",")[0].trim();
 
-    const orderId = Date.now().toString(); // BE tự gen unique id
-
+     const orderId = `ORDER${Date.now()}`; 
+const orderInfo = `Payment for order ${orderId}`;
     const paymentUrl = createPaymentUrl({
       amount: Math.floor(amount),
       orderId,
