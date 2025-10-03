@@ -1,10 +1,11 @@
 import crypto from "crypto";
 import qs from "qs";
 
-export const vnp_TmnCode = process.env.VNP_TMNCODE ; 
-export const vnp_HashSecret = (process.env.VNP_HASHSECRET).trim();
+export const vnp_TmnCode = process.env.VNP_TMNCODE?.trim() || "";
+export const vnp_HashSecret = process.env.VNP_HASH_SECRET?.trim() || "";
 export const vnp_Url = process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 export const vnp_ReturnUrl = process.env.VNP_RETURNURL || "https://good-smile-company.vercel.app/payment-return";
+export const vnp_IpnUrlEnv = process.env.VNP_IPNURL || "https://good-smile-company-1.onrender.com/api/payment/ipn";
 
 // Hàm sắp xếp object theo thứ tự alphabet key (VNPay yêu cầu)
 export function sortObject(obj) {
