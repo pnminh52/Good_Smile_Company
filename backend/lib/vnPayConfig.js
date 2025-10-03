@@ -76,12 +76,11 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode,
 
   sortedParams["vnp_SecureHash"] = signed;
 
-  // Build URL cuối cùng
-  const queryString = Object.keys(sortedParams)
-    .map(k => `${k}=${encodeURIComponent(sortedParams[k])}`)
-    .join('&');
+const queryString = Object.keys(sortedParams)
+  .map(k => `${k}=${sortedParams[k]}`)
+  .join('&');
 
-  return `${vnp_Url}?${queryString}`;
+return `${vnp_Url}?${queryString}`;
 }
 
 /**
