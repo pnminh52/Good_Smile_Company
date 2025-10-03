@@ -78,14 +78,16 @@ function decodeVnpParams(params) {
   return newParams;
 }
 
-// Trong verify
 export function verifyVnpayReturn(params) {
-  const decodedParams = decodeVnpParams(params); // decode trước khi hash
-
-  const vnp_Params = { ...decodedParams };
+  const vnp_Params = { ...params };
   const secureHash = vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
+
+  // decode mọi value từ VNPay trước khi hash
+  Object.keys(vnp_Params).forEach(k => {
+    vnp_Params[k] = decodeURIComponent(vnp_Params[k]);
+  });
 
   const sortedParams = sortObject(vnp_Params);
   const signData = Object.keys(sortedParams)
@@ -98,3 +100,4 @@ export function verifyVnpayReturn(params) {
 
   return secureHash?.toLowerCase() === signed.toLowerCase();
 }
+
