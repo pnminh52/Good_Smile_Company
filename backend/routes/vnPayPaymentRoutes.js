@@ -1,7 +1,9 @@
 import express from "express";
 import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
-
+import bodyParser from "body-parser"; 
 const router = express.Router();
+app.use(bodyParser.urlencoded({ extended: false })); // VNPay gửi x-www-form-urlencoded
+app.use(bodyParser.json()); // chỉ để phòng
 
 // Tạo link thanh toán VNPay
 router.post("/create-payment", (req, res) => {
@@ -54,16 +56,17 @@ router.get("/payment-return", (req, res) => {
   }
 });
 
-// IPN (VNPay gọi server để xác nhận)
-router.get("/ipn", (req, res) => {
+router.post("/ipn", (req, res) => {
   try {
-    const isValid = verifyVnpayReturn(req.query);
+    const params = req.body; // Nhận params từ VNPay
+    const isValid = verifyVnpayReturn(params);
 
     if (!isValid) {
       return res.status(200).json({ RspCode: "97", Message: "Invalid signature" });
     }
 
-    if (req.query.vnp_ResponseCode === "00") {
+    if (params.vnp_ResponseCode === "00") {
+      // TODO: cập nhật trạng thái đơn hàng
       return res.status(200).json({ RspCode: "00", Message: "Confirm Success" });
     } else {
       return res.status(200).json({ RspCode: "01", Message: "Payment Failed" });
