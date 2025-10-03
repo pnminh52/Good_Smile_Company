@@ -3,6 +3,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
 import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -69,7 +70,8 @@ app.use(async (req, res, next) => {
     next(error);
   }
 });
-
+app.use(bodyParser.urlencoded({ extended: false })); // VNPay gửi x-www-form-urlencoded
+app.use(bodyParser.json()); // chỉ để phòng
 // Dùng route
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);

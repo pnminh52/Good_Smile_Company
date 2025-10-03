@@ -1,9 +1,8 @@
 import express from "express";
 import { createPaymentUrl, verifyVnpayReturn } from "../lib/vnPayConfig.js";
-import bodyParser from "body-parser"; 
+
 const router = express.Router();
-app.use(bodyParser.urlencoded({ extended: false })); // VNPay gửi x-www-form-urlencoded
-app.use(bodyParser.json()); // chỉ để phòng
+
 
 // Tạo link thanh toán VNPay
 router.post("/create-payment", (req, res) => {
