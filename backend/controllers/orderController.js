@@ -48,16 +48,26 @@ export const getOrderDetail = async (req, res) => {
   const userId = req.user.id;
   try {
     const order = await sql`
-      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.district, o.created_at
-      FROM orders o
-      LEFT JOIN order_status os ON o.status_id = os.id
-      WHERE o.id = ${orderId} AND o.user_id = ${userId}
-    `;
+    SELECT 
+      o.id, o.total, o.status_id, os.name AS status,
+      o.address, o.district, o.created_at,
+      o.payment_method,
+      CASE 
+        WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
+        WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
+        ELSE 'Not Determined'
+      END AS payment_method_name
+    FROM orders o
+    LEFT JOIN order_status os ON o.status_id = os.id
+    WHERE o.id = ${orderId} AND o.user_id = ${userId}
+  `;
+  
+
 
     if (!order.length) return res.status(404).json({ error: "Order not found" });
 
     const items = await sql`
-      SELECT oi.id, oi.product_id, p.name, p.base_image, oi.quantity, oi.price
+      SELECT oi.id, oi.product_id,p.title, p.name, p.base_image, oi.quantity, oi.price
       FROM order_items oi
       JOIN products p ON oi.product_id = p.id
       WHERE oi.order_id = ${orderId}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Select, Button, Spin, List, Typography, Image } from "antd";
+import { Modal, Select, Button, Spin, List, Typography, Image, Tag } from "antd";
 import { updateOrderStatus } from "../../../api/orders";
 import useToast from "../../../hook/useToast";
 import dayjs from "dayjs";
@@ -30,7 +30,22 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
       setLoading(false);
     }
   };
+    const getStatusTag = (status) => {
+      let color =
+        status === "Pending"
+          ? "orange"
+          : status === "Processing"
+          ? "blue"
+          : status === "Completed"
+          ? "green"
+          : "red";
+      return <Tag color={color}>{status}</Tag>;
+    };
   
+    const getPaymentTag =(method)=>{
+      let color = method === "Online Banking" ? "blue":"green"
+      return <Tag color={color}>{method}</Tag>
+    }
   return (
    <div className="hide-scrollbar">
      <Modal
@@ -39,10 +54,9 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
       title={`Order #${order.id}`}
       centered
       width={600} 
-      styles={{
-        maxHeight: "70vh",
-        overflowY: "auto",
-      }}
+      styles={{ padding: 0 }}
+      style={{ maxWidth: "95%" }}
+     
       footer={[
         <Button
           key="save"
@@ -64,14 +78,24 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
     >
       <Spin spinning={loading}>
         <div className="space-y-2">
-          <p>
-            <Text strong>Total</Text>{" "}
-            {Number(order.total).toLocaleString("vi-VN")} đ
-          </p>
-          <p>
-            <Text strong>Address</Text> {order.address}
-            {order.district && `/${order.district}`}
-          </p>
+        <p>
+                <span className="font-semibold">Total price</span>{" "}
+                {Number(order.total).toLocaleString("vi-VN")} <span className="underline">đ</span>
+              </p>
+              <p>
+                <span className="font-semibold">Total items in order</span> {order.items?.length || 0}
+              </p>
+              <p className="flex items-center gap-1">
+                <span className="font-semibold">Order status</span> <span>{getStatusTag(order.status)}</span>
+              </p>
+              <p className="flex items-center gap-1">
+                <span className="font-semibold">Payment method using</span><span>{getPaymentTag(order.payment_method)}</span>
+
+              </p>
+              <p>
+                <span className="font-semibold">User address/district at </span>{" "}
+                {[order.address, order.district].filter(Boolean).join(", ")}
+              </p>
           <p>
             <Text strong>Created at</Text>{" "}
             {dayjs(order.created_at).format("DD/MM/YYYY HH:mm")}

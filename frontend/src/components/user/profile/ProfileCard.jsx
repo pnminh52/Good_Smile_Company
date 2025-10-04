@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, Form, Input, Button, Upload, Select } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { getProfile, updateProfile } from "../../../api/auth";
-import { uploadImage } from "../../../api/upload";
+import { getProfile, updateProfile, changePassword } from "../../../api/auth";
 import useToast from "../../../hook/useToast";
 import Loader from "../../Loader";
 import useAuth from "../../../hook/useAuth";
+import { CloseOutlined, PlusOutlined, EditOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Spin, Modal, Input } from "antd";
 
-const { Option } = Select;
 
 const provinces = [
   "Hà Nội","Hồ Chí Minh","Đà Nẵng","Hải Phòng","Cần Thơ",
@@ -23,13 +21,17 @@ const provinces = [
   "Tiền Giang","Trà Vinh","Tuyên Quang","Vĩnh Long","Vĩnh Phúc","Yên Bái"
 ];
 
-const ProfileCard = ({handdleLogOut}) => {
+const ProfileCard = ({ handdleLogOut }) => {
   const { login: contextLogin } = useAuth();
-  const [form] = Form.useForm();
   const [user, setUser] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const toast = useToast();
+  const [isChanged, setIsChanged]=useState(false)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -39,203 +41,302 @@ const ProfileCard = ({handdleLogOut}) => {
         const res = await getProfile(token);
         const profile = res.data.user || res.data;
         setUser(profile);
-        form.setFieldsValue(profile);
+        setFormData(profile);
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load profile");
+        toast.error("Failed to load user profile!");
       }
     };
     fetchProfile();
-  }, [form]);
-
-  const handleUploadAvatar = async ({ file }) => {
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      const data = await uploadImage(formData);
-      const avatarUrl = data.url;
-
-      const token = localStorage.getItem("token");
-      const res = await updateProfile({ avatar: avatarUrl }, token);
-
-      setUser((prev) => ({ ...prev, ...res.data.user, avatar: avatarUrl }));
-      form.setFieldsValue({ avatar: avatarUrl });
-      toast.success("Update avatar successfully!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to update avatar!");
-    } finally {
-      setUploading(false);
-    }
+  }, []);
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleDistrictChange = (index, value) => {
+    const updated = [...(formData.district || [])];
+    updated[index] = value;
+    setFormData((prev) => ({ ...prev, district: updated }));
+  };
 
-  const handleSave = async (values) => {
+  const addDistrict = () => {
+    if ((formData.district?.length || 0) >= 3) {
+      toast.error("You can only add up to 3 districts!");
+      return;
+    }
+    const updated = [...(formData.district || []), ""];
+    setFormData((prev) => ({ ...prev, district: updated }));
+  };
+
+  const removeDistrict = (index) => {
+    const updated = [...(formData.district || [])];
+    updated.splice(index, 1);
+    setFormData((prev) => ({ ...prev, district: updated }));
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    const hasChanged =
+      JSON.stringify({
+        ...formData,
+        district: (formData.district || []).filter((d) => d.trim()),
+      }) !==
+      JSON.stringify({
+        ...user,
+        district: (user.district || []).filter((d) => d.trim()),
+      });
+    setIsChanged(hasChanged);
+  }, [formData, user]);
+  
+  const handleSave = async (e) => {
+    e.preventDefault();
+  
+    // Kiểm tra district trống
+    if ((formData.district || []).some((d) => !d.trim())) {
+      toast.error("Please fill in all district fields before saving!");
+      return;
+    }
+  
     try {
       setSaving(true);
       const token = localStorage.getItem("token");
       const payload = {
-        ...values,
-        district: Array.isArray(values.district) ? values.district : [],
+        ...formData,
+        district: formData.district?.filter((d) => d.trim()) || [],
       };
       const res = await updateProfile(payload, token);
-  
       const updatedUser = res.data.user || res.data;
       setUser(updatedUser);
-  
-      // đồng bộ với context + localStorage
       contextLogin(updatedUser, token);
       localStorage.setItem("user", JSON.stringify(updatedUser));
-  
-      toast.success("Update info successfully!");
+      toast.success("Profile updated successfully!");
+      setIsChanged(false);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to update info!");
+      toast.error("Failed to update profile!");
     } finally {
       setSaving(false);
     }
   };
-  
-  
+
+  const handleChangePassword = async () => {
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const res = await changePassword({ oldPassword, newPassword }, token);
+      toast.success(res.data?.message || "Password changed successfully!");
+      setIsModalVisible(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Change password failed");
+    }
+  };
 
   if (!user) return <Loader />;
 
   return (
-    <Card
-     
-       className=" mx-auto px-4 justify-center [&_.ant-card-cover]:flex [&_.ant-card-cover]:justify-center [&_.ant-card-cover]:items-center"
-      
-    
-      
-      
-      
-    >
-  
+   <div>
+     <p className=" text-xl  font-semibold py-4">  Information</p>
+
+<div className="w-full mx-auto bg-white p-4 border rounded-lg lg:rounded-sm border-gray-200 ">
 
 
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={user}
-        onFinish={handleSave}
-        
+  <form onSubmit={handleSave} className="space-y-5">
+   
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Name</label>
+      <input
+        type="text"
+        value={formData.name || ""}
+        onChange={(e) => handleChange("name", e.target.value)}
+        className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+      />
+    </div>
+
+    {/* Email */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Email</label>
+      <input
+        type="email"
+        value={formData.email || ""}
+        disabled
+        className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+      />
+    </div>
+
+    {/* Phone */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Phone</label>
+      <input
+        type="text"
+        value={formData.phone || ""}
+        onChange={(e) => handleChange("phone", e.target.value)}
+        className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+      />
+    </div>
+
+    {/* Address */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Address (Province/City)</label>
+      <select
+        value={formData.address || ""}
+        onChange={(e) => handleChange("address", e.target.value)}
+        className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
       >
-<Form.Item
-  name="avatar"
-  label="Avatar"
-  valuePropName="fileList"
-  getValueFromEvent={(e) => {
-    if (Array.isArray(e)) return e;
-    return e?.fileList || [];
-  }}
->
-  <Upload
-    customRequest={handleUploadAvatar}
-    listType="picture-card"
-    showUploadList={false}
-    accept="image/*"
-  >
-    {user.avatar ? (
-      <img src={user.avatar} alt="avatar" style={{ width: "100%" }} />
-    ) : (
-      <div>
-        <UploadOutlined />
-        <div style={{ marginTop: 8 }}>Upload</div>
+        <option value="">-- Select Province/City --</option>
+        {provinces.map((p) => (
+          <option key={p} value={p}>{p}</option>
+        ))}
+      </select>
+    </div>
+
+    {/* Districts */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Districts (Limit 3 per account)
+      </label>
+      <div className="space-y-2">
+        {(formData.district || []).map((district, index) => (
+          <div key={index} className="flex gap-2 items-center">
+            <input
+              type="text"
+              value={district}
+              onChange={(e) => handleDistrictChange(index, e.target.value)}
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => removeDistrict(index)}
+              className="text-red-500 cursor-pointer  "
+            >
+              <CloseOutlined />
+            </button>
+          </div>
+        ))}
       </div>
-    )}
-  </Upload>
-</Form.Item>
+      {(!formData.district || formData.district.length < 3) && (
+        <button
+          type="button"
+          onClick={addDistrict}
+          className="mt-2 text-sm text-[#FF6900] border p-2 rounded-lg cursor-pointer font-semibold "
+        >
+          <PlusOutlined /> Add District
+        </button>
+      )}
+    </div>
 
+    {/* Password Section */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+      <div className="flex items-center gap-2">
+        <input
+          type="password"
+          value="********"
+          disabled
+          className="flex-1 border border-gray-200 rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed"
+        />
+        <button
+          type="button"
+          onClick={() => setIsModalVisible(true)}
+          className="rounded-lg cursor-pointer bg-white text-[#FF6900]   p-2  border font-semibold border-[#FF6900]"
 
-        <Form.Item label="Name" name="name">
-          <Input />
-        </Form.Item>
-       
+        >
+         <EditOutlined /> Change
+        </button>
+      </div>
+    </div>
 
-        <Form.Item label="Email" name="email">
-          <Input disabled />
-        </Form.Item>
+    <div className="flex flex-col gap-3 mt-6">
+  {/* Nút Save */}
+  <Button
+    type="primary"
+    htmlType="submit"
+    loading={saving}
+    size="large"
+    shape="round"
+    style={{ background: "#FF6900", borderColor: "#FF6900", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
 
-        <Form.Item label="Phone" name="phone">
-          <Input />
-        </Form.Item>
-
-        <Form.Item label="Address (Province/City)" name="address">
-          <Select placeholder="Chọn tỉnh/thành phố">
-            {provinces.map((p) => (
-              <Option key={p} value={p}>
-                {p}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item label="Districts" name="district">
-  <Select
-    mode="tags"
-    placeholder="Nhập hoặc chọn quận/huyện"
   >
-    {Array.isArray(user.district) &&
-      user.district.map((d) => (
-        <Option key={d} value={d}>
-          {d}
-        </Option>
-      ))}
-  </Select>
-</Form.Item>
+    Save
+  </Button>
 
+  {/* Nút Logout */}
+  <Button
+    type="default"
+    onClick={handdleLogOut}
+    loading={saving}
+     size="large"
+    shape="round"
 
-
-<Form.Item>
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "12px", // khoảng cách giữa 2 nút
-      width: "100%",
-    }}
+    style={{ background: "#FFF", color:"#FF6900", borderColor: "#FF6900", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
   >
-    <Button
-      type="primary"
-      htmlType="submit"
-      loading={saving}
-      style={{
-        backgroundColor: "#FF6624",
-        color: "white",
-        fontWeight: 600,
-        borderRadius: "9999px",
-        border: "none",
-        width: "100%",
-        height: "45px",
-      }}
-    >
-      Save
-    </Button>
-    <Button
-      type="primary"
-      htmlType="button"
-      onClick={handdleLogOut}
-      loading={saving}
-      style={{
-        backgroundColor: "#FFF",
-        color: "#FF6624",
-        fontWeight: 600,
-        borderRadius: "9999px",
-        border: "1px solid #FF6624",
-        width: "100%",
-        height: "45px",
-      }}
-    >
-      Logout
-    </Button>
-  </div>
-</Form.Item>
+    Logout
+  </Button>
+</div>
+  </form>
 
-
-      </Form>
-    </Card>
+  {/* Modal Change Password */}
+  {isModalVisible && (
+   <Modal
+   title="Change Password"
+  open={isModalVisible}
+  onCancel={() => setIsModalVisible(false)}
+  footer={null}
+  centered 
+  styles={{ padding: 0 }}
+  style={{ maxWidth: "95%" }}
+ >
+   <div className="flex flex-col gap-3">
+     <Input.Password
+       placeholder="Old password"
+       value={oldPassword}
+       size="large"
+       onChange={(e) => setOldPassword(e.target.value)}
+       className="w-full"
+     />
+     <Input.Password
+       placeholder="New password"
+       value={newPassword}
+       onChange={(e) => setNewPassword(e.target.value)}
+       className="w-full"
+        size="large"
+     />
+     <Input.Password
+       placeholder="Confirm new password"
+       value={confirmPassword}
+       onChange={(e) => setConfirmPassword(e.target.value)}
+       className="w-full"
+        size="large"
+     />
+ 
+     <div className="flex gap-3 mt-2">
+       <Button
+         type="primary"
+         size="large"
+         shape="round"
+     className="w-full"
+     style={{ background: "#FF6900", borderColor: "#FF6900", border:"1px solid #FF6900" }}
+         onClick={handleChangePassword}
+         loading={saving} // nếu muốn hiện spinner khi đang lưu
+       >
+         Confirm
+       </Button>
+     
+     </div>
+   </div>
+ </Modal>
+  )}
+</div>
+   </div>
   );
 };
 

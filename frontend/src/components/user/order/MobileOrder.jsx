@@ -22,6 +22,7 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
       setLoadingId(id);
       const res = await getOrderDetail(id, token);
       setSelectedOrder(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error("Failed to load order detail", err);
     } finally {
@@ -65,20 +66,20 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
           children: (
             <div className="space-y-2">
               <p>
-                <span className="font-medium">Total</span>{" "}
-                {Number(order.total).toLocaleString("vi-VN")}đ
+                <span className="font-semibold">Total price</span>{" "}
+                {Number(order.total).toLocaleString("vi-VN")} <span className="underline">đ</span>
               </p>
               <p>
-                <span className="font-medium">Items in order</span> {order.items?.length || 0}
+                <span className="font-semibold">Total items in order</span> {order.items?.length || 0}
+              </p>
+              <p className="flex items-center gap-1">
+                <span className="font-semibold">Order status</span> <span>{getStatusTag(order.status)}</span>
+              </p>
+              <p className="flex items-center gap-1">
+                <span className="font-semibold">Payment method using</span> <span>{getPaymentTag(order.payment_method)}</span>
               </p>
               <p>
-                <span className="font-medium">Order status</span> {getStatusTag(order.status)}
-              </p>
-                <p>
-                <span className="font-medium">Payment method using</span> {getPaymentTag(order.payment_method)}
-              </p>
-              <p>
-                <span className="font-medium">User address/district at </span>{" "}
+                <span className="font-semibold">User address/district at </span>{" "}
                 {[order.address, order.district].filter(Boolean).join(", ")}
               </p>
 
