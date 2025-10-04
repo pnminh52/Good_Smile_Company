@@ -28,8 +28,7 @@ export const createPaymentUrl = async (req, res) => {
     }
 
     const createDate = new Date();
-    const expireDate = new Date();
-    expireDate.setMinutes(expireDate.getMinutes() + 15); // hết hạn sau 15 phút
+  
 
     const paymentData = {
       vnp_TxnRef: orderId.toString(),
@@ -40,7 +39,6 @@ export const createPaymentUrl = async (req, res) => {
       vnp_ReturnUrl: process.env.VNP_RETURNURL,
       vnp_IpAddr: req.ip || '127.0.0.1',
       vnp_CreateDate: dateFormat(createDate),
-      vnp_ExpireDate: dateFormat(expireDate),
     };
 
     const paymentUrl = vnpay.buildPaymentUrl(paymentData);
