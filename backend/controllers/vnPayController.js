@@ -7,8 +7,9 @@ import { dateFormat } from 'vnpay/utils';
 const vnpay = new VNPay({
   tmnCode: process.env.VNP_TMNCODE,
   secureSecret: process.env.VNP_HASH_SECRET,
-  vnpayHost: 'https://sandbox.vnpayment.vn',
-  testMode: true,
+//   vnpayHost: 'https://sandbox.vnpayment.vn',
+ vnpayHost: 'https://pay.vnpay.vn',
+  testMode: false,
   enableLog: true,
   loggerFn: ignoreLogger,
   endpoints: {
