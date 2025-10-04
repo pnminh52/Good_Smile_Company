@@ -69,15 +69,17 @@ const Checkout = () => {
       const orderId = createdOrder.data.orderId; // ✅ lấy orderId trả về từ server
 console.log(orderId);
 
-      // 2️⃣ Gọi API FE VNPay
-      const { data } = await createVnpayPayment({
-        orderId,
-        amount: Math.floor(total + shippingFee)
-      });
+    // 2️⃣ Gọi API FE VNPay
+const { data } = await createVnpayPayment({
+  orderId, // orderId từ backend
+  amount: Math.floor(total + shippingFee) // tổng tiền + phí ship
+});
 
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl; // redirect sang VNPay
-      }
+// ✅ Chuyển sang VNPay
+if (data.paymentUrl) {
+  window.location.href = data.paymentUrl; // redirect sang VNPay
+}
+
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error("Payment failed");
