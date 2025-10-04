@@ -41,6 +41,11 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
     return <Tag color={color}>{status}</Tag>;
   };
 
+  const getPaymentTag =(method)=>{
+    let color = method === "Online Banking" ? "blue":"green"
+    return <Tag color={color}>{method}</Tag>
+  }
+
   if (orders.length === 0) return <NoResult />;
 
   return (
@@ -61,16 +66,19 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
             <div className="space-y-2">
               <p>
                 <span className="font-medium">Total</span>{" "}
-                {Number(order.total).toLocaleString("vi-VN")} đ
+                {Number(order.total).toLocaleString("vi-VN")}đ
               </p>
               <p>
-                <span className="font-medium">Items</span> {order.items?.length || 0}
+                <span className="font-medium">Items in order</span> {order.items?.length || 0}
               </p>
               <p>
-                <span className="font-medium">Status</span> {getStatusTag(order.status)}
+                <span className="font-medium">Order status</span> {getStatusTag(order.status)}
+              </p>
+                <p>
+                <span className="font-medium">Payment method using</span> {getPaymentTag(order.payment_method)}
               </p>
               <p>
-                <span className="font-medium">Address</span>{" "}
+                <span className="font-medium">User address/district at </span>{" "}
                 {[order.address, order.district].filter(Boolean).join(", ")}
               </p>
 

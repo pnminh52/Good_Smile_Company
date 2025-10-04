@@ -21,24 +21,26 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:gap-4 gap-2 items-center">
-        <button
+      <div className="flex flex-col  lg:gap-4 gap-2 items-center">
+       <div className="flex flex-col lg:flex-row w-full gap-2 lg:gap-4 items-center">
+         <button
           onClick={handleCodPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
           className={`w-full py-3 rounded-full font-semibold transition duration-300 ease-in-out 
             ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-[#FF6900] text-white cursor-pointer"}`}
         >
-          {loading ? "Processing..." : "Pay with COD"}
+          {loading ? "Processing..." : "Cash Order (COD)"}
         </button>
 
         <button
           onClick={handleVnpayPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
           className={`w-full py-3 rounded-full font-semibold transition duration-300 ease-in-out 
-            ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-[#00AAFF] text-white cursor-pointer"}`}
+            ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-[#FAB12F] text-white cursor-pointer"}`}
         >
-          {loading ? "Processing..." : "Pay Online (VNPay)"}
+          {loading ? "Processing..." : "Online Banking (VNPay recommended)"}
         </button>
+       </div>
 
         <button
           onClick={() => navigate("/cart")}
@@ -46,6 +48,8 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         >
           Back to Cart
         </button>
+              <p className="text-sm text-red-600">*Online payment method is being tested in a sandbox environment, please do not use a real bank card*</p>
+
       </div>
     </div>
   );

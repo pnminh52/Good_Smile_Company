@@ -96,7 +96,7 @@ const Checkout = () => {
 
   return (
     <div className="max-w-screen-lg w-full mx-auto lg:px-30 px-4">
-      <h1 className="text-xl font-semibold sm:py-6 py-4">Checkout</h1>
+      <h1 className="text-xl font-semibold sm:py-6 py-4">Checkout ({cartItems?.length})</h1>
       <div className="flex flex-col">
         <CheckOutItem cartItems={cartItems} />
         <UserInfoCard onChange={setUserInfo} />

@@ -92,7 +92,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
        {
         districts.length<3 && (
            <div className="flex flex-col ">
-                    <label className="    text-xl font-semibold sm:py-6 py-4">District / city</label>
+                    <label className="    text-xl font-semibold sm:py-6 py-4">District / city </label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -119,7 +119,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
             districts.length===3 &&(
               "pt-4"
             )
-          }`}    >Your saved addresses</label>
+          }`}    >Your saved addresses ({districts?.length}) </label>
         <div className=" space-y-2">
             {districts.map((d, i) => (
                       <div

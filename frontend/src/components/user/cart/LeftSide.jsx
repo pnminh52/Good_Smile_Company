@@ -19,7 +19,7 @@ const LeftSide = ({ cartItems, handleUpdateQuantity, handleDelete }) => {
                                                                <img
                               src={item.base_image}
                               alt={item.name}
-                              className="lg:w-50 w-50 aspect-square  object-cover rounded-lg"
+                              className="lg:w-50 w-45 aspect-square  object-cover rounded-lg"
                             />
                             
                                                             </Link>

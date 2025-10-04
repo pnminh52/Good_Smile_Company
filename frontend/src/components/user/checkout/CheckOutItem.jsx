@@ -14,7 +14,7 @@ const CheckOutItem = ({cartItems}) => {
                                                                 <img
                                src={item.base_image}
                                alt={item.name}
-                               className="sm:w-40 w-50 aspect-square  object-cover rounded-lg"
+                               className="lg:w-50 w-45  aspect-square  object-cover rounded-lg"
                              />
                              
                                                              </Link>

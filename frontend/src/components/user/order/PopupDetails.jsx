@@ -84,6 +84,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
   value={status} 
   onChange={(value) => setStatus(value)}
   style={{ width: "100%", maxWidth: 250, marginTop: 8 }}
+   disabled={order.status_id === 4}
 >
   <Option value={1} disabled={order.status_id !== 1 && order.status_id !== 4}>
     Pending
