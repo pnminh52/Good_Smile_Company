@@ -81,7 +81,7 @@ console.log("🟩 payment_method:", req.body.payment_method);
 
     // 🔹 Phân biệt phương thức thanh toán
     // status_id: 1 = Chờ thanh toán, 2 = Đã thanh toán (tùy hệ thống bạn định nghĩa)
-    const statusId = payment_method === "Online Banking" ? 1 : 2;
+    const statusId =  1 ;
 
     // Tạo order
     const [order] = await sql`
