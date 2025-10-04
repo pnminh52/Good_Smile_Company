@@ -49,9 +49,9 @@ export const getOrderDetail = async (req, res) => {
 
 
 export const createOrder = async (req, res) => {
-  console.log(req.body);
-  console.log("🟩 req.body:", req.body);
-console.log("🟩 payment_method:", req.body.payment_method);
+//   console.log(req.body);
+//   console.log("🟩 req.body:", req.body);
+// console.log("🟩 payment_method:", req.body.payment_method);
 
   
   const userId = req.user.id;

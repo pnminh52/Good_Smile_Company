@@ -39,7 +39,7 @@ const Checkout = () => {
         shippingFee,
         payment_method:"Cash On Delivery"
       };
-      console.log("🟢 Sending COD order data:", orderData);
+      // console.log("🟢 Sending COD order data:", orderData);
       await createOrder(orderData, token);
       await clearCart(token);
       toast.success("Order placed successfully!");
@@ -70,7 +70,7 @@ const Checkout = () => {
 
     const createdOrder = await createOrder(orderData, token);
     const orderId = createdOrder.data.orderId; // ✅ tạo orderId ở đây sau khi API trả về
-    console.log("OrderId:", orderId);
+    // console.log("OrderId:", orderId);
 
     // Gọi API tạo payment URL VNPay
     const { data } = await createVnpayPayment({
