@@ -20,6 +20,7 @@ const vnpay = new VNPay({
 export const createPaymentUrl = async (req, res) => {
   try {
     const { orderId, amount, orderInfo, bankCode } = req.body;
+console.log("Received from frontend:", req.body);
 
     if (!orderId || !amount) {
       return res.status(400).json({ message: 'orderId and amount are required' });
