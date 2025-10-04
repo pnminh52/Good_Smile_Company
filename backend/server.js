@@ -3,8 +3,6 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
-
 import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js"
@@ -92,8 +90,8 @@ app.use("/api/news", newRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/chatbot", chatbotRoutes)
 
-console.log("TMN:", `"${process.env.VNP_TMNCODE}"`);
-console.log("HASH:", `"${process.env.VNP_HASH_SECRET}"`);
+// console.log("TMN:", `"${process.env.VNP_TMNCODE}"`);
+// console.log("HASH:", `"${process.env.VNP_HASH_SECRET}"`);
 
 
 
