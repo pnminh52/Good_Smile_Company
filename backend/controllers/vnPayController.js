@@ -33,7 +33,7 @@ export const createPaymentUrl = async (req, res) => {
 
     const paymentData = {
       vnp_TxnRef: orderId.toString(),
-      vnp_Amount: amount * 100, // VNPay nhân với 100
+     vnp_Amount: Math.floor(amount * 100), // VNPay nhân với 100
       vnp_OrderInfo: `Payment for order ${orderId}`,
       vnp_OrderType: ProductCode.Other,
       vnp_Locale: VnpLocale.VN,
