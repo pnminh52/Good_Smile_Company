@@ -4,9 +4,31 @@ export const getUserOrders = async (req, res) => {
   const userId = req.user.id;
   try {
     const orders = await sql`
-      SELECT o.id, o.total, o.status_id, os.name AS status, o.address, o.district, o.created_at,
-        COALESCE(json_agg(json_build_object('product_id', oi.product_id, 'name', p.name, 'quantity', oi.quantity)) 
-                 FILTER (WHERE oi.id IS NOT NULL), '[]') AS items
+      SELECT 
+        o.id, 
+        o.total, 
+        o.status_id, 
+        os.name AS status, 
+        o.address, 
+        o.district, 
+        o.created_at, 
+        o.payment_method,
+        CASE 
+          WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
+          WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
+          ELSE 'Not Determined'
+        END AS payment_method_name,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'product_id', oi.product_id, 
+              'name', p.name, 
+              'quantity', oi.quantity, 
+              'price', oi.price
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL), 
+          '[]'
+        ) AS items
       FROM orders o
       LEFT JOIN order_status os ON o.status_id = os.id
       LEFT JOIN order_items oi ON oi.order_id = o.id
