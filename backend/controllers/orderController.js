@@ -49,8 +49,13 @@ export const getOrderDetail = async (req, res) => {
 
 
 export const createOrder = async (req, res) => {
+  console.log(req.body);
+  console.log("🟩 req.body:", req.body);
+console.log("🟩 payment_method:", req.body.payment_method);
+
+  
   const userId = req.user.id;
-  const { items, address, selectedDistrict, shippingFee } = req.body;
+  const { items, address, selectedDistrict, shippingFee, payment_method } = req.body;
 
   if (!items || !items.length)
     return res.status(400).json({ error: "No items in order" });
@@ -61,7 +66,8 @@ export const createOrder = async (req, res) => {
     for (const item of items) {
       const product = await sql`SELECT price, stock FROM products WHERE id = ${item.product_id}`;
       if (!product.length) return res.status(400).json({ error: "Product not found" });
-      if (product[0].stock < item.quantity) return res.status(400).json({ error: "Insufficient stock" });
+      if (product[0].stock < item.quantity)
+        return res.status(400).json({ error: "Insufficient stock" });
       totalProducts += Number(product[0].price) * item.quantity;
     }
     const totalWithShip = totalProducts + Number(shippingFee || 0);
@@ -73,10 +79,14 @@ export const createOrder = async (req, res) => {
       orderAddress = userRecord.address;
     }
 
+    // 🔹 Phân biệt phương thức thanh toán
+    // status_id: 1 = Chờ thanh toán, 2 = Đã thanh toán (tùy hệ thống bạn định nghĩa)
+    const statusId = payment_method === "Online Banking" ? 1 : 2;
+
     // Tạo order
     const [order] = await sql`
-      INSERT INTO orders (user_id, total, shipping_fee, status_id, address, district)
-      VALUES (${userId}, ${totalWithShip}, ${shippingFee}, 1, ${orderAddress}, ${selectedDistrict})
+      INSERT INTO orders (user_id, total, shipping_fee, status_id, address, district, payment_method)
+      VALUES (${userId}, ${totalWithShip}, ${shippingFee}, ${statusId}, ${orderAddress}, ${selectedDistrict}, ${payment_method})
       RETURNING *
     `;
 
@@ -102,8 +112,8 @@ export const createOrder = async (req, res) => {
         UPDATE products SET stock = stock - ${item.quantity} WHERE id = ${item.product_id}
       `;
       await sql`
-      UPDATE products SET sold = sold + ${item.quantity} WHERE id = ${item.product_id}
-    `;
+        UPDATE products SET sold = sold + ${item.quantity} WHERE id = ${item.product_id}
+      `;
     }
 
     res.status(201).json({
@@ -112,13 +122,15 @@ export const createOrder = async (req, res) => {
       shippingFee,
       total: totalWithShip,
       address: orderAddress,
-      district: selectedDistrict
+      district: selectedDistrict,
+      payment_method,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 export const updateOrderStatus = async (req, res) => {

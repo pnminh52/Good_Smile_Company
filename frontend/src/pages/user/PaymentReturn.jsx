@@ -18,7 +18,7 @@ const PaymentReturn = () => {
         return prev -1
       })
     })
-  }, 1000)
+  }, 10000)
   return (
    <div className="flex flex-col items-center justify-center min-h-screen text-center">
       <h1 className="text-3xl font-bold mb-4">Payment Return</h1>

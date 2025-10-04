@@ -99,178 +99,186 @@ console.log("HASH:", `"${process.env.VNP_HASH_SECRET}"`);
 
 
 
-async function initDB() {
-  try {
-    // 1. Categories
-    await sql`
-      CREATE TABLE IF NOT EXISTS categories (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        image TEXT,
-        description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
-    await sql`
-      CREATE TABLE IF NOT EXISTS news (
-        id SERIAL PRIMARY KEY,
-        title VARCHAR(255) NOT NULL,
-        type VARCHAR(100),
-        content TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )`
+// async function initDB() {
+//   try {
+//     // 1. Categories
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS categories (
+//         id SERIAL PRIMARY KEY,
+//         name VARCHAR(255) NOT NULL,
+//         image TEXT,
+//         description TEXT,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-    // 2. Products (schema mới)
-    await sql`
-CREATE TABLE IF NOT EXISTS products (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,          -- Tên sản phẩm (ngắn gọn)
-  title VARCHAR(255),                  -- Tiêu đề chi tiết
-  series VARCHAR(255),                 -- Series (vd: Hatsune Miku, Naruto,…)
-  release_date DATE,                   -- Ngày phát hành
-  decalProduction VARCHAR(255),        -- Đơn vị sản xuất decal
-  specifications TEXT,                 -- Thông số chi tiết
-  sculptor VARCHAR(255),               -- Người sculpt
-  planningAndProduction VARCHAR(255),  -- Đơn vị Planning/Production
-  productionCooperation VARCHAR(255),  -- Production cooperation
-  paintwork VARCHAR(255),              -- Người phụ trách paintwork
-  relatedInformation TEXT,             -- Thông tin liên quan
-  manufacturer VARCHAR(255),           -- Hãng sản xuất
-  distributedBy VARCHAR(255),          -- Nhà phân phối
-  price DECIMAL(10,2) NOT NULL,        -- Giá bán
-  stock INT DEFAULT 0,                 -- Tồn kho
-  status VARCHAR(50) DEFAULT 'available',  -- Trạng thái (available, preorder, soldout,…)
-  base_image TEXT,                     -- Ảnh chính
-  imagecopyright TEXT,
-  sold INT DEFAULT 0, 
-  additional_images TEXT[],            -- Ảnh phụ
-  category_id INT REFERENCES categories(id) ON DELETE SET NULL,
-  description TEXT,                  
-  copyrightSeries VARCHAR(255),  
-    gift_items JSONB DEFAULT '[]',     
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`;
+//     // 2. News
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS news (
+//         id SERIAL PRIMARY KEY,
+//         title VARCHAR(255) NOT NULL,
+//         type VARCHAR(100),
+//         content TEXT NOT NULL,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-await sql`
-CREATE TABLE IF NOT EXISTS shipping (
-  id SERIAL PRIMARY KEY,
-  region VARCHAR(255) NOT NULL,
-  min_order DECIMAL(10,2),
-  fee DECIMAL(10,2) NOT NULL
-);
-`
+//     // 3. Products
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS products (
+//         id SERIAL PRIMARY KEY,
+//         name VARCHAR(255) NOT NULL,
+//         title VARCHAR(255),
+//         series VARCHAR(255),
+//         release_date DATE,
+//         decalProduction VARCHAR(255),
+//         specifications TEXT,
+//         sculptor VARCHAR(255),
+//         planningAndProduction VARCHAR(255),
+//         productionCooperation VARCHAR(255),
+//         paintwork VARCHAR(255),
+//         relatedInformation TEXT,
+//         manufacturer VARCHAR(255),
+//         distributedBy VARCHAR(255),
+//         price DECIMAL(10,2) NOT NULL,
+//         stock INT DEFAULT 0,
+//         status VARCHAR(50) DEFAULT 'available',
+//         base_image TEXT,
+//         imagecopyright TEXT,
+//         sold INT DEFAULT 0,
+//         additional_images TEXT[],
+//         category_id INT REFERENCES categories(id) ON DELETE SET NULL,
+//         description TEXT,
+//         copyrightSeries VARCHAR(255),
+//         gift_items JSONB DEFAULT '[]',
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-  await sql` 
-  CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  district TEXT[], 
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,        -- hash password
-  phone VARCHAR(20),                     -- số điện thoại
-  address TEXT,                          -- địa chỉ mặc định
-  avatar TEXT,
-  role VARCHAR(50) DEFAULT 'customer',   -- phân quyền: customer/admin
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+//     // 4. Shipping
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS shipping (
+//         id SERIAL PRIMARY KEY,
+//         region VARCHAR(255) NOT NULL,
+//         min_order DECIMAL(10,2),
+//         fee DECIMAL(10,2) NOT NULL
+//       )
+//     `;
 
-  `;
+//     // 5. Users (orders & some tables depend on this)
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS users (
+//         id SERIAL PRIMARY KEY,
+//         name VARCHAR(255) NOT NULL,
+//         district TEXT[],
+//         email VARCHAR(255) UNIQUE NOT NULL,
+//         password VARCHAR(255) NOT NULL,
+//         phone VARCHAR(20),
+//         address TEXT,
+//         avatar TEXT,
+//         role VARCHAR(50) DEFAULT 'customer',
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
+//     // 6. Cart (depends on users & products)
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS cart (
+//         id SERIAL PRIMARY KEY,
+//         user_id INT REFERENCES users(id) ON DELETE CASCADE,
+//         product_id INT REFERENCES products(id) ON DELETE CASCADE,
+//         quantity INT NOT NULL DEFAULT 1,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-  await sql`
-CREATE TABLE IF NOT EXISTS cart (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  quantity INT NOT NULL DEFAULT 1,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`;
+//     // 7. Password resets
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS password_resets (
+//         id SERIAL PRIMARY KEY,
+//         user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+//         token VARCHAR(255) NOT NULL,
+//         expires_at TIMESTAMP NOT NULL,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-await sql`
-CREATE TABLE IF NOT EXISTS password_resets (
-  id SERIAL PRIMARY KEY,
-  user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
-  token VARCHAR(255) NOT NULL,
-  expires_at TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+//     // 8. Order status (create BEFORE orders)
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS order_status (
+//         id SERIAL PRIMARY KEY,
+//         name VARCHAR(50) NOT NULL,
+//         description TEXT,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-`;
+//     // 9. Orders (create BEFORE order_items)
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS orders (
+//         id SERIAL PRIMARY KEY,
+//         user_id INT REFERENCES users(id) ON DELETE CASCADE,
+//         total DECIMAL(10,2) NOT NULL,
+//         shipping_fee DECIMAL(10,2) DEFAULT 0,
+//         status_id INT REFERENCES order_status(id) ON DELETE SET NULL,
+//         address TEXT,
+//         district TEXT,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//         payment_method VARCHAR(50)
+//       )
+//     `;
 
+//     // 10. Order items (now orders exist)
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS order_items (
+//         id SERIAL PRIMARY KEY,
+//         order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+//         product_id INT REFERENCES products(id) ON DELETE CASCADE,
+//         quantity INT NOT NULL,
+//         price DECIMAL(10,2) NOT NULL
+//       )
+//     `;
 
+//     // 11. Banners
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS banners (
+//         id SERIAL PRIMARY KEY,
+//         title VARCHAR(255),
+//         image_mobile TEXT NOT NULL,
+//         image_desktop TEXT NOT NULL,
+//         link TEXT,
+//         status VARCHAR(50) DEFAULT 'active',
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       )
+//     `;
 
-  await sql` 
-  CREATE TABLE IF NOT EXISTS order_items (
-  id SERIAL PRIMARY KEY,
-  order_id INT REFERENCES orders(id) ON DELETE CASCADE,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  quantity INT NOT NULL,
-  price DECIMAL(10,2) NOT NULL              -- giá tại thời điểm đặt (fix, không phụ thuộc thay đổi sau này)
-);
-  `;
+//     // 12. Wishlist
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS wishlist (
+//         id SERIAL PRIMARY KEY,
+//         user_id INT REFERENCES users(id) ON DELETE CASCADE,
+//         product_id INT REFERENCES products(id) ON DELETE CASCADE,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//         UNIQUE(user_id, product_id)
+//       )
+//     `;
 
-  await sql`
-  CREATE TABLE IF NOT EXISTS banners (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255),         
-    image_mobile TEXT NOT NULL,   -- ảnh cho mobile
-    image_desktop TEXT NOT NULL,  -- ảnh cho laptop/desktop
-    link TEXT,                    
-    status VARCHAR(50) DEFAULT 'active', 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-  `;
-  
+//     console.log("✅ Database initialized successfully (Apple schema)");
+//   } catch (error) {
+//     console.error("❌ DB error:", error.message);
+//   }
+// }
 
-// order_status
-await sql`
-  CREATE TABLE IF NOT EXISTS order_status (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-`;
-
-
-
-// order
-await sql`
-  CREATE TABLE IF NOT EXISTS orders (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    total DECIMAL(10,2) NOT NULL,
-     shipping_fee DECIMAL(10,2) DEFAULT 0,
-    status_id INT REFERENCES order_status(id) ON DELETE SET NULL,
-   address TEXT,
-   district TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-`;
-
-await sql `
-CREATE TABLE IF NOT EXISTS wishlist (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  product_id INT REFERENCES products(id) ON DELETE CASCADE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(user_id, product_id)  -- tránh lưu trùng sản phẩm
-);
-`
-
-
-    console.log("✅ Database initialized successfully (Apple schema)");
-  } catch (error) {
-    console.error("❌ DB error:", error.message);
-  }
-}
 
 // Gọi hàm khởi tạo DB
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("✅ Server running on http://localhost:" + PORT);
-  });
+// initDB().then(() => {
+//   app.listen(PORT, () => {
+//     console.log("✅ Server running on http://localhost:" + PORT);
+//   });
+// });
+
+
+app.listen(PORT, () => {
+  console.log("✅ Server running on http://localhost:" + PORT);
 });

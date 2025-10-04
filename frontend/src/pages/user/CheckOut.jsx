@@ -36,8 +36,10 @@ const Checkout = () => {
         items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity })),
         address: userInfo.address,
         selectedDistrict: userInfo.selectedDistrict,
-        shippingFee
+        shippingFee,
+        payment_method:"Cash On Delivery"
       };
+      console.log("🟢 Sending COD order data:", orderData);
       await createOrder(orderData, token);
       await clearCart(token);
       toast.success("Order placed successfully!");
@@ -63,6 +65,7 @@ const Checkout = () => {
       address: userInfo.address,
       selectedDistrict: userInfo.selectedDistrict,
       shippingFee,
+        payment_method: "Online Banking",
     };
 
     const createdOrder = await createOrder(orderData, token);
