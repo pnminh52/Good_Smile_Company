@@ -12,4 +12,7 @@ router.get('/payment-return', verifyReturnUrl);
 // Lấy danh sách ngân hàng VNPay (nếu cần)
 router.get('/banks', getBankList);
 
+// routes/vnPayRoutes.js
+router.get('/ipn', verifyReturnUrl);
+
 export default router;

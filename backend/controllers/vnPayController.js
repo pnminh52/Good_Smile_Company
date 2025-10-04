@@ -55,31 +55,28 @@ export const createPaymentUrl = async (req, res) => {
 export const verifyReturnUrl = async (req, res) => {
   try {
     const queryParams = req.query;
+    const result = vnpay.verifyReturnUrl(queryParams);
+
     const orderId = queryParams.vnp_TxnRef;
     const responseCode = queryParams.vnp_ResponseCode;
 
-    console.log("🔙 VNPay callback:", responseCode, "orderId:", orderId);
-
-    // responseCode:
-    // "00" = success
-    // "24" = user canceled
-    // khác nữa = lỗi giao dịch
+    console.log("VNPay callback:", { orderId, responseCode });
 
     if (responseCode === "00") {
-      await sql`UPDATE orders SET status_id = 1 WHERE id = ${orderId}`;
-      return res.redirect("https://good-smile-company.vercel.app/payment-success");
-    } else if (responseCode === "24") {
-      await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
-      return res.redirect("https://good-smile-company.vercel.app/payment-cancelled");
+      await sql`UPDATE orders SET status_id = 2 WHERE id = ${orderId}`;
+      console.log(`✅ Order ${orderId} success`);
+      return res.status(200).send("OK");
     } else {
       await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
-      return res.redirect("https://good-smile-company.vercel.app/payment-failed");
+      console.log(`❌ Order ${orderId} cancelled/failed`);
+      return res.status(200).send("OK");
     }
   } catch (err) {
-    console.error("verifyReturnUrl error:", err);
-    res.status(500).json({ message: "VNPay return failed" });
+    console.error("VNPay verifyReturnUrl error:", err);
+    res.status(500).json({ message: "Failed to verify VNPay return" });
   }
 };
+
 
 
 export const getBankList = async (req, res) => {
