@@ -51,7 +51,6 @@ export const createPaymentUrl = async (req, res) => {
   }
 };
 
-// Verify trả về khi VNPay redirect
 export const verifyReturnUrl = async (req, res) => {
   try {
     const queryParams = req.query;
@@ -64,7 +63,6 @@ export const verifyReturnUrl = async (req, res) => {
   }
 };
 
-// Optional: lấy danh sách ngân hàng
 export const getBankList = async (req, res) => {
   try {
     const banks = await vnpay.getBankList();
