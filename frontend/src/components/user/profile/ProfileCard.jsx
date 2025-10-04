@@ -244,14 +244,15 @@ const ProfileCard = ({ handdleLogOut }) => {
           disabled
           className="flex-1 border border-gray-200 rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed"
         />
-        <button
-          type="button"
-          onClick={() => setIsModalVisible(true)}
-          className="rounded-lg cursor-pointer bg-white text-[#FF6900]   p-2  border font-semibold border-[#FF6900]"
+       <button
+  type="button"
+  onClick={() => setIsModalVisible(true)}
+  className="rounded-lg cursor-pointer bg-white text-[#FF6900] border font-semibold 
+             w-10 h-10 p-2 lg:w-auto lg:h-auto lg:px-4 lg:py-2"
+>
+  <EditOutlined /> <span className="hidden lg:inline">Change</span>
+</button>
 
-        >
-         <EditOutlined /> Change
-        </button>
       </div>
     </div>
 
