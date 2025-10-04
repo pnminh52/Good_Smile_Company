@@ -7,9 +7,8 @@ import { dateFormat } from 'vnpay/utils';
 const vnpay = new VNPay({
   tmnCode: process.env.VNP_TMNCODE,
   secureSecret: process.env.VNP_HASH_SECRET,
-//   vnpayHost: 'https://sandbox.vnpayment.vn',
- vnpayHost: 'https://pay.vnpay.vn',
-  testMode: false,
+  vnpayHost: 'https://sandbox.vnpayment.vn',
+  testMode: true,
   enableLog: true,
   loggerFn: ignoreLogger,
   endpoints: {
@@ -33,7 +32,7 @@ export const createPaymentUrl = async (req, res) => {
 
     const paymentData = {
       vnp_TxnRef: orderId.toString(),
-     vnp_Amount: Math.floor(amount * 100), // VNPay nhân với 100
+      vnp_Amount: amount, // VNPay nhân với 100
       vnp_OrderInfo: `Payment for order ${orderId}`,
       vnp_OrderType: ProductCode.Other,
       vnp_Locale: VnpLocale.VN,
