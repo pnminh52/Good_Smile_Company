@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { VNPay, ignoreLogger } from 'vnpay';
 import { ProductCode, VnpLocale } from 'vnpay/enums';
 import { dateFormat } from 'vnpay/utils';
-import { sql } from '../config/db';
+import { sql } from '../config/db.js';
 
 // Khởi tạo VNPay instance
 const vnpay = new VNPay({
