@@ -9,7 +9,6 @@ import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
-import vnPaypaymentRoutes from "./routes/vnPayPaymentRoutes.js"
 import orderRoutes from "./routes/orderRoutes.js";
 import shippingRoutes from "./routes/shippingRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
@@ -17,6 +16,7 @@ import uploadRoutes from "./routes/uploadRoutes.js"
 import newRoutes from "./routes/newRoutes.js"
 import bannerRoutes from "./routes/bannerRoutes.js"
 import chatbotRoutes from"./routes/chatbotRoutes.js"
+import vnPayRoutes from "./routes/vnPayRoutes.js"
 
 
 import { sql } from "./config/db.js";
@@ -83,7 +83,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/payment", vnPaypaymentRoutes);
+app.use("/api/payment", vnPayRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/shipping", shippingRoutes);

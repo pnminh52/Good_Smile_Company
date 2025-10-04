@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/orders";
 import { clearCart } from "../../api/cart";
-import { createVnpayPayment } from "../../api/payment";
 import UserInfoCard from './../../components/user/checkout/UserInfoCard';
 import CheckOutItem from './../../components/user/checkout/CheckOutItem';
 import PriceTable from "../../components/user/checkout/PriceTable";
@@ -10,6 +9,7 @@ import NotFound from './NotFound';
 import Loader from './../../components/Loader';
 import useToast from "../../hook/useToast";
 import useShippingFee from "../../hook/useShippingFee";
+import { createVnpayPayment } from './../../api/payment';
 
 const Checkout = () => {
   const toast = useToast();
@@ -50,51 +50,40 @@ const Checkout = () => {
     }
   };
 
-const handleVnpayPayment = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) return toast.error("Please login!");
+  // VNPay payment
+  const handleVnpayPayment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Please login!");
+    setLoading(true);
 
-  setLoading(true);
-  try {
-   const createdOrder = await createOrder(
-  {
-    items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
-    address: userInfo.address,
-    selectedDistrict: userInfo.selectedDistrict,
-    shippingFee
-  },
-  token
-);
+    try {
+      // 1️⃣ Tạo order trước
+      const orderData = {
+        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, price: item.price })),
+        address: userInfo.address,
+        selectedDistrict: userInfo.selectedDistrict,
+        shippingFee,
+      };
 
-const orderId = createdOrder.data.orderId; // ✅ Lấy đúng orderId từ response server
-console.log("Order ID sent to VNPay:", orderId);
+      const createdOrder = await createOrder(orderData, token);
+      const orderId = createdOrder.data.orderId; // ✅ lấy orderId trả về từ server
 
-const { data } = await createVnpayPayment({
-  amount: Math.floor(total + shippingFee),
-  orderId
-});
+      // 2️⃣ Gọi API FE VNPay
+      const { data } = await createVnpayPayment({
+        orderId,
+        amount: Math.floor(total + shippingFee)
+      });
 
-if (data.paymentUrl) window.location.href = data.paymentUrl;
-
-
-    console.log("Cart total:", total);
-    console.log("Shipping fee:", shippingFee);
-    console.log("Amount sent to VNPay:", Math.floor(total + shippingFee));
-    console.log("Order ID sent to VNPay:", orderId);
-
- 
-
-    if (data.paymentUrl) window.location.href = data.paymentUrl;
-
-  } catch (err) {
-    console.error("VNPay payment error:", err.response?.data || err.message);
-    toast.error("Payment failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl; // redirect sang VNPay
+      }
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      toast.error("Payment failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cartItems.length === 0) return <NotFound />;
   if (loading) return <Loader />;
@@ -110,7 +99,7 @@ if (data.paymentUrl) window.location.href = data.paymentUrl;
           shippingFee={shippingFee}
           handleCodPayment={handleCodPayment}
           handleVnpayPayment={handleVnpayPayment}
-          loading={loading} // truyền trạng thái loader
+          loading={loading}
         />
       </div>
     </div>
