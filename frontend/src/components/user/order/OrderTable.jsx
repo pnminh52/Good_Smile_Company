@@ -68,15 +68,18 @@ const OrderTable = ({ orders, token, reloadOrders }) => {
         return <Tag color={color}>{status}</Tag>;
       },
     },
-    {
-      title: "Address / District",
-      key: "address",
+        {
+      title: "Payment Method",
+      dataIndex: "payment_method",
+      key: "payment_method",
       align: "center",
-      render: (_, record) => {
-        const fullAddress = [record.address, record.district].filter(Boolean).join(", ");
-        const shortAddress = fullAddress.length > 20 ? fullAddress.slice(0, 20) + "..." : fullAddress;
-        return <Tooltip title={fullAddress}>{shortAddress}</Tooltip>;
-      },
+      render: (method) => (
+        <Tag color={method === "Online Banking" ? "blue" : "green"}>
+          {method === "Online Banking"
+            ? "Online Banking"
+            : "Cash On Delivery"}
+        </Tag>
+      ),
     },
     {
       title: "Created At",
