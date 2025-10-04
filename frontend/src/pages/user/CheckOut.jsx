@@ -51,42 +51,42 @@ const Checkout = () => {
   };
 
   // VNPay payment
-  const handleVnpayPayment = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return toast.error("Please login!");
-    setLoading(true);
+ const handleVnpayPayment = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return toast.error("Please login!");
+  setLoading(true);
 
-    try {
-      // 1️⃣ Tạo order trước
-      const orderData = {
-        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, price: item.price })),
-        address: userInfo.address,
-        selectedDistrict: userInfo.selectedDistrict,
-        shippingFee,
-      };
+  try {
+    // Gọi API tạo order
+    const orderData = {
+      items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, price: item.price })),
+      address: userInfo.address,
+      selectedDistrict: userInfo.selectedDistrict,
+      shippingFee,
+    };
 
-      const createdOrder = await createOrder(orderData, token);
-      const orderId = createdOrder.data.orderId; // ✅ lấy orderId trả về từ server
-console.log(orderId);
+    const createdOrder = await createOrder(orderData, token);
+    const orderId = createdOrder.data.orderId; // ✅ tạo orderId ở đây sau khi API trả về
+    console.log("OrderId:", orderId);
 
-    // 2️⃣ Gọi API FE VNPay
-const { data } = await createVnpayPayment({
-  orderId, // orderId từ backend
-  amount: Math.floor(total + shippingFee) // tổng tiền + phí ship
-});
+    // Gọi API tạo payment URL VNPay
+    const { data } = await createVnpayPayment({
+      orderId,
+      amount: Math.floor(total + shippingFee)
+    });
 
-// ✅ Chuyển sang VNPay
-if (data.paymentUrl) {
-  window.location.href = data.paymentUrl; // redirect sang VNPay
-}
-
-    } catch (err) {
-      console.error(err.response?.data || err.message);
-      toast.error("Payment failed");
-    } finally {
-      setLoading(false);
+    if (data.paymentUrl) {
+      window.location.href = data.paymentUrl; // redirect sang VNPay
     }
-  };
+
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    toast.error("Payment failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   if (cartItems.length === 0) return <NotFound />;
   if (loading) return <Loader />;
