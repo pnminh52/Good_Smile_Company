@@ -67,6 +67,7 @@ const Checkout = () => {
 
       const createdOrder = await createOrder(orderData, token);
       const orderId = createdOrder.data.orderId; // ✅ lấy orderId trả về từ server
+console.log(orderId);
 
       // 2️⃣ Gọi API FE VNPay
       const { data } = await createVnpayPayment({

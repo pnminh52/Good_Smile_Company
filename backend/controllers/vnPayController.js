@@ -16,34 +16,23 @@ const vnpay = new VNPay({
   },
 });
 
-// Tạo URL thanh toán VNPay
 export const createPaymentUrl = async (req, res) => {
-  try {
-    const { orderId, amount, orderInfo, bankCode } = req.body;
-console.log("Received from frontend:", req.body);
+  const { orderId, amount } = req.body;
+  if (!orderId || !amount) return res.status(400).json({ message: "Missing orderId or amount" });
 
-    if (!orderId || !amount) {
-      return res.status(400).json({ message: 'orderId and amount are required' });
-    }
+  const paymentData = {
+    orderId,
+    amount: amount * 100,
+    orderInfo: `Payment for order ${orderId}`,
+    returnUrl: process.env.VNP_RETURNURL,
+    ipnUrl: process.env.VNP_IPNURL,
+    locale: "vn",
+    currCode: "VND",
+  };
 
-    const paymentData = {
-      amount: amount * 100, // VNPay yêu cầu đơn vị là đồng x100
-      orderId,
-      orderInfo: orderInfo || `Thanh toán đơn hàng #${orderId}`,
-      returnUrl: process.env.VNP_RETURNURL,
-      ipnUrl: process.env.VNP_IPNURL,
-      bankCode, // optional
-      locale: 'vn',
-      currCode: 'VND',
-    };
-
-    const paymentUrl = vnpay.paymentUrl(paymentData); // ⚡ Sử dụng phương thức đúng của version mới
-
-    return res.json({ paymentUrl });
-  } catch (err) {
-    console.error('VNPay createPaymentUrl error:', err);
-    return res.status(500).json({ message: 'Failed to create VNPay payment URL' });
-  }
+  const paymentUrl = vnpay.createPaymentUrl(paymentData);
+  console.log("VNPay Payment Params:", paymentData);
+  res.json({ paymentUrl });
 };
 
 // Verify trả về khi VNPay redirect (nếu cần)
