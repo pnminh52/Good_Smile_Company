@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { VNPay, ignoreLogger } from 'vnpay';
 import { ProductCode, VnpLocale } from 'vnpay/enums';
 import { dateFormat } from 'vnpay/utils';
+import { sql } from '../config/db';
 
 // Khởi tạo VNPay instance
 const vnpay = new VNPay({
@@ -43,7 +44,7 @@ export const createPaymentUrl = async (req, res) => {
 
     const paymentUrl = vnpay.buildPaymentUrl(paymentData);
 
-    console.log("VNPay Payment Params:", paymentData);
+    // console.log("VNPay Payment Params:", paymentData);
     res.json({ paymentUrl });
   } catch (err) {
     console.error("VNPay createPaymentUrl error:", err);
@@ -54,14 +55,32 @@ export const createPaymentUrl = async (req, res) => {
 export const verifyReturnUrl = async (req, res) => {
   try {
     const queryParams = req.query;
-    const result = vnpay.verifyReturnUrl(queryParams);
+    const orderId = queryParams.vnp_TxnRef;
+    const responseCode = queryParams.vnp_ResponseCode;
 
-    res.json({ result });
+    console.log("🔙 VNPay callback:", responseCode, "orderId:", orderId);
+
+    // responseCode:
+    // "00" = success
+    // "24" = user canceled
+    // khác nữa = lỗi giao dịch
+
+    if (responseCode === "00") {
+      await sql`UPDATE orders SET status_id = 1 WHERE id = ${orderId}`;
+      return res.redirect("https://good-smile-company.vercel.app/payment-success");
+    } else if (responseCode === "24") {
+      await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
+      return res.redirect("https://good-smile-company.vercel.app/payment-cancelled");
+    } else {
+      await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
+      return res.redirect("https://good-smile-company.vercel.app/payment-failed");
+    }
   } catch (err) {
-    console.error('VNPay verifyReturnUrl error:', err);
-    res.status(500).json({ message: 'Failed to verify VNPay return' });
+    console.error("verifyReturnUrl error:", err);
+    res.status(500).json({ message: "VNPay return failed" });
   }
 };
+
 
 export const getBankList = async (req, res) => {
   try {
