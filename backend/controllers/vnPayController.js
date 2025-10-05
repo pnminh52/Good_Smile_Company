@@ -63,20 +63,37 @@ export const verifyReturnUrl = async (req, res) => {
 
     console.log("VNPay callback:", { orderId, responseCode });
 
+    // Lấy order tương ứng
+    const order = await sql`SELECT * FROM orders WHERE id = ${orderId}`;
+    if (!order.length) {
+      console.warn(`⚠️ Order ${orderId} not found`);
+      return res.status(404).send("Order not found");
+    }
+
+    const userId = order[0].user_id;
+
     if (responseCode === "00") {
+      // Cập nhật trạng thái đơn hàng
       await sql`UPDATE orders SET status_id = 2 WHERE id = ${orderId}`;
-      console.log(`✅ Order ${orderId} success`);
-      return res.status(200).send("OK");
+
+      // Xóa giỏ hàng user
+      await sql`DELETE FROM cart WHERE user_id = ${userId}`;
+
+      console.log(`✅ Order ${orderId} success — cart cleared for user ${userId}`);
+      return res.redirect(`${process.env.CLIENT_URL}/order-success?orderId=${orderId}`);
     } else {
+      // Nếu giao dịch bị hủy / thất bại
       await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
-      console.log(`❌ Order ${orderId} cancelled/failed`);
-      return res.status(200).send("OK");
+      console.log(`❌ Order ${orderId} failed or cancelled`);
+      return res.redirect(`${process.env.CLIENT_URL}/order-failed?orderId=${orderId}`);
     }
   } catch (err) {
     console.error("VNPay verifyReturnUrl error:", err);
     res.status(500).json({ message: "Failed to verify VNPay return" });
   }
 };
+
+
 
 
 
