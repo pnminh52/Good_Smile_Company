@@ -31,12 +31,10 @@ const MobileFilter = ({
         className="w-full"
       />
 
-      <Button
-        icon={<FilterOutlined />}
-        onClick={() => setOpen(true)}
-        className="w-full bg-orange-500 text-white hover:bg-orange-600"
-        size="large"
-      ></Button>
+ <button  className="border w-10 h-10 rounded-lg border-gray-300"   onClick={() => setOpen(true)}>
+  <FilterOutlined />
+  </button>
+     
    {
     open && (
         <div className="fixed inset-0 z-50 flex">

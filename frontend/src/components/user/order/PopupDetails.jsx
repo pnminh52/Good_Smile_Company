@@ -3,6 +3,7 @@ import { Modal, Select, Button, Spin, List, Typography, Image, Tag } from "antd"
 import { updateOrderStatus } from "../../../api/orders";
 import useToast from "../../../hook/useToast";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -123,11 +124,12 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
             <div className="space-y-2 pt-2">
             {order.items.map((item) => (
               <div key={item.id} className="flex  gap-2 p-0  rounded-lg ">
+               
                 <img
-                  src={item.base_image}
-                  alt={item.name}
-                  className="w-24 h-24 object-cover rounded-md"
-                />
+                                 src={item.base_image}
+                                 alt={item.name}
+                                 className="w-24 h-24 object-cover rounded-md"
+                               />
                 <div className="flex flex-col ">
                   <p className="font-medium ">{item.name} </p>
                   <p className="text-gray-600"><span className="">{Number(item.price).toLocaleString("vi-VN")} đ</span> / {item.quantity}</p>

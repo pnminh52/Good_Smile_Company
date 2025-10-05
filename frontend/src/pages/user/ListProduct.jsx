@@ -200,12 +200,10 @@ const handleLoadMore = () => {
     onChange={(e) => setSearchTerm(e.target.value)}
     size="large"
   />
-  <Button
-    type="default"
-    icon={<FilterOutlined />}
-    onClick={() => setShowFilter(true)}
-    size="large"
-  />
+  <button  className="border w-10 h-10 rounded-lg border-gray-300"   onClick={() => setShowFilter(true)}>
+  <FilterOutlined />
+  </button>
+
 </div>
 
       {/* Drawer Filter Mobile */}
