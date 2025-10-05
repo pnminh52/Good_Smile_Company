@@ -73,10 +73,12 @@ const Checkout = () => {
     // console.log("OrderId:", orderId);
 
     // Gọi API tạo payment URL VNPay
-    const { data } = await createVnpayPayment({
-      orderId,
-      amount: Math.floor(total + shippingFee)
-    });
+    // const { data } = await createVnpayPayment({
+      // orderId,
+      // amount: Math.floor(total + shippingFee)
+    
+    // });
+    const { data } = await createVnpayPayment({ orderId });
 
     if (data.paymentUrl) {
       window.location.href = data.paymentUrl; // redirect sang VNPay

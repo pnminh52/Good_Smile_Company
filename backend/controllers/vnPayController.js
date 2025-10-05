@@ -29,11 +29,11 @@ export const createPaymentUrl = async (req, res) => {
     }
 
     const createDate = new Date();
-  
+    const fixedAmount = 10000; 
 
     const paymentData = {
       vnp_TxnRef: orderId.toString(),
-      vnp_Amount: amount * 100, // VNPay nhân với 100
+      vnp_Amount: fixedAmount * 100, // VNPay nhân với 100
       vnp_OrderInfo: `Payment for order ${orderId}`,
       vnp_OrderType: ProductCode.Other,
       vnp_Locale: VnpLocale.VN,
