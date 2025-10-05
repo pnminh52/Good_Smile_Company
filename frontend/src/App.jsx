@@ -39,6 +39,10 @@ import { setLogoutRef } from './hook/useAuth';
 import NewList from "./pages/admin/new/NewList";
 import PaymentReturn from "./pages/user/PaymentReturn";
 import PreviousShop from './pages/user/guide/PreviousShop';
+import AboutPayments from "./pages/user/guide/AboutPayments";
+import DeliveryAndShipping from "./pages/user/guide/DeliveryAndShipping";
+import ImportanNote from "./pages/user/guide/ImportanNote";
+import Coupons from "./pages/user/guide/Coupons";
 
 
 function App() {
@@ -69,33 +73,40 @@ function AppContent() {
         pauseOnHover
         draggable
       />
-        
+
       <Routes>
         {/* User */}
-      
-           <Route element={<UserLayout />}>
-                    <Route path="/" element={<Homepage />} />
-                    <Route path="/product" element={<ListProduct />} />
-                    <Route path="/product/:id" element={<ProductDetails />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/search" element={<SearchByKeyword />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/new" element={<News />} />
-                    <Route path="/checkout" element={<CheckOut />} />
-                    <Route path="/profile/:id" element={<Profile />} />
-                    <Route path="/order" element={<Order />} />
-                    <Route path="/wishlist" element={<Wishlist />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="*" element={<NotFound />} />
-                    <Route path="/payment-return" element={<PaymentReturn />} />
-                                        <Route path="/guide/user-guide" element={<UserGuide />} />
-                                        <Route path="/guide/previous-shop" element={<PreviousShop />} />
-                                        <Route path="/order-success" element={<OrderSuccess />} />
-                  </Route>
-        
-       
+
+        <Route element={<UserLayout />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/product" element={<ListProduct />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<SearchByKeyword />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/new" element={<News />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/payment-return" element={<PaymentReturn />} />
+          <Route path="/guide/user-guide" element={<UserGuide />} />
+          <Route path="/guide/previous-shop" element={<PreviousShop />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/guide/about-payments" element={<AboutPayments />} />
+          <Route path="/guide/delivery-and-shipping" element={<DeliveryAndShipping />} />
+          <Route path="/guide/importan" element={<ImportanNote />} />
+          <Route path="/guide/coupons" element={<Coupons />} />
+
+
+
+        </Route>
+
+
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
@@ -105,7 +116,7 @@ function AppContent() {
           <Route path="products" element={<ProductList />} />
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />
-                    
+
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<CategoryAdd />} />
           <Route path="categories/edit/:id" element={<CategoryEdit />} />

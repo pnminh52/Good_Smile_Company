@@ -2,7 +2,7 @@ import React from "react";
 
 const UserGuide = () => {
   return (
-    <div className="max-w-screen-xl mx-auto lg:px-60 px-4">
+    <div className="max-w-screen-xl mx-auto lg:px-60 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">About Orders</h1>
       <div className="text-[15px] space-y-2">
         <p className="font-semibold">

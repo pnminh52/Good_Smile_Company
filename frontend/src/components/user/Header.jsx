@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 const Header = () => {
   const toast = useToast();
-  const location =useLocation()
+  const location = useLocation()
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const upcomingAlert = () => {
@@ -17,16 +17,16 @@ const Header = () => {
       toast.error("You must login to use this featured!");
     }
   };
-useEffect(()=>{
-  const handleScroll = ()=>{
-    if(open) setOpen(false)
-  }
-window.addEventListener("scroll", handleScroll)
-return ()=> window.removeEventListener("scroll", handleScroll)
-}, [open])
-useEffect(()=>{
-  setOpen(false)
-},[location.pathname])
+  useEffect(() => {
+    const handleScroll = () => {
+      if (open) setOpen(false)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [open])
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
 
   return (
     <div className="border-b border-gray-300">
@@ -65,7 +65,7 @@ useEffect(()=>{
               </li>
             </Link>
             <li
-              onClick={() => setOpen(prev=> !prev)}
+              onClick={() => setOpen(prev => !prev)}
               className="flex items-center cursor-pointer gap-2 font-semibold "
             >
               <svg
@@ -249,35 +249,55 @@ useEffect(()=>{
         </ul>
       </div>
       {open && (
-        <div onClick={()=>setOpen(false)} className="fixed bg-black/40 z-99 w-full h-full">
-          <div onClick={(e)=>e.stopPropagation()} className="bg-white block lg:hidden h-auto border-t border-gray-300">
+        <div onClick={() => setOpen(false)} className="fixed bg-black/40 z-99 w-full h-full">
+          <div onClick={(e) => e.stopPropagation()} className="bg-white block lg:hidden h-auto border-t border-gray-300">
             <ul className="py-3 space-y-1 px-4">
-             <Link to={"/guide/user-guide"}>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
-             </Link>
-             <Link to={"/guide/previous-shop"}>
-                           <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
-             
-             </Link>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About Coupons</li>
+              <Link to={"/guide/user-guide"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
+              </Link>
+              <Link to={"/guide/previous-shop"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+
+              </Link>
+              <Link to={"/guide/about-payments"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
+
+              </Link>
+              <Link to={"/guide/delivery-and-shipping"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
+              </Link>
+              <Link to={"/guide/importan"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>
+              </Link>
+              <Link to={"/guide/coupons"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About Coupons</li>
+              </Link>
+
             </ul>
           </div>
-          <div onClick={(e)=>e.stopPropagation()} className="h-15 hidden lg:block border-t bg-white border-gray-300">
-          <ul className="h-15  px-4 flex items-center justify-center  gap-6 text-sm">
-             <Link to={"/guide/user-guide"}>
-             <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
-             </Link>
-             <Link to={"/guide/previous-shop"}>
-             <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+          <div onClick={(e) => e.stopPropagation()} className="h-15 hidden lg:block border-t bg-white border-gray-300">
+            <ul className="h-15  px-4 flex items-center justify-center  gap-6 text-sm">
+              <Link to={"/guide/user-guide"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
+              </Link>
+              <Link to={"/guide/previous-shop"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
 
-             </Link>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About Coupons</li>
+              </Link>
+              <Link to={"/guide/about-payments"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
+
+              </Link>
+              <Link to={"/guide/delivery-and-shipping"}>
+
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
+              </Link>
+              <Link to={"/guide/importan"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>
+              </Link>
+              <Link to={"/guide/coupons"}>
+                <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About Coupons</li>
+              </Link>
             </ul>
           </div>
         </div>
