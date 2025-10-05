@@ -21,8 +21,9 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (address) setUserInfo(prev => ({ ...prev, selectedDistrict: address, address }));
+    if (address) setUserInfo(prev => ({ ...prev, address }));
   }, [address]);
+  
 
   const total = cartItems.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 
