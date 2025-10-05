@@ -255,7 +255,10 @@ useEffect(()=>{
              <Link to={"/guide/user-guide"}>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
              </Link>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+             <Link to={"/guide/previous-shop"}>
+                           <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+             
+             </Link>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>
@@ -267,7 +270,10 @@ useEffect(()=>{
              <Link to={"/guide/user-guide"}>
              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>About This Store</li>
              </Link>
-              <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+             <Link to={"/guide/previous-shop"}>
+             <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p>For Users of the Previous Online Shop</li>
+
+             </Link>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Payment</li>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> About Delivery and Shipping</li>
               <li className="flex items-center gap-2 cursor-pointer"> <p className="w-3 h-3 bg-[#F06E00] rounded-full "></p> Important Notice</li>

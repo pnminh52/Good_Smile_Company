@@ -4,7 +4,7 @@ const UserGuide = () => {
   return (
     <div className="max-w-screen-xl mx-auto lg:px-60 px-4">
       <h1 className="font-semibold sm:py-4 text-xl py-6">About Orders</h1>
-      <div className="text-[15px] space-y-4">
+      <div className="text-[15px] space-y-2">
         <p className="font-semibold">
                 *The information on this page applies to orders shipped to regions other
                 than Japan and Taiwan.
@@ -25,7 +25,7 @@ const UserGuide = () => {
               </ul>
       </div>
          <h1 className="font-semibold py-4 text-xl ">Regarding Preorders</h1>
-    <div className="space-y-4 text-[15px]">
+    <div className="space-y-2 text-[15px]">
           <p>
                 The majority of products available for purchase on the Good Smile
                 Company Online Store are preorder products. Please note that adequate
@@ -69,7 +69,7 @@ const UserGuide = () => {
               </p>
     </div>
          <h1 className="font-semibold py-4 text-xl ">Regarding Orders</h1>
-     <div className="space-y-4 text-[15px]">
+     <div className="space-y-2 text-[15px]">
          <p>We do not accept orders via phone, email or post.</p>
         
               <p>
@@ -90,7 +90,7 @@ const UserGuide = () => {
               </p>
      </div>
          <h1 className="font-semibold py-4 text-xl ">About Order Numbers</h1>
-     <div className="text-[15px] space-y-4">
+     <div className="text-[15px] space-y-2">
          <p>
                 The order number of an order will differ depending on the time an order
                 is placed.
@@ -102,7 +102,7 @@ const UserGuide = () => {
               </p>
      </div>
          <h1 className="font-semibold py-4 text-xl ">How to Place an Order</h1>
-      <ol className="list-decimal pl-5 space-y-4 text-[15px]">
+      <ol className="list-decimal pl-5 space-y-2 text-[15px]">
   <li>Log in to your Good Smile Company Online Store account.</li>
   <li>Click the "Preorder Now" or "Add to Cart" button on the product page of the desired item.</li>
   <li>Click the "Cart" button on the top right of the screen.</li>

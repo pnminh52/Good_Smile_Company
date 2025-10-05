@@ -106,7 +106,7 @@ const LeftSide = ({ product }) => {
         return (
           <div
             key={i}
-            className={`w-1/5 h-auto aspect-square  bg-gray-100 flex-shrink-0 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
+            className={`w-1/5 h-auto aspect-square cursor-grab   bg-gray-100 flex-shrink-0 flex items-center justify-center  transition-all rounded-sm ease-in-out duration-300
               ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"}`}
             onClick={() => setMainImage(img)}
           >

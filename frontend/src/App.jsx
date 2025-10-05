@@ -37,6 +37,7 @@ import { useLogout } from "./hook/useLogout";
 import { setLogoutRef } from './hook/useAuth';
 import NewList from "./pages/admin/new/NewList";
 import PaymentReturn from "./pages/user/PaymentReturn";
+import PreviousShop from './pages/user/guide/PreviousShop';
 
 
 function App() {
@@ -89,7 +90,7 @@ function AppContent() {
                     <Route path="*" element={<NotFound />} />
                     <Route path="/payment-return" element={<PaymentReturn />} />
                                         <Route path="/guide/user-guide" element={<UserGuide />} />
-                    
+                                        <Route path="/guide/previous-shop" element={<PreviousShop />} />
                   </Route>
         
        

@@ -36,9 +36,12 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
           onClick={handleVnpayPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
           className={`w-full py-3 rounded-full font-semibold transition duration-300 ease-in-out 
-            ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-[#FAB12F] text-white cursor-pointer"}`}
+            ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 border-blue-200 flex items-center justify-center text-gray-500 cursor-not-allowed" : "bg-[#FFF] border-blue-500 border rounded-full flex items-center justify-center text-white cursor-pointer"}`}
         >
-          {loading ? "Processing..." : "Online Banking (VNPay recommended)"}
+          {loading ? "" : (
+          <img className="w-20" src="./vnpay.png" alt="" />
+
+          )}
         </button>
        </div>
 

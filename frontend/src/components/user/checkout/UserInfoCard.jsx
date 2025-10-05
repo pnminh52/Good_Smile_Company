@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useToast from "../../../hook/useToast";
+import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
 const UserInfoCard = ({ onChange }) => {
   const toast = useToast();
@@ -51,11 +52,19 @@ const res = await axios.get(`${API_URL}/users/profile`, {
   const handleAddDistrict = () => {
     const d = newDistrict.trim();
     if (!d) return;
-
+    if (!d) { 
+      toast.error("Cannot add empty district!");
+      return;
+    }
     if (districts.length >= 3) {
       toast.error("You can only add up to 3 districts!");
       return;
     }
+   if(districts.includes(d)){
+
+    toast.error("This district already exists!");
+    return;
+   }
 
     if (districts.includes(d)) {
       toast.error("This district already exists!");
@@ -99,15 +108,18 @@ const res = await axios.get(`${API_URL}/users/profile`, {
                         value={newDistrict}
                         onChange={handleNewDistrictChange}
                         placeholder="Enter your current address and place of residence"
-                        className="border border-gray-300 rounded px-3 py-2 flex-1"
+                        className="border border-gray-300  px-3 h-10 rounded-lg flex-1"
                       />
-                      <button
-                        type="button"
-                        onClick={handleAddDistrict}
-                        className="bg-orange-500 text-white px-8 py-2 rounded-full "
-                      >
-                        Add
-                      </button>
+                     <button
+  type="button"
+  onClick={handleAddDistrict}
+  className="bg-[#FFF] border cursor-pointer border-[#FF6900] text-[#FF6900] rounded-lg flex items-center justify-center gap-2 
+             w-10 h-10 p-0 lg:w-auto lg:h-auto lg:px-4 lg:py-2"
+>
+  <PlusOutlined />
+  <span className="hidden lg:inline">Add new district</span>
+</button>
+
                     </div>
                   </div>
         )
@@ -124,7 +136,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
             {districts.map((d, i) => (
                       <div
                         key={i}
-                        className={`flex items-center justify-between border  px-3 py-2 rounded ${
+                        className={`flex items-center justify-between border rounded-lg  px-3 py-2 ${
                           selectedDistrict === d ? "bg-gray-50 border border-[#FF6624]" : "opacity-40"
                         }`}
                       >
@@ -139,18 +151,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
                           onClick={() => handleRemoveDistrict(i)}
                           className="cursor-pointer text-red-500 font-bold"
                         >
-                           <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="#EA1717"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M5.29 5.29c.39-.39 1.02-.39 1.41 0L12 10.59l5.29-5.3a1 1 0 111.42 1.42L13.41 12l5.3 5.29a1 1 0 01-1.42 1.42L12 13.41l-5.29 5.3a1 1 0 01-1.42-1.42L10.59 12l-5.3-5.29a1 1 0 010-1.42z"
-                    />
-                  </svg>
+                          <CloseOutlined />
                         </button>
                       </div>
                     ))}
