@@ -73,23 +73,13 @@ export const verifyReturnUrl = async (req, res) => {
     const userId = order[0].user_id;
 
     if (responseCode === "00") {
-      // ✅ Thanh toán thành công
       await sql`UPDATE orders SET status_id = 2 WHERE id = ${orderId}`;
-
-      // 🔹 Xóa toàn bộ giỏ hàng của user sau khi thanh toán
-      await sql`DELETE FROM cart WHERE user_id = ${userId}`;
-
-      console.log(`✅ Order ${orderId} success — cleared cart for user ${userId}`);
-
-      // Redirect về client (ví dụ trang success)
-      return res.redirect(`${process.env.CLIENT_URL}/order-success?orderId=${orderId}`);
+      console.log(`✅ Order ${orderId} success`);
+      return res.redirect(`https://good-smile-company.vercel.app/order-success?orderId=${orderId}`);
     } else {
-      // ❌ Thanh toán thất bại hoặc bị hủy
       await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
-      console.log(`❌ Order ${orderId} failed or cancelled`);
-
-      // Redirect về client (trang thất bại)
-      return res.redirect(`${process.env.CLIENT_URL}/order-failed?orderId=${orderId}`);
+      console.log(`❌ Order ${orderId} failed`);
+      return res.redirect(`https://good-smile-company.vercel.app/order-fail?orderId=${orderId}`);
     }
   } catch (err) {
     console.error("VNPay verifyReturnUrl error:", err);
