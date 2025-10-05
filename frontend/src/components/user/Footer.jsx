@@ -6,7 +6,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#F4F4F6]  mt-30">
+    <footer className="bg-[#F4F4F6]  mt-20">
       <div className="h-16 bg-[#FF6900] relative">
         <button
           onClick={scrollToTop}
