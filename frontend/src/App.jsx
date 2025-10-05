@@ -92,7 +92,7 @@ function AppContent() {
                     <Route path="/payment-return" element={<PaymentReturn />} />
                                         <Route path="/guide/user-guide" element={<UserGuide />} />
                                         <Route path="/guide/previous-shop" element={<PreviousShop />} />
-                                        <Route path="/order-success/:id" element={<OrderSuccess />} />
+                                        <Route path="/order-success" element={<OrderSuccess />} />
                   </Route>
         
        
