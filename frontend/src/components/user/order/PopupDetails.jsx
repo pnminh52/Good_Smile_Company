@@ -12,25 +12,6 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
   const [status, setStatus] = useState(order.status_id);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-
-  const handleSave = async () => {
-    if (order.status_id >= 4) {
-      toast.error("Order already canceled!");
-      return;
-    }
-  
-    try {
-      setLoading(true);
-      await updateOrderStatus(order.id, 4, token); 
-      if (onUpdated) onUpdated();
-      onClose();
-      toast.success("Order canceled successfully!");
-    } catch (err) {
-      toast.error("Failed to cancel order!");
-    } finally {
-      setLoading(false);
-    }
-  };
     const getStatusTag = (status) => {
       let color =
         status === "Pending"
@@ -42,11 +23,38 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
           : "red";
       return <Tag color={color}>{status}</Tag>;
     };
-  
     const getPaymentTag =(method)=>{
       let color = method === "Online Banking" ? "blue":"green"
       return <Tag color={color}>{method}</Tag>
     }
+    const handleCancel = () => {
+      if (order.status === "Canceled") {
+        toast.error("Order is already canceled!");
+        return;
+      }
+    
+      Modal.confirm({
+        title: "Confirm cancel",
+        content: "Are you sure you want to cancel this order?",
+        okText: "Yes, cancel",
+        centered: true,
+        cancelText: "No",
+        okType: "danger",
+        onOk: async () => {
+          try {
+            setLoading(true);
+            await updateOrderStatus(order.id, 4, token); // cancel order
+            toast.success("Order canceled successfully!");
+            if (onUpdated) onUpdated();
+            onClose();
+          } catch (err) {
+            toast.error("Failed to cancel order!");
+          } finally {
+            setLoading(false);
+          }
+        },
+      });
+    };
   return (
    <div className="hide-scrollbar">
      <Modal
@@ -86,34 +94,8 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
               </p>
         </div>
 
-      {
-         order.status !== "Canceled" &&(
-            <div className=" flex items-center gap-1">
-                    <Text strong>Update order status</Text>
-                    <Select
-            value={status} 
-            onChange={(value) => setStatus(value)}
-            style={{ width: "100%", maxWidth: 100, marginTop: 8 }}
-             disabled={order.status_id === 4}
-          >
-            <Option value={1} disabled={order.status_id !== 1 && order.status_id !== 4}>
-              Pending
-            </Option>
-            <Option value={2} disabled={order.status_id !== 2 && order.status_id !== 4}>
-              Processing
-            </Option>
-            <Option value={3} disabled={order.status_id !== 3 && order.status_id !== 4}>
-              Completed
-            </Option>
-            <Option value={4} disabled={order.status_id === 4}>
-              Canceled
-            </Option>
-          </Select>
-          
-          
-                  </div>
-        )
-      }
+      
+
         
 
         <div className="">
@@ -142,22 +124,23 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
         </div>
         
       </Spin>
-     {
-      order.status !== "Canceled" && (
-        <div className="pt-4">
-        <Button
-                type="primary"
-                size="large"
-                shape="round"
-            className="w-full"
-            style={{ background: "#FF6900", borderColor: "#FF6900", border:"1px solid #FF6900" }}
-                onClick={handleSave}
-                loading={false} 
-              >
-                Confirm
-              </Button>      </div>
-      )
-     }
+      {order.status !== "Canceled" && (
+  <div className="pt-4 flex flex-col gap-2">
+    <Button
+      type="primary"
+      size="large"
+      shape="round"
+      className="w-full"
+      style={{ background: "#DC2626", borderColor: "#DC2626" }}
+
+      onClick={handleCancel} 
+      loading={loading}
+    >
+      Cancel Order
+    </Button>
+  </div>
+)}
+
     </Modal>
    </div>
   );
