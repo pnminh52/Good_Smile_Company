@@ -24,9 +24,10 @@ export const createPaymentUrl = async (req, res) => {
   try {
     const { orderId, amount } = req.body;
 
-    if (!orderId || !amount) {
-      return res.status(400).json({ message: "Missing orderId or amount" });
+    if (!orderId) {
+      return res.status(400).json({ message: "Missing orderId" });
     }
+    
 
     const createDate = new Date();
     const fixedAmount = 10000; 
