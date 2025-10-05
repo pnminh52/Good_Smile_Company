@@ -129,7 +129,7 @@ const LeftSide = ({ product }) => {
   <Carousel
     ref={carouselRef}
     swipeToSlide
-    dots={true}
+    dots={false}
     className="w-full h-[400px]"
     afterChange={(index) => {
       setCurrentIndex(index);
@@ -147,8 +147,8 @@ const LeftSide = ({ product }) => {
             alt={product.name}
             style={{
               height: "400px",
-              width: "auto",
-              objectFit: "cover",
+              width: "fit",
+              objectFit: "contain",
               display: "block",
             }}
             preview={{ mask: <span>Click to enlarge</span> }}

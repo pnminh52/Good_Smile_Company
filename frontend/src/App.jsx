@@ -13,6 +13,8 @@ import CategoryEdit from "./pages/admin/category/CategoryEdit";
 import NewAdd from "./pages/admin/new/NewAdd";
 import NewUpdate from "./pages/admin/new/NewUpdate";
 
+import UserGuide from "./pages/user/guide/UserGuide";
+
 import Homepage from "./pages/user/Homepage";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
@@ -86,6 +88,8 @@ function AppContent() {
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="/payment-return" element={<PaymentReturn />} />
+                                        <Route path="/guide/user-guide" element={<UserGuide />} />
+                    
                   </Route>
         
        

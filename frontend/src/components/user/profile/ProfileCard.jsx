@@ -179,8 +179,9 @@ const ProfileCard = ({ handdleLogOut }) => {
       <input
         type="text"
         value={formData.phone || ""}
+        disabled
         onChange={(e) => handleChange("phone", e.target.value)}
-        className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+        className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
       />
     </div>
 
