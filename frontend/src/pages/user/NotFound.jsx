@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const NotFound = () => {
   return (
-    <div className=" flex flex-col gap-4 py-20 justify-center items-center">
+    <div className=" flex flex-col gap-4 min-h-[50vh] mt-16 justify-center items-center">
       <img src="https://www.goodsmile.com/img/common/404.png" alt="" />
       <p>Sorry. We could not find that page.</p>
      <Link to={"/"}>
