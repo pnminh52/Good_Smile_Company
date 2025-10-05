@@ -11,6 +11,7 @@ const Order = () => {
     status: "",
     sortOrder: "",
     keyword: "",
+    paymentMethod:""
   });
   const [orders, setOrders] = useState([]);
   const [sortQuantity, setSortQuantity] = useState(""); 
@@ -21,11 +22,14 @@ const Order = () => {
   const [pageKey, setPageKey] = useState(0);
   const handleFilterChange = (changed) => {
     if ("priceRange" in changed) setPriceRange(changed.priceRange);
-    if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined); 
-    if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined); 
-    setFilter((prev) => ({ ...prev, ...changed }));
-    setPageKey((prev) => prev + 1);
+    if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined);
+    if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined);
+    if ("paymentMethod" in changed) setFilter(prev => ({ ...prev, paymentMethod: changed.paymentMethod }));
+    
+    setFilter(prev => ({ ...prev, ...changed }));
+    setPageKey(prev => prev + 1);
   };
+  
 
   const fetchOrders = async () => {
     if (!token) return;
@@ -55,29 +59,26 @@ const Order = () => {
 
     const matchKeyword = filter.keyword
       ? order.id.toString().includes(filter.keyword) ||
-        order.items?.some(p =>
-          p.name.toLowerCase().includes(filter.keyword.toLowerCase())
-        ) ||
-        [order.address, order.district].some(f =>
-          f?.toLowerCase().includes(filter.keyword.toLowerCase())
-        )
+        order.items?.some(p => p.name.toLowerCase().includes(filter.keyword.toLowerCase())) ||
+        [order.address, order.district].some(f => f?.toLowerCase().includes(filter.keyword.toLowerCase()))
       : true;
 
-    const matchPrice =
-      priceRange &&
+    const matchPrice = priceRange &&
       order.total >= priceRange[0] &&
       order.total <= priceRange[1];
 
+    const matchPayment = filter.paymentMethod
+      ? order.payment_method === filter.paymentMethod
+      : true;
+
+    // existing date filter
     const createdDate = new Date(order.created_at);
     let matchDate = true;
     const now = new Date();
-
     if (filter.sortOrder === "this_year") {
       matchDate = createdDate.getFullYear() === now.getFullYear();
     } else if (filter.sortOrder === "this_month") {
-      matchDate =
-        createdDate.getFullYear() === now.getFullYear() &&
-        createdDate.getMonth() === now.getMonth();
+      matchDate = createdDate.getFullYear() === now.getFullYear() && createdDate.getMonth() === now.getMonth();
     } else if (filter.sortOrder === "this_week") {
       const firstDayOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
       const lastDayOfWeek = new Date(firstDayOfWeek);
@@ -85,20 +86,18 @@ const Order = () => {
       matchDate = createdDate >= firstDayOfWeek && createdDate <= lastDayOfWeek;
     }
 
-    return matchStatus && matchKeyword && matchPrice && matchDate;
+    return matchStatus && matchKeyword && matchPrice && matchPayment && matchDate;
   })
   .sort((a, b) => {
     if (sortTotal) return sortTotal === "asc" ? a.total - b.total : b.total - a.total;
     if (sortQuantity) return sortQuantity === "asc" ? (a.items?.length||0) - (b.items?.length||0) : (b.items?.length||0) - (a.items?.length||0);
 
-    if (filter.sortOrder === "newest") {
-      return new Date(b.created_at) - new Date(a.created_at);
-    } else if (filter.sortOrder === "oldest") {
-      return new Date(a.created_at) - new Date(b.created_at);
-    }
+    if (filter.sortOrder === "newest") return new Date(b.created_at) - new Date(a.created_at);
+    if (filter.sortOrder === "oldest") return new Date(a.created_at) - new Date(b.created_at);
 
     return 0;
   });
+
 
 
 
@@ -107,22 +106,27 @@ const Order = () => {
       <h1 className="     text-xl font-semibold sm:py-6 py-4">Orders ({filteredOrders.length})</h1>
   <div className="  block lg:hidden pb-2">
   <MobileFilter
-           key={pageKey} 
-    status={filter.status}
-    sortOrder={filter.sortOrder}
-    keyword={filter.keyword}
-    priceRange={priceRange}
-    sortQuantity={sortQuantity}
-    sortTotal={sortTotal}
-    onChange={(changed) => {
-      if ("priceRange" in changed) setPriceRange(changed.priceRange);
-      if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined); 
-      if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined); 
-      setFilter((prev) => ({ ...prev, ...changed }));
-    }}
-            
-            
-          />
+  key={pageKey}
+  status={filter.status}
+  sortOrder={filter.sortOrder}
+  keyword={filter.keyword}
+  priceRange={priceRange}
+  sortQuantity={sortQuantity}
+  sortTotal={sortTotal}
+  paymentMethod={filter.paymentMethod} // thêm prop này
+  onChange={(changed) => {
+    if ("priceRange" in changed) setPriceRange(changed.priceRange);
+    if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined); 
+    if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined); 
+
+    setFilter(prev => ({
+      ...prev,
+      ...changed,
+    }));
+    setPageKey(prev => prev + 1);
+  }}
+/>
+
         </div>
       <div className="flex flex-col sm:flex-row sm:gap-4 gap-2">
         <div className="lg:w-[80%] w-full hidden sm:block">

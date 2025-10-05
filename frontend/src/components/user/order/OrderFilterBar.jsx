@@ -11,7 +11,8 @@ const OrderFilterBar = ({
   onChange,
   priceRange,
   sortQuantity,
-  sortTotal
+  sortTotal,
+  paymentMethod
 }) => {
   const handleFieldChange = (field) => (value) => {
     onChange({ [field]: value ?? undefined });
@@ -48,6 +49,17 @@ const OrderFilterBar = ({
           <Option value="completed">Completed</Option>
           <Option value="canceled">Canceled</Option>
         </Select>
+        <Select
+  placeholder="Sort by payment method"
+  value={paymentMethod || undefined}
+  onChange={handleFieldChange("paymentMethod")}
+  allowClear
+  size="large"
+  className="w-full"
+>
+  <Option value="Cash On Delivery">Cash On Delivery</Option>
+  <Option value="Online Banking">Online Banking</Option>
+</Select>
 
         <Select
   placeholder="Sort by date"

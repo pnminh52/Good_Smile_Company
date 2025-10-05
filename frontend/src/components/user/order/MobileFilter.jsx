@@ -13,6 +13,7 @@ const MobileFilter = ({
   priceRange,
   sortQuantity,
   sortTotal,
+  paymentMethod
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -71,6 +72,7 @@ const MobileFilter = ({
         <Option value="completed">Completed</Option>
         <Option value="canceled">Canceled</Option>
       </Select>
+       
     
       {/* Date */}
       <Select
@@ -89,6 +91,25 @@ const MobileFilter = ({
         <Option value="this_year">This Year</Option>
         <Option value="this_month">This Month</Option>
         <Option value="this_week">This Week</Option>
+      </Select>
+
+      <Select
+        placeholder="Sort by payment method"
+        value={paymentMethod ?? undefined}
+        onChange={(value) => {
+          handleFieldChange("paymentMethod")(value);
+          if (value) setOpen(false); 
+        }
+        
+
+          
+        }
+        allowClear
+        size="large"
+        className="w-full"
+      >
+        <Option value="Cash On Delivery">Cash On Delivery</Option>
+        <Option value="Online Banking">Online Banking</Option>
       </Select>
     
       {/* Quantity */}
