@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DetailSection from './DetailSection';
-import { Image } from "antd";
+import { Image, Carousel } from "antd";
+import { useRef } from "react";
 const LeftSide = ({ product }) => {
-
+  const carouselRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0)
   const images = product.additional_images?.length > 0
     ? product.additional_images
@@ -125,50 +126,63 @@ const LeftSide = ({ product }) => {
       </div>
       </div>
       <div className="block sm:hidden">
-        <div className="flex flex-col sm:flex-row gap-4">
-    
-          <div className="flex-1 w-full">
-            <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center">
-              <div key={mainImage} className="w-full  h-full flex items-center justify-center relative duration-300 ease-in-out animate-fade">
-                <Image
-                  src={mainImage}
-                  alt={product.name}
-                  style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "cover" }}
-                  preview={{ mask: <span>Click to enlarge</span> }}
-                />
-            
-              </div>
-            </div>
-
-            <div className="flex sm:hidden mt-2 overflow-x-auto hide-scrollbar gap-2">
-              {product.additional_images?.map((img, i) => {
-                const isSelected = img === mainImage;
-                return (
-                  <div
-                    key={i}
-                    className={`w-16 h-16 flex-shrink-0 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
-          ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"} bg-gray-100`}
-                    onClick={() => {
-                      setMainImage(img);
-                      setCurrentIndex(i);
-                    }}
-
-                  >
-                    <img
-                      src={img}
-                      alt={`Additional ${i}`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-
+  <Carousel
+    ref={carouselRef}
+    swipeToSlide
+    dots={true}
+    className="w-full h-[400px]"
+    afterChange={(index) => {
+      setCurrentIndex(index);
+      setMainImage(product.additional_images[index]);
+    }}
+  >
+    {product.additional_images?.map((img, i) => (
+      <div
+        key={i}
+        className="w-full h-[400px] bg-gray-100 flex items-center justify-center overflow-hidden"
+      >
+        <div className="h-[400px] flex items-center justify-center">
+          <Image
+            src={img}
+            alt={product.name}
+            style={{
+              height: "400px",
+              width: "auto",
+              objectFit: "cover",
+              display: "block",
+            }}
+            preview={{ mask: <span>Click to enlarge</span> }}
+          />
         </div>
-
       </div>
+    ))}
+  </Carousel>
+
+  <div className="flex sm:hidden mt-2 overflow-x-auto hide-scrollbar gap-2">
+    {product.additional_images?.map((img, i) => {
+      const isSelected = i === currentIndex;
+      return (
+        <div
+          key={i}
+          className={`w-16 h-16 flex-shrink-0 flex items-center justify-center cursor-pointer transition-all rounded-sm ease-in-out duration-300
+            ${isSelected ? "border-2 border-[#F06E00]" : "border border-gray-100"} bg-gray-100`}
+          onClick={() => {
+            setMainImage(img);
+            setCurrentIndex(i);
+            // scroll Carousel đến slide tương ứng
+            carouselRef.current.goTo(i, false);
+          }}
+        >
+          <img
+            src={img}
+            alt={`Additional ${i}`}
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      );
+    })}
+  </div>
+</div>
     </div>
   );
 };
