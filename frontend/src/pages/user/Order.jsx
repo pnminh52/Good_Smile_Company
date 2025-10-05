@@ -20,15 +20,15 @@ const Order = () => {
   const token = localStorage.getItem("token");
   const [sortTotal, setSortTotal] = useState(""); 
   const [pageKey, setPageKey] = useState(0);
-  const handleFilterChange = (changed) => {
-    if ("priceRange" in changed) setPriceRange(changed.priceRange);
-    if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined);
-    if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined);
-    if ("paymentMethod" in changed) setFilter(prev => ({ ...prev, paymentMethod: changed.paymentMethod }));
+  // const handleFilterChange = (changed) => {
+  //   if ("priceRange" in changed) setPriceRange(changed.priceRange);
+  //   if ("sortQuantity" in changed) setSortQuantity(changed.sortQuantity ?? undefined);
+  //   if ("sortTotal" in changed) setSortTotal(changed.sortTotal ?? undefined);
+  //   if ("paymentMethod" in changed) setFilter(prev => ({ ...prev, paymentMethod: changed.paymentMethod }));
     
-    setFilter(prev => ({ ...prev, ...changed }));
-    setPageKey(prev => prev + 1);
-  };
+  //   setFilter(prev => ({ ...prev, ...changed }));
+  //   setPageKey(prev => prev + 1);
+  // };
   
 
   const fetchOrders = async () => {

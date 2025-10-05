@@ -95,14 +95,11 @@ const MobileFilter = ({
 
       <Select
         placeholder="Sort by payment method"
-        value={paymentMethod ?? undefined}
+        value={paymentMethod || undefined}
         onChange={(value) => {
           handleFieldChange("paymentMethod")(value);
-          if (value) setOpen(false); 
-        }
-        
-
-          
+          setOpen(false); 
+        } 
         }
         allowClear
         size="large"
