@@ -12,6 +12,7 @@ import CategoryAdd from "./pages/admin/category/CategoryAdd";
 import CategoryEdit from "./pages/admin/category/CategoryEdit";
 import NewAdd from "./pages/admin/new/NewAdd";
 import NewUpdate from "./pages/admin/new/NewUpdate";
+import OrderSuccess from "./pages/user/OrderSuccess";
 
 import UserGuide from "./pages/user/guide/UserGuide";
 
@@ -91,6 +92,7 @@ function AppContent() {
                     <Route path="/payment-return" element={<PaymentReturn />} />
                                         <Route path="/guide/user-guide" element={<UserGuide />} />
                                         <Route path="/guide/previous-shop" element={<PreviousShop />} />
+                                        <Route path="/order-success" element={<OrderSuccess />} />
                   </Route>
         
        

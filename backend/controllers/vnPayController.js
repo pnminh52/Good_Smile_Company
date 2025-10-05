@@ -63,7 +63,7 @@ export const verifyReturnUrl = async (req, res) => {
 
     console.log("VNPay callback:", { orderId, responseCode });
 
-    // Lấy order tương ứng
+    // 🔹 Lấy thông tin đơn hàng để biết user nào thanh toán
     const order = await sql`SELECT * FROM orders WHERE id = ${orderId}`;
     if (!order.length) {
       console.warn(`⚠️ Order ${orderId} not found`);
@@ -73,18 +73,22 @@ export const verifyReturnUrl = async (req, res) => {
     const userId = order[0].user_id;
 
     if (responseCode === "00") {
-      // Cập nhật trạng thái đơn hàng
+      // ✅ Thanh toán thành công
       await sql`UPDATE orders SET status_id = 2 WHERE id = ${orderId}`;
 
-      // Xóa giỏ hàng user
+      // 🔹 Xóa toàn bộ giỏ hàng của user sau khi thanh toán
       await sql`DELETE FROM cart WHERE user_id = ${userId}`;
 
-      console.log(`✅ Order ${orderId} success — cart cleared for user ${userId}`);
+      console.log(`✅ Order ${orderId} success — cleared cart for user ${userId}`);
+
+      // Redirect về client (ví dụ trang success)
       return res.redirect(`${process.env.CLIENT_URL}/order-success?orderId=${orderId}`);
     } else {
-      // Nếu giao dịch bị hủy / thất bại
+      // ❌ Thanh toán thất bại hoặc bị hủy
       await sql`UPDATE orders SET status_id = 4 WHERE id = ${orderId}`;
       console.log(`❌ Order ${orderId} failed or cancelled`);
+
+      // Redirect về client (trang thất bại)
       return res.redirect(`${process.env.CLIENT_URL}/order-failed?orderId=${orderId}`);
     }
   } catch (err) {
