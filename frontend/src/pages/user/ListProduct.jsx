@@ -177,13 +177,17 @@ const handleLoadMore = () => {
   setVisibleCount((prev) => prev + 10);
 };
 
-  if (loading) return <Loader />;
+if (loading) return <Loader />;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 lg:px-0">
 <div className="flex items-center justify-between">
-        <h1 className=" text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
+{
+  filteredProducts.length>0 && (
+    <h1 className=" text-xl  font-semibold py-4 sm:py-6">Our Collection ({filteredProducts.length})</h1>
 
+  )
+}
 {
   activeFiltersCount >1 && (
     <button onClick={()=>handleResetAll()} className="px-4 text-sm block sm:hidden border border-red-600 text-red-600 cursor-pointer rounded-full py-1">Clear All</button>

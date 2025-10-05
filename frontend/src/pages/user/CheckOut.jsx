@@ -26,24 +26,28 @@ const Checkout = () => {
 
   const total = cartItems.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 
-  // COD payment
   const handleCodPayment = async () => {
     const token = localStorage.getItem("token");
     if (!token) return toast.error("Please login before ordering!");
     setLoading(true);
     try {
       const orderData = {
-        items: cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity })),
+        items: cartItems.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity
+        })),
         address: userInfo.address,
         selectedDistrict: userInfo.selectedDistrict,
         shippingFee,
-        payment_method:"Cash On Delivery"
+        payment_method: "Cash On Delivery",
       };
-      // console.log("🟢 Sending COD order data:", orderData);
-      await createOrder(orderData, token);
+  
+      const res = await createOrder(orderData, token);
+      const orderId = res?.data?.id; 
       await clearCart(token);
       toast.success("Order placed successfully!");
-      navigate("/order");
+  
+      navigate(`/order-success?orderId=${orderId}&method=cod`);
     } catch (err) {
       console.error("COD error:", err.response?.data || err.message);
       toast.error("Order failed");
@@ -51,6 +55,7 @@ const Checkout = () => {
       setLoading(false);
     }
   };
+  
 
   // VNPay payment
  const handleVnpayPayment = async () => {
