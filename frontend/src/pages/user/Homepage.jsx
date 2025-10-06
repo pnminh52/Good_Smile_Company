@@ -12,6 +12,7 @@ import NewsSection from "../../components/user/homepage/NewsSection";
 const Homepage = () => {
   const [loading,setLoading]=useState(true)
   useEffect(()=>{
+    window.scrollTo({top:0, behavior:"smooth"})
     const timer =setTimeout(()=>{
       setLoading(false)
     }, 1000)
