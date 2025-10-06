@@ -82,12 +82,12 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                 {[order.address, order.district].filter(Boolean).join(", ")}
               </p>
               <p>
-  <span className="font-semibold">Username </span>{" "}
+  <span className="font-semibold">Orderer & Consignee </span>{" "}
   {order.user_name}
 </p>
 
 <p>
-  <span className="font-semibold">Phone </span>{" "}
+  <span className="font-semibold">Contact phone number </span>{" "}
   {order.user_phone}
 </p>
 
