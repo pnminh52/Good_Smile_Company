@@ -53,7 +53,7 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
       <div className="border-b border-gray-300" />
 
       {/* Actions */}
-      <div className="pt-4 space-y-3">
+      <div className="pt-4 space-y-2">
         <button
           onClick={handleCheckout}
           disabled={shippingFee === null || shippingFee === 0}

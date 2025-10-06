@@ -133,14 +133,14 @@ const Cart = () => {
       {/* <button className="px-4 text-sm block sm:hidden border border-red-600 text-red-600 cursor-pointer rounded-full py-1" onClick={()=>handleDeleteAll()}>Clear All</button> */}
      </div>
       <div className="flex flex-col lg:flex-row gap-4 lg:px-30 px-4 ">
-        <div className="w-full lg:w-[70%]">
+        <div className="w-full lg:w-[65%]">
           <LeftSide
             cartItems={cartItems}
             handleUpdateQuantity={handleUpdateQuantity}
             handleDelete={handleDelete}
           />
         </div>
-        <div className="w-full lg:w-[30%] sticky top-4 self-start">
+        <div className="w-full lg:w-[35%] sticky top-4 self-start">
   {user && cartItems.length > 0 && (
     <PriceInfo
       handleCheckout={handleCheckout}
