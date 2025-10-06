@@ -1,6 +1,10 @@
 import React from 'react'
+import { useEffect } from 'react'
 
 const ImportanNote = () => {
+    useEffect(()=>{
+      window.scrollTo({top:0, behavior:"smooth"})
+    },[])
   return (
     <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">Important Notices</h1>

@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const AboutPayments = () => {
+  useEffect(()=>{
+    window.scrollTo({top:0, behavior:"smooth"})
+  },[])
   return (
    <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
         <h1 className="font-semibold sm:py-4 text-xl py-6">Payments</h1>
