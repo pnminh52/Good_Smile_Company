@@ -44,7 +44,7 @@ const ProductDetails = () => {
 
   {/* Right */}
   <div className="w-full lg:w-[30%]">
-    <div className="sticky top-6">
+    <div className="sticky top-22">
       <RightSide product={product} />
     </div>
   </div>

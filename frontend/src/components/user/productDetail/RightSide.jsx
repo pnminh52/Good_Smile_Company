@@ -6,12 +6,19 @@ import useToast from "../../../hook/useToast";
 import api from "../../../api/axios";
 import { Button } from "antd";
 import dayjs from "dayjs";
+import { getCart } from "../../../api/cart";
 const RightSide = ({ product }) => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-
+  const [cartQuantity, setCartQuantity] = useState(0);
+  let title="Add to Cart"
+  if (cartQuantity >= 3) {
+    title = "Maximum 3 items reached";
+  } else if (product.status === "preorder") {
+    title = "Preorder now";
+  }
   useEffect(() => {
     const fetchWishlist = async () => {
       const token = localStorage.getItem("token");
@@ -27,13 +34,27 @@ const RightSide = ({ product }) => {
     };
     fetchWishlist();
   }, [product.id]);
+  useEffect(() => {
+    const fetchCartQuantity = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const cartItems = await getCart();
+        const existingItem = cartItems.data.find(item => item.product_id === product.id);
+        setCartQuantity(existingItem?.quantity || 0);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCartQuantity();
+  }, [product.id]);
 
   const handleAddToCart = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("You must be logged in to add to cart!");
+        toast.error("You must be logged in!");
         setLoading(false);
         return;
       }
@@ -45,7 +66,7 @@ const RightSide = ({ product }) => {
       const existingItem = cartItems.find(item => item.product_id === product.id);
   
       if (existingItem && existingItem.quantity >= 3) {
-        toast.error("Maximum 3 items allowed per product!");
+        toast.error("Maximum 3 items allowed per cart!");
         setLoading(false);
         return;
       }
@@ -86,7 +107,7 @@ const RightSide = ({ product }) => {
       setWishlistLoading(false);
     }
   };
-  
+ 
 
   return (
     <div>
@@ -136,7 +157,7 @@ const RightSide = ({ product }) => {
 </p>
 
     
-        <p className="text-gray-500 text-sm ">Limit 3 per person /  Shipping costs not included</p>
+        <p className="text-gray-500 text-sm ">Limit 3 per checkout /  Shipping costs not included</p>
      
        
        
@@ -146,16 +167,17 @@ const RightSide = ({ product }) => {
         {
   product.stock > 0 && (
     <Button
-      type="primary"
-      shape="round"
-      size="large"
-      style={{ background: "#FF6900", borderColor: "#FF6900", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
-      onClick={handleAddToCart}
-      loading={loading} 
-      disabled={product.stock <= 0 && product.status !== "preorder"}
-    >
-      {product.status === "preorder" ? "Preorder now" : "Add to Cart"}
-    </Button>
+    type="primary"
+    shape="round"
+    size="large"
+    style={{ background: "#FF6900", fontWeight: 600, color:"#FFF", borderColor: "#FF6900", height: "48px", padding: "0 24px" }}
+    onClick={handleAddToCart}
+    loading={loading}
+    disabled={product.stock <= 0 && product.status !== "preorder" }
+  >
+    {title}
+  </Button>
+  
   )}
 
 
@@ -170,6 +192,7 @@ const RightSide = ({ product }) => {
       : "border-[#FF6900] text-[#FF6900]"
   }`}
   style={{
+    fontWeight: 600,
     borderColor: inWishlist ? "#d9d9d9" : "#FF6900",
     color: inWishlist ? "#9ca3af" : "#FF6900",
      height: "48px", padding: "0 24px"
