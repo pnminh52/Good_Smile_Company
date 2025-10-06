@@ -62,8 +62,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
       onCancel={onClose}
       title={`Order #${order.id}`}
       centered
-      footer={null}
-      width={600} 
+      footer={null} 
       styles={{ padding: 0 }}
       style={{ maxWidth: "95%" }}
     >
