@@ -212,7 +212,7 @@ if (loading) return <Loader />;
 
       {/* Drawer Filter Mobile */}
       {showFilter && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-999 flex">
           {/* Overlay */}
           <div
             className="fixed inset-0 bg-black/40 bg-opacity-40"
