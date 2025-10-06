@@ -26,7 +26,7 @@ const DeliveryAndShipping = () => {
     About Shipping and Shipping Costs
   </h1>
 
-  <ul className="list-disc pl-6 space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>When you preorder an item, there will be a shipping charge applicable for each type item type included in the transaction.</li>
     <li>If you preorder the same item type in a separate transaction, a different order number will be generated, resulting in an additional shipping charge for the new order number.</li>
     <li>If you purchase the same item multiple times using different transactions, each purchase will result in an additional shipping charge.</li>
@@ -45,7 +45,7 @@ const DeliveryAndShipping = () => {
   <h1 className="text-xl  py-4 font-semibold">
     Updating Your Shipping Address
   </h1>
-  <ul className="list-disc pl-6 space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>If you wish to update your shipping address, please update it for every applicable order (1*).</li>
     <li>If you change the shipping address information registered in your account, the shipping address of orders that have already been placed will not be updated automatically. Please ensure to update the shipping address manually for each individual order number.</li>
   </ul>
@@ -53,14 +53,14 @@ const DeliveryAndShipping = () => {
   <p className="text-red-500 py-2 italic">
     (1*) For Orders Placed on the Old GOODSMILE ONLINE SHOP
   </p>
-  <ul className="list-disc pl-6 space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>Orders of multiple types of products made at the same will result in only one order number. Example: If an order for three types of products was made in a single checkout, only one order number will be issued. If the shipping address for the order was updated, the change will apply to all three product types.</li>
   </ul>
 
   <p className="text-red-500 py-2 italic">
     For Orders Placed on the Good Smile Company Online Store
   </p>
-  <ul className="list-disc pl-6 space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>Orders of multiple types of products made at the same time will result in an order number issued for each type of product. Example: If an order for three types of products was made in a single checkout, three different order numbers will be issued. If you would like to update the shipping address, you will be required to make the change individually for each product type (once per order number, three times in total).</li>
   </ul>
 
@@ -68,7 +68,7 @@ const DeliveryAndShipping = () => {
 
     Receiving Your Order
   </h1>
-  <ul className="list-disc pl-6 space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>The shipping deadline (storage deadline) is generally one week from the time the package has been processed at customs clearance. Please always check the tracking information of your package using your preferred tracking site and communicate directly with the shipping courier in charge of the package's delivery for further information.</li>
     <li>Please note that customs clearance deadlines may differ and you will need to contact the shipping courier or your country's customs office directly for further information.</li>
     <li>If the shipment is not received and the storage period has passed, the package will be returned to us.</li>

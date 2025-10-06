@@ -249,7 +249,7 @@ const Header = () => {
         </ul>
       </div>
       {open && (
-        <div onClick={() => setOpen(false)} className="fixed bg-black/40 z-99 w-full h-full">
+        <div onClick={() => setOpen(false)} className="fixed  bg-black/40 z-99 w-full h-full">
           <div onClick={(e) => e.stopPropagation()} className="bg-white block lg:hidden h-auto border-t border-gray-300">
             <ul className="py-3 space-y-1 px-4">
               <Link to={"/guide/user-guide"}>

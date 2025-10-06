@@ -95,9 +95,10 @@ function AppContent() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/payment-return" element={<PaymentReturn />} />
+                    <Route path="/order-success" element={<OrderSuccess />} />
+          
           <Route path="/guide/user-guide" element={<UserGuide />} />
           <Route path="/guide/previous-shop" element={<PreviousShop />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/guide/about-payments" element={<AboutPayments />} />
           <Route
             path="/guide/delivery-and-shipping"
