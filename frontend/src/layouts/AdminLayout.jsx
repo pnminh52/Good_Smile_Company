@@ -1,22 +1,29 @@
 // layouts/AdminLayout.jsx
-import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/admin/Sidebar";
 import Topbar from "../components/admin/Topbar";
-
-const { Content } = Layout;
+import Footer from './../components/admin/Footer';
 
 const AdminLayout = () => {
   return (
-    <Layout>
+    <div className="flex">
+      {/* Sidebar */}
       <Sidebar />
-      <Layout>
+
+      {/* Main content area */}
+      <div className="flex flex-col flex-1">
+        {/* Topbar */}
         <Topbar />
-        <Content style={{ padding: "20px", minHeight: "100vh", background: "#F7F7F7" }}>
+
+        {/* Content */}
+        <main className="flex-1 p-5 bg-gray-100">
           <Outlet />
-        </Content>
-      </Layout>
-    </Layout>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </div>
   );
 };
 

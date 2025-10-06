@@ -1,4 +1,3 @@
-import { Layout, Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import {
   DashboardOutlined,
@@ -6,11 +5,8 @@ import {
   ShoppingCartOutlined,
   BoxPlotOutlined,
   UserOutlined,
-  ReadOutlined,     // News
-  PictureOutlined,  // Banners
+  ReadOutlined,
 } from "@ant-design/icons";
-
-const { Sider } = Layout;
 
 const Sidebar = () => {
   const location = useLocation();
@@ -22,37 +18,41 @@ const Sidebar = () => {
     { key: "/admin/orders", icon: <BoxPlotOutlined />, label: "Orders" },
     { key: "/admin/users", icon: <UserOutlined />, label: "Users" },
     { key: "/admin/news", icon: <ReadOutlined />, label: "News" },
-    { key: "/admin/banners", icon: <PictureOutlined />, label: "Banners" },
   ];
 
   return (
-    <Sider
-      width={250}
-      style={{
-        background: "#fff",
-        borderRight: "1px solid #e8e8e8",
-      }}
-    >
-      <div className="logo text-xl font-bold border-b h-16 border-[#e8e8e8] w-full flex justify-center mx-auto py-4">
+    <div className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col">
+      {/* Logo */}
+      <div className="h-16 flex items-center justify-center border-b border-gray-200">
         <img
           src="https://www.goodsmile.com/img/common/logo.svg"
-          className="w-30 h-auto"
-          alt=""
+          className="w-32 h-auto"
+          alt="Logo"
         />
       </div>
 
-      <Menu
-        mode="inline"
-        theme="light"
-        selectedKeys={[location.pathname]}
-        style={{ height: "100%", borderRight: 0, paddingLeft: "5px", paddingRight: "5px" }}
-        items={menuItems.map((item) => ({
-          key: item.key,
-          icon: item.icon,
-          label: <Link to={item.key}>{item.label}</Link>,
-        }))}
-      />
-    </Sider>
+      {/* Menu */}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="flex flex-col space-y-1">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.key;
+            return (
+              <li key={item.key}>
+                <Link
+                  to={item.key}
+                  className={`flex items-center gap-3 px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-200 transition ${
+                    isActive ? "bg-gray-200 font-semibold" : ""
+                  }`}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </div>
   );
 };
 

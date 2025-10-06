@@ -1,16 +1,12 @@
-// components/admin/Topbar.jsx
 import React, { useState } from "react";
-import { Layout, Input, AutoComplete } from "antd";
 import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
 
-const { Header } = Layout;
-
 const Topbar = () => {
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
   const [options, setOptions] = useState([]);
 
-  // Các route admin để search
   const routes = [
     { label: "Dashboard", path: "/admin" },
     { label: "Categories", path: "/admin/categories" },
@@ -20,45 +16,48 @@ const Topbar = () => {
   ];
 
   const handleSearch = (value) => {
-    const filtered = routes
-      .filter((r) => r.label.toLowerCase().includes(value.toLowerCase()))
-      .map((r) => ({ value: r.label, path: r.path }));
+    setQuery(value);
+    const filtered = routes.filter((r) =>
+      r.label.toLowerCase().includes(value.toLowerCase())
+    );
     setOptions(filtered);
   };
 
-  const handleSelect = (value, option) => {
-    navigate(option.path);
+  const handleSelect = (path) => {
+    navigate(path);
+    setQuery("");
     setOptions([]);
   };
 
   return (
-    <Header
-      style={{
-        background: "#fff",
-        padding: "0 24px",
-        display: "flex",
-        alignItems: "center",
-        borderBottom: "1px solid #e8e8e8",
-      }}
-    >
-      <AutoComplete
-        style={{ width: 300 }}
-        options={options}
-        onSearch={handleSearch}
-        onSelect={handleSelect}
-        placeholder="Search..."
-      >
-        <Input.Search
-          size="middle"
-          onSearch={(value) => {
-            const route = routes.find(
-              (r) => r.label.toLowerCase() === value.toLowerCase()
-            );
-            if (route) navigate(route.path);
-          }}
+    <div className="w-full h-16 bg-white flex items-center px-6 border-b border-gray-200 relative">
+      {/* Search input */}
+      <div className="relative w-80">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => handleSearch(e.target.value)}
+          placeholder="Search..."
+          className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
-      </AutoComplete>
-    </Header>
+        <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+
+        {/* Dropdown gợi ý */}
+        {options.length > 0 && (
+          <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+            {options.map((opt) => (
+              <li
+                key={opt.path}
+                onClick={() => handleSelect(opt.path)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 };
 
