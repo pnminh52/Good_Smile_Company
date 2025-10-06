@@ -61,7 +61,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
       
 
       <div className="w-full">
-      <div className="w-full py-2 flex flex-col lg:flex-row items-center gap-2">
+      <div className="w-full py-1 flex flex-col lg:flex-row items-center gap-2">
        <button
           onClick={() => navigate("/product")}
           className="w-full h-12 rounded-full cursor-pointer font-semibold border border-[#FF6624] bg-white text-[#FF6624]"
@@ -75,7 +75,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
           Back to Cart
         </button>
        </div>
-              <p className="text-sm text-red-600">*Online payment method is being tested in a sandbox environment, please do not use a real bank card*</p>
+              {/* <p className="text-sm text-red-600">*Online payment method is being tested in a sandbox environment, please do not use a real bank card*</p> */}
 
       </div>
       </div>

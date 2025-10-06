@@ -2,7 +2,7 @@ import React from 'react'
 
 const DeliveryAndShipping = () => {
   return (
-    <div className="max-w-screen-xl mx-auto lg:px-60 px-4 text-[15px]">
+    <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">Shipping & Shipping Fees</h1>
       <div className='space-y-2 text-[15px]'>
 <p className='font-semibold'>*The information on this page applies to orders shipped to regions other than Japan and Taiwan.</p>

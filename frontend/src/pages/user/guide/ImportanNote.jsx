@@ -2,7 +2,7 @@ import React from 'react'
 
 const ImportanNote = () => {
   return (
-    <div className="max-w-screen-xl mx-auto lg:px-60 px-4 text-[15px]">
+    <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">Important Notices</h1>
       <ul className="space-y-2 text-gray-800">
   <li>

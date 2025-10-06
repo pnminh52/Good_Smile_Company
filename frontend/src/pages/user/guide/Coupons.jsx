@@ -2,7 +2,7 @@ import React from 'react'
 
 const Coupons = () => {
   return (
-    <div className="max-w-screen-xl mx-auto lg:px-60 px-4 text-[15px]">
+    <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">Coupons</h1>
       <div className='space-y-2 text-[15px]'>
         <p>A coupon may be used if it meets the usage requirements at the time of purchase.

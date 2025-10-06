@@ -35,8 +35,11 @@ const Cart = () => {
   };
 
   const fetchCart = async () => {
+    window.scrollTo({top:0,behavior:"smooth"})
     try {
+      
       setLoading(true);
+    
       const res = await getCart(token);
       const items = Array.isArray(res.data)
         ? res.data.map((item) => ({
@@ -129,10 +132,10 @@ const Cart = () => {
   return (
     <div className="max-w-screen-xl w-full mx-auto ">
      <div className="flex justify-between items-center">
-       <h1 className="  text-xl  font-semibold sm:py-6 py-4 lg:px-30 px-4"> Cart ({cartItems.length})</h1>
+       <h1 className="  text-xl  font-semibold sm:py-6 py-4 lg:px-40 px-4"> Cart ({cartItems.length})</h1>
       {/* <button className="px-4 text-sm block sm:hidden border border-red-600 text-red-600 cursor-pointer rounded-full py-1" onClick={()=>handleDeleteAll()}>Clear All</button> */}
      </div>
-      <div className="flex flex-col lg:flex-row gap-4 lg:px-30 px-4 ">
+      <div className="flex flex-col lg:flex-row gap-4 lg:px-40 px-4 ">
         <div className="w-full lg:w-[65%]">
           <LeftSide
             cartItems={cartItems}
@@ -140,7 +143,7 @@ const Cart = () => {
             handleDelete={handleDelete}
           />
         </div>
-        <div className="w-full lg:w-[35%] sticky top-4 self-start">
+        <div className="w-full lg:w-[35%] sticky top-18 self-start">
   {user && cartItems.length > 0 && (
     <PriceInfo
       handleCheckout={handleCheckout}
@@ -152,7 +155,7 @@ const Cart = () => {
 
       </div>
 
-<div className="lg:px-30 px-0">
+<div className="lg:px-40 px-0">
 <AlsoLike  products={recommendedProducts}/>
 </div>
     

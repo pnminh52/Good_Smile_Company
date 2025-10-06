@@ -72,7 +72,7 @@ const News = () => {
   }
 
   return (
-    <div className="lg:px-80 md:px-30 px-4 max-w-screen-xl mx-auto">
+    <div className="lg:px-50 md:px-30 px-4 max-w-screen-xl mx-auto">
       <h1 className="text-xl font-semibold py-4 sm:py-6">News ({filteredNews.length})</h1>
       <SearchBar onSearch={handleSearch} onFilter={handleFilter}/>
 

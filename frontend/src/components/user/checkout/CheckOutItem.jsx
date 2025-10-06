@@ -2,19 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 const CheckOutItem = ({cartItems}) => {
   return (
-   <div className="grid grid-cols-1 gap-4">
+   <div className="grid grid-cols-1 gap-2.5">
                  {cartItems.map((item) => (
                  <div
                  key={item.cart_id}
-                 className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2"
+                 className="flex flex-col sm:flex-row sm:justify-between sm:items-center "
                >
-                         <div className=" w-full flex justify-between lg:gap-4 gap-2">
+                         <div className=" w-full flex justify-between lg:gap-2.5 gap-2">
                                {item.base_image && (
                                                              <Link to={`/product/${item.product_id}`}>
                                                                 <img
                                src={item.base_image}
                                alt={item.name}
-                               className="lg:w-50 w-45  aspect-square  object-cover rounded-lg"
+                               className="w-45  aspect-square  object-cover rounded-lg"
                              />
                              
                                                              </Link>

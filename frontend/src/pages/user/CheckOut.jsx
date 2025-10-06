@@ -98,7 +98,7 @@ window.scrollTo({top:0, behavior:"smooth"})
   if (loading) return <Loader />;
 
   return (
-    <div className="max-w-screen-lg w-full mx-auto lg:px-30 px-4">
+    <div className="max-w-screen-xl w-full mx-auto lg:px-40 px-4">
       <h1 className="text-xl font-semibold sm:py-6 py-4">Checkout ({cartItems?.length})</h1>
       <div className="flex flex-col">
         <CheckOutItem cartItems={cartItems} />
