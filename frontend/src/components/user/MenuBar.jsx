@@ -7,7 +7,20 @@ const MenuBar = ({ upcomingAlert }) => {
   useEffect(() => {
     setOpen(false);
   }, [location]);
-
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >768) { 
+        setOpen(false);
+      }
+    };
+  
+    window.addEventListener("resize", handleResize);
+      handleResize();
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div>

@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 import MenuBar from './MenuBar';
 const Header = () => {
   const toast = useToast();
-  const location = useLocation()
   const { user } = useAuth();
   const upcomingAlert = () => {
     toast.info("Feature coming soon!");
@@ -17,6 +16,25 @@ const Header = () => {
       toast.error("You must logged in!");
     }
   };
+  const [open, setOpen] = useState(false);
+  const location = useLocation()
+  useEffect(() => {
+    setOpen(false);
+  }, [location]);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1100) { 
+        setOpen(false);
+      }
+    };
+  
+    window.addEventListener("resize", handleResize);
+      handleResize();
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
  
@@ -57,6 +75,7 @@ const Header = () => {
               </li>
             </Link>
             <li
+             onClick={() => setOpen((prev) => !prev)}
               
               className="flex items-center cursor-pointer gap-2 font-semibold "
             >
@@ -157,7 +176,37 @@ const Header = () => {
         </div>
       </div>
 
-
+ {open && (
+  <div
+    className="fixed top-16 left-0 w-full h-[calc(100%-4rem)] bg-black/40 z-40"
+    onClick={() => setOpen(false)}
+  >
+    {/* Dropdown */}
+    <ul
+      className="absolute top-0 px-4 py-4 space-y-1 justify-center   space-x-6 w-full flex flex-col md:flex-row text-sm bg-white border border-gray-300   z-50"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/user-guide">About Us</Link>
+      </li>
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/previous-shop">Previous Online Shop</Link>
+      </li>
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/about-payments"> Payment</Link>
+      </li>
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/delivery-and-shipping">Delivery and Shipping</Link>
+      </li>
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/importan"> Notice</Link>
+      </li>
+      <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
+        <Link to="/guide/coupons">Coupons</Link>
+      </li>
+    </ul>
+  </div>
+)}
 
    <MenuBar upcomingAlert={upcomingAlert}/>
 
