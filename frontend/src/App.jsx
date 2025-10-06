@@ -43,6 +43,7 @@ import AboutPayments from "./pages/user/guide/AboutPayments";
 import DeliveryAndShipping from "./pages/user/guide/DeliveryAndShipping";
 import ImportanNote from "./pages/user/guide/ImportanNote";
 import Coupons from "./pages/user/guide/Coupons";
+import OrderList from "./pages/admin/order/OrderList";
 
 
 function App() {
@@ -116,6 +117,9 @@ function AppContent() {
           <Route path="products" element={<ProductList />} />
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />
+
+          <Route path="orders" element={<OrderList />} />
+
 
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<CategoryAdd />} />

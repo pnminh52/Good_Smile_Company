@@ -43,6 +43,54 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await sql`
+      SELECT 
+        o.id, 
+        o.total, 
+        o.status_id, 
+        os.name AS status, 
+        o.address, 
+        o.district, 
+        o.created_at, 
+        o.payment_method,
+        u.name AS user_name,
+        u.email AS user_email,
+        u.phone AS user_phone,
+        CASE 
+          WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
+          WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
+          ELSE 'Not Determined'
+        END AS payment_method_name,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'product_id', oi.product_id, 
+              'name', p.name, 
+              'quantity', oi.quantity, 
+              'price', oi.price
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL), 
+          '[]'
+        ) AS items
+      FROM orders o
+      LEFT JOIN users u ON o.user_id = u.id
+      LEFT JOIN order_status os ON o.status_id = os.id
+      LEFT JOIN order_items oi ON oi.order_id = o.id
+      LEFT JOIN products p ON p.id = oi.product_id
+      GROUP BY o.id, os.name, u.name, u.email, u.phone
+      ORDER BY o.created_at DESC
+    `;
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 export const getOrderDetail = async (req, res) => {
   const orderId = req.params.id;
   const userId = req.user.id;
