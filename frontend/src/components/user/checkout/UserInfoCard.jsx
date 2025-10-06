@@ -151,13 +151,17 @@ const res = await axios.get(`${API_URL}/users/profile`, {
               {districts.map((d, i) => (
                         <div
                           key={i}
-                          className={`flex items-center justify-between border rounded-lg  px-3 py-2 ${
-                            selectedDistrict === d ? "bg-gray-50 border border-[#FF6624]" : "opacity-40"
+                          onClick={() => handleSelectDistrict(d)}
+                          className={`flex items-center cursor-pointer justify-between border transition duration-300 ease-in-out rounded-lg  px-3 py-2 ${
+                            selectedDistrict === d ? " border border-[#FF6624]" : "bg-gray-50 opacity-40"
                           }`}
                         >
                           <p
-                            onClick={() => handleSelectDistrict(d)}
-                            className="cursor-pointer"
+                            
+                            className={`cursor-pointer ${
+ selectedDistrict === d ? " text-[#FF6624]" : ""
+
+                            }`}
                           >
                             {d}
                           </p>
