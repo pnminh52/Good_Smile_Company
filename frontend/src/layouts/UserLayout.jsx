@@ -5,7 +5,9 @@ import { Outlet } from 'react-router-dom';
 const UserLayout = () => {
   return (
     <div>
+<div className='sticky top-0 z-999'>
 <Header />
+  </div>
 <Outlet />
 <Footer />
 
