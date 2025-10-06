@@ -22,7 +22,7 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
       setLoadingId(id);
       const res = await getOrderDetail(id, token);
       setSelectedOrder(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (err) {
       console.error("Failed to load order detail", err);
     } finally {

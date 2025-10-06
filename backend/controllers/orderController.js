@@ -97,18 +97,24 @@ export const getOrderDetail = async (req, res) => {
   const userId = req.user.id;
   try {
     const order = await sql`
-    SELECT 
-      o.id, o.total, o.status_id, os.name AS status,
-      o.address, o.district, o.created_at,
-      o.payment_method,
-      CASE 
-        WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
-        WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
-        ELSE 'Not Determined'
-      END AS payment_method_name
-    FROM orders o
-    LEFT JOIN order_status os ON o.status_id = os.id
-    WHERE o.id = ${orderId} AND o.user_id = ${userId}
+ SELECT 
+  o.id, o.total, o.status_id, os.name AS status,
+  o.address, o.district,
+  u.name AS user_name,
+  u.phone AS user_phone,
+  o.created_at,
+  o.payment_method,
+  CASE 
+    WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
+    WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
+    ELSE 'Not Determined'
+  END AS payment_method_name
+FROM orders o
+LEFT JOIN order_status os ON o.status_id = os.id
+LEFT JOIN users u ON o.user_id = u.id
+WHERE o.id = ${orderId} AND o.user_id = ${userId}
+
+
   `;
   
 

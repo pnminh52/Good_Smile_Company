@@ -147,7 +147,7 @@ const ProfileCard = ({ handdleLogOut }) => {
    <div>
      <p className=" text-xl  font-semibold py-4">  Information</p>
 
-<div className="w-full mx-auto bg-white p-4 border rounded-lg lg:rounded-sm border-gray-200 ">
+<div className="w-full mx-auto bg-white p-4 border rounded-lg lg:rounded-md border-gray-200 ">
 
 
   <form onSubmit={handleSave} className="space-y-5">
@@ -257,7 +257,7 @@ const ProfileCard = ({ handdleLogOut }) => {
       </div>
     </div>
 
-    <div className="flex flex-col gap-3 mt-6">
+    <div className="flex flex-col w-full lg:flex-row gap-2 ">
   {/* Nút Save */}
   <Button
     type="primary"
@@ -265,7 +265,7 @@ const ProfileCard = ({ handdleLogOut }) => {
     loading={saving}
     size="large"
     shape="round"
-    style={{ background: "#FF6900", borderColor: "#FF6900", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
+    style={{ background: "#FF6900", borderColor: "#FF6900", width:"100%", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
 
   >
     Save
@@ -279,7 +279,7 @@ const ProfileCard = ({ handdleLogOut }) => {
      size="large"
     shape="round"
 
-    style={{ background: "#FFF", color:"#FF6900", borderColor: "#FF6900", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
+    style={{ background: "#FFF", color:"#FF6900", borderColor: "#FF6900", width:"100%", height: "48px", padding: "0 24px", border:"1px solid #FF6900" }}
   >
     Logout
   </Button>

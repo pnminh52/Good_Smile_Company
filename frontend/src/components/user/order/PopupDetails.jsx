@@ -81,6 +81,16 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                 <span className="font-semibold">User address/district at </span>{" "}
                 {[order.address, order.district].filter(Boolean).join(", ")}
               </p>
+              <p>
+  <span className="font-semibold">Username </span>{" "}
+  {order.user_name}
+</p>
+
+<p>
+  <span className="font-semibold">Phone </span>{" "}
+  {order.user_phone}
+</p>
+
           <p>
             <Text strong>Order created at</Text>{" "}
             {dayjs(order.created_at).format("DD/MM/YYYY HH:mm")}
@@ -124,7 +134,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
         </div>
         
       </Spin>
-      {order.status !== "Canceled" && (
+      {order.status !== "Canceled" && order.status !=="Completed" &&(
   <div className="pt-4 flex flex-col gap-2">
     <Button
       type="primary"

@@ -16,7 +16,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="max-w-screen-xl lg:px-80 px-4 mx-auto ">
+    <div className="max-w-screen-xl lg:px-40 px-4 mx-auto ">
       <div className=" ">
         <p className=" text-xl  font-semibold sm:py-6  py-4"> Account</p>
        <div className="">
