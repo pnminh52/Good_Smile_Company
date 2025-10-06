@@ -55,6 +55,7 @@ export const getAllOrders = async (req, res) => {
         o.district, 
         o.created_at, 
         o.payment_method,
+        u.id AS user_id,
         u.name AS user_name,
         u.email AS user_email,
         u.phone AS user_phone,
@@ -79,7 +80,7 @@ export const getAllOrders = async (req, res) => {
       LEFT JOIN order_status os ON o.status_id = os.id
       LEFT JOIN order_items oi ON oi.order_id = o.id
       LEFT JOIN products p ON p.id = oi.product_id
-      GROUP BY o.id, os.name, u.name, u.email, u.phone
+      GROUP BY o.id, os.name, u.id, u.name, u.email, u.phone
       ORDER BY o.created_at DESC
     `;
 

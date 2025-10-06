@@ -35,16 +35,16 @@ import Order from "./pages/user/Order";
 import Wishlist from "./pages/user/Wishlist";
 import SearchByKeyword from "./pages/user/SearchByKeyword";
 import { useLogout } from "./hook/useLogout";
-import { setLogoutRef } from './hook/useAuth';
+import { setLogoutRef } from "./hook/useAuth";
 import NewList from "./pages/admin/new/NewList";
 import PaymentReturn from "./pages/user/PaymentReturn";
-import PreviousShop from './pages/user/guide/PreviousShop';
+import PreviousShop from "./pages/user/guide/PreviousShop";
 import AboutPayments from "./pages/user/guide/AboutPayments";
 import DeliveryAndShipping from "./pages/user/guide/DeliveryAndShipping";
 import ImportanNote from "./pages/user/guide/ImportanNote";
 import Coupons from "./pages/user/guide/Coupons";
 import OrderList from "./pages/admin/order/OrderList";
-
+import OrderDetails from "./pages/admin/order/OrderDetails";
 
 function App() {
   return (
@@ -99,14 +99,13 @@ function AppContent() {
           <Route path="/guide/previous-shop" element={<PreviousShop />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/guide/about-payments" element={<AboutPayments />} />
-          <Route path="/guide/delivery-and-shipping" element={<DeliveryAndShipping />} />
+          <Route
+            path="/guide/delivery-and-shipping"
+            element={<DeliveryAndShipping />}
+          />
           <Route path="/guide/importan" element={<ImportanNote />} />
           <Route path="/guide/coupons" element={<Coupons />} />
-
-
-
         </Route>
-
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -118,9 +117,8 @@ function AppContent() {
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />
 
+          <Route path="orders/:id" element={<OrderDetails/>} />
           <Route path="orders" element={<OrderList />} />
-
-
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<CategoryAdd />} />
           <Route path="categories/edit/:id" element={<CategoryEdit />} />
@@ -129,6 +127,5 @@ function AppContent() {
     </>
   );
 }
-
 
 export default App;

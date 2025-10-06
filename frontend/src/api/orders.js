@@ -11,6 +11,11 @@ export const getUserOrders = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+  export const getAllOrders = (token) =>
+    api.get("/orders/all", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  
 export const getOrderDetail = (id, token) =>
   api.get(`/orders/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
