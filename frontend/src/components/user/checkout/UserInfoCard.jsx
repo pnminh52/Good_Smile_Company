@@ -60,8 +60,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
 
   const handleAddDistrict = () => {
     const d = newDistrict.trim();
-    if (!d) return;
-    if (!d) { 
+    if (!d || d==="") { 
       toast.error("Cannot add empty district!");
       return;
     }
