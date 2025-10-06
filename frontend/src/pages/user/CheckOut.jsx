@@ -75,19 +75,11 @@ const Checkout = () => {
     };
 
     const createdOrder = await createOrder(orderData, token);
-    const orderId = createdOrder.data.orderId; // ✅ tạo orderId ở đây sau khi API trả về
-    // console.log("OrderId:", orderId);
-
-    // Gọi API tạo payment URL VNPay
-    // const { data } = await createVnpayPayment({
-      // orderId,
-      // amount: Math.floor(total + shippingFee)
-    
-    // });
+    const orderId = createdOrder.data.orderId; 
     const { data } = await createVnpayPayment({ orderId });
 
     if (data.paymentUrl) {
-      window.location.href = data.paymentUrl; // redirect sang VNPay
+      window.location.href = data.paymentUrl; 
     }
 
   } catch (err) {
@@ -97,6 +89,9 @@ const Checkout = () => {
     setLoading(false);
   }
 };
+useEffect(()=>{
+window.scrollTo({top:0, behavior:"smooth"})
+},[])
 
 
   if (cartItems.length === 0) return <NotFound />;

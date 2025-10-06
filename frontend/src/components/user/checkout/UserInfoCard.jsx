@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useToast from "../../../hook/useToast";
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import Loader from "../../Loader";
 
 const UserInfoCard = ({ onChange }) => {
+  const [loading, setLoading]=useState(false)
   const toast = useToast();
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000/api";
 
@@ -13,10 +15,15 @@ const UserInfoCard = ({ onChange }) => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [newDistrict, setNewDistrict] = useState("");
 
+
   useEffect(() => {
     const fetchUserProfile = async () => {
+      setLoading(true)
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+setLoading(false)
+        return;
+      } 
 
       try {
        
@@ -41,6 +48,8 @@ const res = await axios.get(`${API_URL}/users/profile`, {
           });
       } catch (err) {
         console.error("Failed to fetch user profile:", err);
+      }finally{
+        setLoading(false);
       }
     };
 
@@ -91,7 +100,9 @@ const res = await axios.get(`${API_URL}/users/profile`, {
     onChange && onChange({ districts, selectedDistrict: d });
   };
 
+  if (loading) return <Loader />;
   if (!user) return null;
+  
 
   return (
     <div className="">
@@ -132,30 +143,37 @@ const res = await axios.get(`${API_URL}/users/profile`, {
               "pt-4"
             )
           }`}    >Your saved addresses ({districts?.length}) </label>
-        <div className=" space-y-2">
-            {districts.map((d, i) => (
-                      <div
-                        key={i}
-                        className={`flex items-center justify-between border rounded-lg  px-3 py-2 ${
-                          selectedDistrict === d ? "bg-gray-50 border border-[#FF6624]" : "opacity-40"
-                        }`}
-                      >
-                        <p
-                          onClick={() => handleSelectDistrict(d)}
-                          className="cursor-pointer"
+          {
+            loading ?(
+              <Loader />
+            ):(
+              <div className=" space-y-2">
+              {districts.map((d, i) => (
+                        <div
+                          key={i}
+                          className={`flex items-center justify-between border rounded-lg  px-3 py-2 ${
+                            selectedDistrict === d ? "bg-gray-50 border border-[#FF6624]" : "opacity-40"
+                          }`}
                         >
-                          {d}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveDistrict(i)}
-                          className="cursor-pointer text-red-500 font-bold"
-                        >
-                          <CloseOutlined />
-                        </button>
-                      </div>
-                    ))}
-        </div>
+                          <p
+                            onClick={() => handleSelectDistrict(d)}
+                            className="cursor-pointer"
+                          >
+                            {d}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveDistrict(i)}
+                            className="cursor-pointer text-red-500 font-bold"
+                          >
+                            <CloseOutlined />
+                          </button>
+                        </div>
+                      ))}
+          </div>
+            )
+          }
+       
         </div>
 
        
