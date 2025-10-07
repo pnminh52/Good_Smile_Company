@@ -24,7 +24,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         </div>
       </div>
       <p className="text-xl font-semibold">Payment method & Other actions</p>
-      <div className="flex flex-col  lg:gap-2  items-center">
+      <div className="flex flex-col  lg:gap-2 gap-1 items-center">
        
        <div className="flex flex-col lg:flex-row w-full gap-2 lg:gap-2 items-center">
          <button
