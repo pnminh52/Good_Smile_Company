@@ -42,7 +42,7 @@ const OrderSuccess = () => {
         </span>
       </p>
 
-      <div className="flex sm:flex-row flex-col gap-3 w-full sm:w-auto">
+      <div className="flex sm:flex-row flex-col gap-2 w-full sm:w-auto">
   <button
     onClick={() => navigate("/")}
     className="w-full sm:w-auto px-6 py-2 border rounded-full border-[#FF6900] cursor-pointer text-white bg-[#FF6900] hover:bg-[#ff7d26] transition"
