@@ -94,6 +94,16 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                            <span className="font-semibold">Cancel reason:</span> {order.cancel_reason}
                          </p>
                        )}
+
+                       {
+                        order.note && (
+                          <>
+                            <p>
+                           <span className="font-semibold">Note for shipper:</span> {order.note}
+                         </p>
+                          </>
+                        )
+                       }
             <p className="flex items-center gap-1">
               <span className="font-semibold">Payment method:</span>{" "}
               {getPaymentTag(order.payment_method)}

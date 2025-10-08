@@ -109,7 +109,7 @@ export const getOrderDetail = async (req, res) => {
   o.created_at,
   o.payment_method,
   o.cancel_reason, 
-  o.note
+  o.note,
   CASE 
     WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
     WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
