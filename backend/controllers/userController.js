@@ -51,14 +51,7 @@ export const loginUser = async (req, res) => {
     if (!validPass) return res.status(400).json({ error: "Invalid password" });
 
     const token = jwt.sign({ id: user[0].id }, JWT_SECRET, { expiresIn: "7d" });
-   
-    try {
-      const io = getIO();
-      io.emit("userLogin", { userId: user[0].id, name: user[0].name });
-    } catch (e) {
-      console.warn("⚠️ Socket not initialized yet");
-    }
-   
+
     res.json({
       message: "Login success",
       token,
@@ -67,15 +60,13 @@ export const loginUser = async (req, res) => {
         name: user[0].name,
         email: user[0].email,
         role: user[0].role,
+        is_delete_requested: user[0].is_delete_requested,
         address: user[0].address || "",
-    district: user[0].district || "",
-    phone: user[0].phone || "",
-    avatar: user[0].avatar || ""
+        district: user[0].district || "",
+        phone: user[0].phone || "",
+        avatar: user[0].avatar || ""
       }
     });
-  
-    
-    
   } catch (err) {
     console.error("❌ Login error:", err.message);
     res.status(500).json({ error: "Login failed" });
