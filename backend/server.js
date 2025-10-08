@@ -18,7 +18,7 @@ import newRoutes from "./routes/newRoutes.js";
 import bannerRoutes from "./routes/bannerRoutes.js";
 import chatbotRoutes from "./routes/chatbotRoutes.js";
 import vnPayRoutes from "./routes/vnPayRoutes.js";
-import accountRoutes from "./routes/accountRoutes"
+import accountRoutes from "./routes/accountRoutes.js"
 
 import { sql } from "./config/db.js";
 import { aj } from "./lib/arcjetConfig.js";
