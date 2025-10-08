@@ -18,9 +18,10 @@ export const requestDeleteAccount = async (req, res) => {
 
     res.json({ message: "Account deletion request sent. Waiting for admin confirmation." });
   } catch (err) {
-    console.error("Error in requestDeleteAccount:", err);
-    res.status(500).json({ error: err.message, detail: err.detail });
+    console.error("Error in requestDeleteAccount:", err.message, err.stack);
+    res.status(500).json({ error: err.message });
   }
+  
   
 };
 

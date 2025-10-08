@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Modal, Input, Radio, Button, message as antdMessage } from "antd";
+import { Modal, Input, Radio, Button, message as antdMessage, Tooltip } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
 import { requestDeleteAccount } from "../../../api/account";
 
 const DeleteAccount = () => {
   const [reason, setReason] = useState("");
-  const [customReason, setCustomReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmText, setConfirmText] = useState("");
@@ -22,29 +22,36 @@ const DeleteAccount = () => {
   const requiredPhrase = "I understand and still want to delete my account";
 
   const handleOpenConfirm = () => {
-    const finalReason =
-      reason === "Other" ? customReason.trim() : reason.trim();
-
-    if (!finalReason) {
-      antdMessage.warning("Please select or enter a reason first.");
+    if (!reason.trim()) {
+      antdMessage.warning("Please select a reason first.");
       return;
     }
-
     setConfirmVisible(true);
   };
 
-  const handleConfirmDelete = async () => {
-    const finalReason =
-      reason === "Other" ? customReason.trim() : reason.trim();
+  const handleCopyPhrase = async () => {
+    try {
+      await navigator.clipboard.writeText(requiredPhrase);
+      antdMessage.success("Copied to clipboard!");
+    } catch {
+      antdMessage.error("Failed to copy text.");
+    }
+  };
 
+  const handleConfirmDelete = async () => {
     setLoading(true);
     try {
-      const res = await requestDeleteAccount(token, finalReason);
+      const res = await requestDeleteAccount(token, reason);
       antdMessage.success(
         res.message || "Your delete request has been sent successfully!"
       );
+
+      // clear
       setReason("");
-      setCustomReason("");
+      localStorage.removeItem("token"); // logout user
+      setTimeout(() => {
+        window.location.href = "/login"; // redirect after logout
+      }, 1000);
     } catch (err) {
       console.error(err);
       antdMessage.error(
@@ -58,14 +65,13 @@ const DeleteAccount = () => {
   };
 
   return (
-    <div className="w-full mx-auto  bg-white ">
+    <div className="w-full mx-auto bg-white">
       <h2 className="text-2xl font-semibold text-red-600 py-4">
         Delete Account
       </h2>
       <p className="text-gray-600 mb-3">
-        If you really want to delete your account, please select or enter your
-        reason below. The administrator will review and confirm before your
-        account is permanently deleted.
+        If you really want to delete your account, please select your reason below.
+        The administrator will review and confirm before your account is permanently deleted.
       </p>
 
       <Radio.Group
@@ -79,16 +85,6 @@ const DeleteAccount = () => {
           </Radio>
         ))}
       </Radio.Group>
-
-      {reason === "Other" && (
-        <Input.TextArea
-          value={customReason}
-          onChange={(e) => setCustomReason(e.target.value)}
-          placeholder="Enter your custom reason..."
-          rows={4}
-          className="mb-3"
-        />
-      )}
 
       <Button
         type="primary"
@@ -105,39 +101,39 @@ const DeleteAccount = () => {
         title="Confirm Account Deletion"
         open={confirmVisible}
         onCancel={() => setConfirmVisible(false)}
-        // footer={[
-        //   <Button key="cancel" onClick={() => setConfirmVisible(false)}>
-        //     Cancel
-        //   </Button>,
-        //   <Button
-        //     key="confirm"
-        //     type="primary"
-        //     danger
-        //     disabled={confirmText !== requiredPhrase}
-        //     loading={loading}
-        //     onClick={handleConfirmDelete}
-        //   >
-        //   
-        //   </Button>,
-        // ]}
         footer={false}
         centered
-        
       >
         <p className="mb-3">
           This action <strong>cannot be undone</strong>. Please type the
           following sentence to confirm:
         </p>
-        <p className="bg-gray-100 p-2 rounded text-sm font-mono mb-3">
-          {requiredPhrase}
-        </p>
+        <div className="bg-gray-100 p-2 rounded text-sm font-mono mb-3 flex items-center justify-between">
+          <span>{requiredPhrase}</span>
+          <Tooltip title="Copy phrase">
+            <Button
+              icon={<CopyOutlined />}
+              type="text"
+              onClick={handleCopyPhrase}
+            />
+          </Tooltip>
+        </div>
         <Input
           value={confirmText}
           onChange={(e) => setConfirmText(e.target.value)}
           placeholder="Type the confirmation phrase exactly..."
         />
-        <Button onClick={handleConfirmDelete}>
-Confirm delete
+
+        <Button
+          type="primary"
+          danger
+          block
+          className="mt-4"
+          disabled={confirmText !== requiredPhrase}
+          loading={loading}
+          onClick={handleConfirmDelete}
+        >
+          Confirm Delete
         </Button>
       </Modal>
     </div>
