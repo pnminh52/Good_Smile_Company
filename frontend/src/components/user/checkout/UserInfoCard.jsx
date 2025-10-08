@@ -118,7 +118,7 @@ const res = await axios.get(`${API_URL}/users/profile`, {
                         value={newDistrict}
                         onChange={handleNewDistrictChange}
                         placeholder="Enter your current address and place of residence"
-                        className="border border-gray-300  px-3 h-10 rounded-lg flex-1"
+                        className="border border-gray-200  px-3 h-10 rounded-lg flex-1"
                       />
                      <button
   type="button"
@@ -151,8 +151,8 @@ const res = await axios.get(`${API_URL}/users/profile`, {
                         <div
                           key={i}
                           onClick={() => handleSelectDistrict(d)}
-                          className={`flex items-center cursor-pointer justify-between border transition duration-300 ease-in-out rounded-lg  px-3 py-2 ${
-                            selectedDistrict === d ? " border border-[#FF6624]" : "bg-gray-50 opacity-40"
+                          className={`flex items-center cursor-pointer justify-between  transition duration-300 ease-in-out rounded-lg  px-3 py-2 ${
+                            selectedDistrict === d ? " border border-[#FF6624]" : " border border-gray-300 "
                           }`}
                         >
                           <p

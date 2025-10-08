@@ -10,6 +10,7 @@ import Loader from './../../components/Loader';
 import useToast from "../../hook/useToast";
 import useShippingFee from "../../hook/useShippingFee";
 import { createVnpayPayment } from './../../api/payment';
+import NoteForShipping from './../../components/user/checkout/NoteForShipping';
 
 const Checkout = () => {
   const toast = useToast();
@@ -19,6 +20,7 @@ const Checkout = () => {
   const { address, shippingFee } = useShippingFee();
   const [userInfo, setUserInfo] = useState({ selectedDistrict: "", district: [], address: "" });
   const [loading, setLoading] = useState(false);
+  const [note , setNote]=useState("")
 
   useEffect(() => {
     if (address) setUserInfo(prev => ({ ...prev, address }));
@@ -41,6 +43,7 @@ const Checkout = () => {
         selectedDistrict: userInfo.selectedDistrict,
         shippingFee,
         payment_method: "Cash On Delivery",
+        note
       };
   
       const res = await createOrder(orderData, token);
@@ -72,6 +75,7 @@ const Checkout = () => {
       selectedDistrict: userInfo.selectedDistrict,
       shippingFee,
         payment_method: "Online Banking",
+        note
     };
 
     const createdOrder = await createOrder(orderData, token);
@@ -103,6 +107,7 @@ window.scrollTo({top:0, behavior:"smooth"})
       <div className="flex flex-col">
         <CheckOutItem cartItems={cartItems} />
         <UserInfoCard onChange={setUserInfo} />
+        <NoteForShipping onChange={(val)=>setNote(val)} />
         <PriceTable
           total={total}
           shippingFee={shippingFee}

@@ -13,6 +13,7 @@ export const getUserOrders = async (req, res) => {
         o.district, 
         o.created_at, 
         o.payment_method,
+        o.note,
         o.cancel_reason, 
         CASE 
           WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
@@ -56,6 +57,7 @@ export const getAllOrders = async (req, res) => {
         o.district, 
         o.created_at, 
         o.payment_method,
+        o.note,
         o.cancel_reason, 
         u.id AS user_id,
         u.name AS user_name,
@@ -107,6 +109,7 @@ export const getOrderDetail = async (req, res) => {
   o.created_at,
   o.payment_method,
   o.cancel_reason, 
+  o.note
   CASE 
     WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
     WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
@@ -139,19 +142,14 @@ WHERE o.id = ${orderId} AND o.user_id = ${userId}
 
 
 export const createOrder = async (req, res) => {
-//   console.log(req.body);
-//   console.log("🟩 req.body:", req.body);
-// console.log("🟩 payment_method:", req.body.payment_method);
-
-  
   const userId = req.user.id;
-  const { items, address, selectedDistrict, shippingFee, payment_method } = req.body;
+  const { items, address, selectedDistrict, shippingFee, payment_method, note } = req.body; // 👈 thêm note
 
   if (!items || !items.length)
     return res.status(400).json({ error: "No items in order" });
 
   try {
-    // Tính tổng tiền sản phẩm
+    // 🔹 Tính tổng tiền sản phẩm
     let totalProducts = 0;
     for (const item of items) {
       const product = await sql`SELECT price, stock FROM products WHERE id = ${item.product_id}`;
@@ -160,27 +158,27 @@ export const createOrder = async (req, res) => {
         return res.status(400).json({ error: "Insufficient stock" });
       totalProducts += Number(product[0].price) * item.quantity;
     }
+
     const totalWithShip = totalProducts + Number(shippingFee || 0);
 
-    // Lấy address mặc định nếu frontend không gửi
+    // 🔹 Lấy address mặc định nếu frontend không gửi
     let orderAddress = address;
     if (!orderAddress) {
       const [userRecord] = await sql`SELECT address, district FROM users WHERE id = ${userId}`;
       orderAddress = userRecord.address;
     }
 
-    // 🔹 Phân biệt phương thức thanh toán
-    // status_id: 1 = Chờ thanh toán, 2 = Đã thanh toán (tùy hệ thống bạn định nghĩa)
-    const statusId =  1 ;
+    // 🔹 Mặc định status_id = 1 (Pending)
+    const statusId = 1;
 
-    // Tạo order
+    // ✅ Tạo order, thêm note vào cột orders
     const [order] = await sql`
-      INSERT INTO orders (user_id, total, shipping_fee, status_id, address, district, payment_method)
-      VALUES (${userId}, ${totalWithShip}, ${shippingFee}, ${statusId}, ${orderAddress}, ${selectedDistrict}, ${payment_method})
+      INSERT INTO orders (user_id, total, shipping_fee, status_id, address, district, payment_method, note)
+      VALUES (${userId}, ${totalWithShip}, ${shippingFee}, ${statusId}, ${orderAddress}, ${selectedDistrict}, ${payment_method}, ${note || null})
       RETURNING *
     `;
 
-    // Cập nhật mảng district trong users nếu district mới
+    // 🔹 Cập nhật mảng district của user nếu district mới
     const [userRecord] = await sql`SELECT district FROM users WHERE id = ${userId}`;
     const userDistricts = userRecord.district || [];
     if (selectedDistrict && !userDistricts.includes(selectedDistrict)) {
@@ -191,7 +189,7 @@ export const createOrder = async (req, res) => {
       `;
     }
 
-    // Thêm order items và trừ stock
+    // 🔹 Thêm order_items và trừ stock
     for (const item of items) {
       const product = await sql`SELECT price FROM products WHERE id = ${item.product_id}`;
       await sql`
@@ -206,6 +204,7 @@ export const createOrder = async (req, res) => {
       `;
     }
 
+    // ✅ Trả về response
     res.status(201).json({
       message: "Order created successfully",
       orderId: order.id,
@@ -214,9 +213,10 @@ export const createOrder = async (req, res) => {
       address: orderAddress,
       district: selectedDistrict,
       payment_method,
+      note: note || null,
     });
   } catch (error) {
-    console.error(error);
+    console.error("❌ Error creating order:", error);
     res.status(500).json({ error: error.message });
   }
 };
