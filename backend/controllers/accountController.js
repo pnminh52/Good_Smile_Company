@@ -86,3 +86,30 @@ export const confirmDeleteAccount = async (req, res) => {
     res.status(500).json({ error: "Failed to process delete confirmation." });
   }
 };
+
+// 🟡 User hủy yêu cầu xóa tài khoản
+export const cancelDeleteAccount = async (req, res) => {
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    // Cập nhật status của request
+    await sql`
+      UPDATE delete_requests
+      SET status = 'canceled'
+      WHERE user_id = ${userId} AND status = 'pending'
+    `;
+
+    // Reset cờ trong bảng users
+    await sql`
+      UPDATE users
+      SET is_delete_requested = false
+      WHERE id = ${userId}
+    `;
+
+    res.json({ message: "Your delete request has been canceled." });
+  } catch (err) {
+    console.error("Error in cancelDeleteAccount:", err);
+    res.status(500).json({ error: "Failed to cancel delete request" });
+  }
+};

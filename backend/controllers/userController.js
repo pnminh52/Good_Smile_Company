@@ -167,7 +167,7 @@ export const getProfile = async (req, res) => {
 
   try {
     const user = await sql`
-      SELECT id, name, email, phone, address, district, avatar
+      SELECT id, name, email, phone, address, district, avatar, is_delete_requested
       FROM users
       WHERE id = ${userId}
     `;
