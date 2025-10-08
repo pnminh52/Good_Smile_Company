@@ -1,4 +1,5 @@
 import { sql } from "../config/db.js";
+import { getIO } from "../routes/socket.js";
 
 export const getUserOrders = async (req, res) => {
   const userId = req.user.id;
@@ -224,13 +225,12 @@ export const createOrder = async (req, res) => {
 
 export const updateOrderStatus = async (req, res) => {
   const orderId = req.params.id;
-  const { status_id, cancel_reason } = req.body; // nhận thêm cancel_reason
+  const { status_id, cancel_reason } = req.body;
 
   try {
     const [order] = await sql`SELECT * FROM orders WHERE id = ${orderId}`;
     if (!order) return res.status(404).json({ error: "Order not found" });
 
-    // Nếu status = 4 (Cancelled), require cancel_reason
     if (status_id === 4 && (!cancel_reason || cancel_reason.trim() === "")) {
       return res.status(400).json({ error: "Cancel reason is required when cancelling order" });
     }
@@ -238,13 +238,22 @@ export const updateOrderStatus = async (req, res) => {
     await sql`
       UPDATE orders
       SET status_id = ${status_id},
-          cancel_reason = ${status_id === 4 ? cancel_reason : null} -- chỉ ghi reason khi hủy
+          cancel_reason = ${status_id === 4 ? cancel_reason : null}
       WHERE id = ${orderId}
     `;
+
+    // ✅ Gửi realtime tới user
+    const io = getIO();
+    io.to(`user_${order.user_id}`).emit("orderStatusChanged", {
+      orderId,
+      status_id,
+      cancel_reason: status_id === 4 ? cancel_reason : null,
+    });
 
     res.json({ message: "Order status updated successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 

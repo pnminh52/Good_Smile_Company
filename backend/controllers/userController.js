@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { sendResetPasswordEmail } from "../lib/mailerConfig.js";
-import { log } from "console";
+import { getIO } from "../routes/socket.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -51,6 +51,14 @@ export const loginUser = async (req, res) => {
     if (!validPass) return res.status(400).json({ error: "Invalid password" });
 
     const token = jwt.sign({ id: user[0].id }, JWT_SECRET, { expiresIn: "7d" });
+   
+    try {
+      const io = getIO();
+      io.emit("userLogin", { userId: user[0].id, name: user[0].name });
+    } catch (e) {
+      console.warn("⚠️ Socket not initialized yet");
+    }
+   
     res.json({
       message: "Login success",
       token,
