@@ -17,7 +17,12 @@ const Section1 = () => {
       <div className="bg-[#F4F4F6] sm:h-8 h-10 flex items-center justify-center">
         <p className="flex items-center sm:text-sm text-xs truncate gap-1 hover:text-[#F06E00] cursor-pointer transition duration-300 ease-in-out">
           <img src="https://www.goodsmile.com/img/icon/alert.svg" alt="" /> 
-          Notice Regarding the Resumption of Shipping to the United States...
+         <span className="hidden sm:block">
+         Notice Regarding the Resumption of Shipping to the United States...
+         </span>
+         <span className="block sm:hidden">
+         Notice Regarding the Resumption of Shipping to the United States...
+         </span>
         </p>
       </div>
 
@@ -31,7 +36,7 @@ const Section1 = () => {
           />
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search by Keyword..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="w-full bg-white pl-10 pr-3 py-3 rounded-full focus:outline-none focus:ring focus:ring-blue-300"
