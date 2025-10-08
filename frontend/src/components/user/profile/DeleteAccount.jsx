@@ -28,7 +28,7 @@ const DeleteAccount = () => {
     return null;
   }
 
-  // Kiểm tra profile user xem đã gửi request chưa
+  // Lấy profile user xem đã gửi request chưa
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -64,8 +64,7 @@ const DeleteAccount = () => {
       await requestDeleteAccount(reason);
       antdMessage.success("Your delete request has been sent!");
       setHasRequested(true);
-      localStorage.removeItem("token"); // logout
-      setTimeout(() => (window.location.href = "/login"), 1000);
+      // ✅ Giữ token, không logout
     } catch (err) {
       console.error(err);
       antdMessage.error(err.response?.data?.error || "Failed to send delete request.");
@@ -113,7 +112,13 @@ const DeleteAccount = () => {
             ))}
           </Radio.Group>
 
-          <Button type="primary" danger block onClick={handleOpenConfirm} disabled={loading}>
+          <Button
+            type="primary"
+            danger
+            block
+            onClick={handleOpenConfirm}
+            disabled={loading}
+          >
             Send Delete Request
           </Button>
 
@@ -121,7 +126,7 @@ const DeleteAccount = () => {
             title="Confirm Account Deletion"
             open={confirmVisible}
             onCancel={() => setConfirmVisible(false)}
-            footer={false}
+            footer={null}
             centered
           >
             <p className="mb-3">
