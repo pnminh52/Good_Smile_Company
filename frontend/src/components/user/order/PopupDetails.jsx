@@ -89,9 +89,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
             <p className="flex items-center gap-1">
               <span className="font-semibold">Order status:</span> {getStatusTag(order.status)}
             </p>
-            <p className="flex items-center gap-1">
-              <span className="font-semibold">Cancel reason:</span> {order.cancel_reason}
-            </p>
+           
             <p className="flex items-center gap-1">
               <span className="font-semibold">Payment method:</span>{" "}
               {getPaymentTag(order.payment_method)}
