@@ -43,7 +43,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         </button>
 
         <button
-         onClick={()=>setOpen(prev=>!prev)}
+         onClick={handleVnpayPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
           className={`w-full h-12 rounded-full font-semibold transition duration-300 ease-in-out 
             ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 border-blue-200 flex items-center justify-center text-gray-500 cursor-not-allowed" : "bg-[#FFF] border-blue-500 border rounded-full flex items-center justify-center text-white cursor-pointer"}`}
@@ -88,11 +88,11 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
 
    
 
-      <NotiAlert
+      {/* <NotiAlert
   open={open}
   handleVnpayPayment={handleVnpayPayment}
   handleCloseModal={() => setOpen(false)}
-/>
+/> */}
 
       
   
