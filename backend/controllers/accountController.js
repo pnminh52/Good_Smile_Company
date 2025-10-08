@@ -18,9 +18,10 @@ export const requestDeleteAccount = async (req, res) => {
 
     res.json({ message: "Account deletion request sent. Waiting for admin confirmation." });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to send delete request" });
+    console.error("Error in requestDeleteAccount:", err);
+    res.status(500).json({ error: err.message, detail: err.detail });
   }
+  
 };
 
 // 🟠 Admin xem danh sách yêu cầu xoá

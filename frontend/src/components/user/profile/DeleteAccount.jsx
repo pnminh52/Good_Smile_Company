@@ -58,8 +58,8 @@ const DeleteAccount = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-semibold text-red-600 mb-4">
+    <div className="w-full mx-auto  bg-white ">
+      <h2 className="text-2xl font-semibold text-red-600 py-4">
         Delete Account
       </h2>
       <p className="text-gray-600 mb-3">
@@ -105,21 +105,24 @@ const DeleteAccount = () => {
         title="Confirm Account Deletion"
         open={confirmVisible}
         onCancel={() => setConfirmVisible(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setConfirmVisible(false)}>
-            Cancel
-          </Button>,
-          <Button
-            key="confirm"
-            type="primary"
-            danger
-            disabled={confirmText !== requiredPhrase}
-            loading={loading}
-            onClick={handleConfirmDelete}
-          >
-            Confirm Delete
-          </Button>,
-        ]}
+        // footer={[
+        //   <Button key="cancel" onClick={() => setConfirmVisible(false)}>
+        //     Cancel
+        //   </Button>,
+        //   <Button
+        //     key="confirm"
+        //     type="primary"
+        //     danger
+        //     disabled={confirmText !== requiredPhrase}
+        //     loading={loading}
+        //     onClick={handleConfirmDelete}
+        //   >
+        //   
+        //   </Button>,
+        // ]}
+        footer={false}
+        centered
+        
       >
         <p className="mb-3">
           This action <strong>cannot be undone</strong>. Please type the
@@ -133,6 +136,9 @@ const DeleteAccount = () => {
           onChange={(e) => setConfirmText(e.target.value)}
           placeholder="Type the confirmation phrase exactly..."
         />
+        <Button onClick={handleConfirmDelete}>
+Confirm delete
+        </Button>
       </Modal>
     </div>
   );
