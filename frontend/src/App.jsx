@@ -128,7 +128,7 @@ function AppContent() {
           <Route path="categories/edit/:id" element={<CategoryEdit />} />
         </Route>
       </Routes>
-      <Chatbot />
+      {/* <Chatbot /> */}
     </>
   );
 }
