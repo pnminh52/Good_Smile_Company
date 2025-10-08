@@ -117,7 +117,7 @@ const Header = () => {
               </svg>
               Contact
             </li>
-            <Link to={"/product"}>
+            {/* <Link to={"/product"}>
               <li className="w-5 flex items-center cursor-pointer gap-2 font-semibold ">
                 <img
                   src="https://www.goodsmile.com/img/common/face.svg"
@@ -125,7 +125,7 @@ const Header = () => {
                 />{" "}
                 Collection
               </li>
-            </Link>
+            </Link> */}
           </ul>
 </div>
 
