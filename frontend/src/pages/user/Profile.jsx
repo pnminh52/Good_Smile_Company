@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useToast from "../../hook/useToast";
 import ProfileCard from './../../components/user/profile/ProfileCard';
 import UserMenu from './../../components/user/profile/UserMenu';
+import DeleteAccount from './../../components/user/profile/DeleteAccount';
 const Profile = () => {
   const toast = useToast();
   const { logout } = useAuth();
@@ -25,6 +26,7 @@ const Profile = () => {
        <div className="">
        <UserMenu />
        <ProfileCard handdleLogOut={handdleLogOut}/>
+       <DeleteAccount />
        </div>
     
       </div>

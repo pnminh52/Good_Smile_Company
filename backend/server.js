@@ -18,6 +18,7 @@ import newRoutes from "./routes/newRoutes.js";
 import bannerRoutes from "./routes/bannerRoutes.js";
 import chatbotRoutes from "./routes/chatbotRoutes.js";
 import vnPayRoutes from "./routes/vnPayRoutes.js";
+import accountRoutes from "./routes/accountRoutes"
 
 import { sql } from "./config/db.js";
 import { aj } from "./lib/arcjetConfig.js";
@@ -70,6 +71,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/news", newRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/account", accountRoutes)
 
 // ✅ Tạo HTTP server và tích hợp Socket.IO
 const server = http.createServer(app);

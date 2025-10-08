@@ -161,8 +161,6 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-
-
 export const getProfile = async (req, res) => {
   const userId = req.user?.id;
   if (!userId) return res.status(401).json({ error: "Not authorized" });
