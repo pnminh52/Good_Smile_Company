@@ -56,8 +56,8 @@ const Cart = () => {
     }
   };
 
-
   useEffect(() => {
+    
     if (user && token) {
       fetchCart();
     }
@@ -65,6 +65,7 @@ const Cart = () => {
     // console.log("Cart component token:", token);
   }, [user, token]);
   useEffect(() => {
+     window.scrollTo({top:0, behavior:"smooth"})
     if (cartItems.length > 0) {
       fetchRecommended(cartItems);
     } else {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useAuth from "../../hook/useAuth";
 import { useNavigate } from "react-router-dom";
 import useToast from "../../hook/useToast";
@@ -14,6 +14,9 @@ const Profile = () => {
     localStorage.removeItem("historyProducts");
     toast.success("Logout successful!");
   };
+  useEffect(()=>{
+    window.scrollTo({top:0, behavior:"smooth"})
+  }, [])
 
   return (
     <div className="max-w-screen-xl lg:px-40 px-4 mx-auto ">

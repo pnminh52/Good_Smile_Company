@@ -95,7 +95,12 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                          </p>
                        )}
 
-                       {
+                      
+            <p className="flex items-center gap-1">
+              <span className="font-semibold">Payment method:</span>{" "}
+              {getPaymentTag(order.payment_method)}
+            </p>
+            {
                         order.note && (
                           <>
                             <p>
@@ -104,11 +109,6 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                           </>
                         )
                        }
-            <p className="flex items-center gap-1">
-              <span className="font-semibold">Payment method:</span>{" "}
-              {getPaymentTag(order.payment_method)}
-            </p>
-           
           </div>
 
           {/* Order Items */}
