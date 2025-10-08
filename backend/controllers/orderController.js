@@ -13,6 +13,7 @@ export const getUserOrders = async (req, res) => {
         o.district, 
         o.created_at, 
         o.payment_method,
+        o.cancel_reason, 
         CASE 
           WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
           WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
@@ -55,6 +56,7 @@ export const getAllOrders = async (req, res) => {
         o.district, 
         o.created_at, 
         o.payment_method,
+        o.cancel_reason, 
         u.id AS user_id,
         u.name AS user_name,
         u.email AS user_email,
@@ -104,6 +106,7 @@ export const getOrderDetail = async (req, res) => {
   u.phone AS user_phone,
   o.created_at,
   o.payment_method,
+  o.cancel_reason, 
   CASE 
     WHEN o.payment_method = 'Cash On Delivery' THEN 'Cash On Delivery'
     WHEN o.payment_method = 'Online Banking' THEN 'Online Banking'
@@ -219,17 +222,24 @@ export const createOrder = async (req, res) => {
 };
 
 
-
 export const updateOrderStatus = async (req, res) => {
   const orderId = req.params.id;
-  const { status_id } = req.body;
+  const { status_id, cancel_reason } = req.body; // nhận thêm cancel_reason
 
   try {
     const [order] = await sql`SELECT * FROM orders WHERE id = ${orderId}`;
     if (!order) return res.status(404).json({ error: "Order not found" });
 
+    // Nếu status = 4 (Cancelled), require cancel_reason
+    if (status_id === 4 && (!cancel_reason || cancel_reason.trim() === "")) {
+      return res.status(400).json({ error: "Cancel reason is required when cancelling order" });
+    }
+
     await sql`
-      UPDATE orders SET status_id = ${status_id} WHERE id = ${orderId}
+      UPDATE orders
+      SET status_id = ${status_id},
+          cancel_reason = ${status_id === 4 ? cancel_reason : null} -- chỉ ghi reason khi hủy
+      WHERE id = ${orderId}
     `;
 
     res.json({ message: "Order status updated successfully" });
@@ -237,3 +247,4 @@ export const updateOrderStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

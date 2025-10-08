@@ -29,11 +29,12 @@ export const getOrderDetail = (id, token) =>
       },
     });
 
-export const updateOrderStatus = (id, status_id, token) =>
-  api.put(
-    `/orders/${id}/status`,
-    { status_id },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+    export const updateOrderStatus = (id, status_id, token, cancel_reason = null) =>
+      api.put(
+        `/orders/${id}/status`,
+        { status_id, cancel_reason },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    
