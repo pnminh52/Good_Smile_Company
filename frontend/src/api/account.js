@@ -6,31 +6,30 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-export const requestDeleteAccount = async (token, reason) => {
-  const res = await api.post(
-    "/account/request-delete",
-    { reason },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+// Tự động đính kèm token nếu có
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export const requestDeleteAccount = async (reason) => {
+  const res = await api.post("/account/request-delete", { reason });
   return res.data;
 };
 
-export const getDeleteRequests = async (token) => {
-  const res = await api.get("/account/delete-requests", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getDeleteRequests = async () => {
+  const res = await api.get("/account/delete-requests");
   return res.data;
 };
 
-export const confirmDeleteAccount = async (token, { requestId, action }) => {
-  const res = await api.post(
-    "/account/confirm-delete",
-    { requestId, action }, 
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+export const confirmDeleteAccount = async ({ requestId, action }) => {
+  const res = await api.post("/account/confirm-delete", { requestId, action });
+  return res.data;
+};
+
+// 🆕 Thêm API hủy yêu cầu xóa tài khoản
+export const cancelDeleteAccount = async () => {
+  const res = await api.post("/account/cancel-delete");
   return res.data;
 };

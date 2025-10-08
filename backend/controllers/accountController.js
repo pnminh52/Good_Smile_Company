@@ -1,21 +1,29 @@
 import { sql } from "../config/db.js";
 
+// 🟢 User gửi yêu cầu xoá tài khoản
 export const requestDeleteAccount = async (req, res) => {
   const userId = req.user?.id;
+  const { reason } = req.body;
+
   if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
   try {
     await sql`
-      INSERT INTO delete_requests (user_id, status, created_at)
-      VALUES (${userId}, 'pending', NOW())
+      INSERT INTO delete_requests (user_id, reason, status, created_at)
+      VALUES (${userId}, ${reason}, 'pending', NOW())
+      ON CONFLICT (user_id) DO UPDATE SET reason = ${reason}, status = 'pending', created_at = NOW()
     `;
-    res.json({ message: "Yêu cầu xóa tài khoản đã được gửi, chờ admin xác nhận" });
+
+    await sql`UPDATE users SET is_delete_requested = true WHERE id = ${userId}`;
+
+    res.json({ message: "Account deletion request sent. Waiting for admin confirmation." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Không thể gửi yêu cầu xóa tài khoản" });
+    res.status(500).json({ error: "Failed to send delete request" });
   }
 };
 
+// 🟠 Admin xem danh sách yêu cầu xoá
 export const getDeleteRequests = async (req, res) => {
   try {
     const requests = await sql`
@@ -27,24 +35,38 @@ export const getDeleteRequests = async (req, res) => {
     res.json(requests);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Không thể lấy danh sách yêu cầu xóa" });
+    res.status(500).json({ error: "Failed to fetch delete requests" });
   }
 };
 
+// 🔴 Admin xác nhận xoá hoặc từ chối
 export const confirmDeleteAccount = async (req, res) => {
-  const { userId, confirm } = req.body;
+  const { userId, action } = req.body; // action: 'approve' | 'reject'
   const adminId = req.user?.id;
 
   if (!adminId) return res.status(401).json({ error: "Unauthorized" });
-  if (!confirm) return res.status(400).json({ error: "Thiếu xác nhận" });
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden: admin only" });
 
   try {
-    await sql`DELETE FROM users WHERE id = ${userId}`;
-    await sql`UPDATE delete_requests SET status = 'approved' WHERE user_id = ${userId}`;
-
-    res.json({ message: "Tài khoản đã được xóa thành công" });
+    if (action === "approve") {
+      await sql`DELETE FROM users WHERE id = ${userId}`;
+      await sql`
+        UPDATE delete_requests
+        SET status = 'approved', reviewed_by = ${adminId}, reviewed_at = NOW()
+        WHERE user_id = ${userId}
+      `;
+      res.json({ message: "User account deleted successfully." });
+    } else {
+      await sql`
+        UPDATE delete_requests
+        SET status = 'rejected', reviewed_by = ${adminId}, reviewed_at = NOW()
+        WHERE user_id = ${userId}
+      `;
+      await sql`UPDATE users SET is_delete_requested = false WHERE id = ${userId}`;
+      res.json({ message: "Delete request has been rejected." });
+    }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Không thể xóa tài khoản" });
+    res.status(500).json({ error: "Failed to process delete confirmation" });
   }
 };
