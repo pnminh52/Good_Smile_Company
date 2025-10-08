@@ -1,11 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useToast from "../../../hook/useToast";
+import NotiAlert from "./NotiAlert";
+import { useState } from "react";
 const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, loading }) => {
   const toast = useToast()
   const navigate = useNavigate();
+  const [open, setOpen]=useState(false)
   const upComingFeatured=()=>{
     toast.info("Upcoming feature!")
+  }
+  const handleCloseModal =()=>{
+    setOpen(false)
   }
   return (
     <div className="py-4 space-y-4">
@@ -37,7 +43,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         </button>
 
         <button
-          onClick={handleVnpayPayment}
+         onClick={()=>setOpen(prev=>!prev)}
           disabled={shippingFee === null || shippingFee === 0 || loading}
           className={`w-full h-12 rounded-full font-semibold transition duration-300 ease-in-out 
             ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 border-blue-200 flex items-center justify-center text-gray-500 cursor-not-allowed" : "bg-[#FFF] border-blue-500 border rounded-full flex items-center justify-center text-white cursor-pointer"}`}
@@ -79,6 +85,17 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
 
       </div>
       </div>
+
+   
+
+      <NotiAlert
+  open={open}
+  handleVnpayPayment={handleVnpayPayment}
+  handleCloseModal={() => setOpen(false)}
+/>
+
+      
+  
     </div>
   );
 };
