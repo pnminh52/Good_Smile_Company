@@ -13,6 +13,7 @@ import CategoryEdit from "./pages/admin/category/CategoryEdit";
 import NewAdd from "./pages/admin/new/NewAdd";
 import NewUpdate from "./pages/admin/new/NewUpdate";
 import OrderSuccess from "./pages/user/OrderSuccess";
+import Chatbot from "./pages/user/Chatbot";
 
 import UserGuide from "./pages/user/guide/UserGuide";
 
@@ -78,7 +79,8 @@ function AppContent() {
       <Routes>
         {/* User */}
 
-        <Route element={<UserLayout />}>
+  
+      <Route element={<UserLayout />}>
           <Route path="/" element={<Homepage />} />
           <Route path="/product" element={<ListProduct />} />
           <Route path="/product/:id" element={<ProductDetails />} />
@@ -107,6 +109,7 @@ function AppContent() {
           <Route path="/guide/importan" element={<ImportanNote />} />
           <Route path="/guide/coupons" element={<Coupons />} />
         </Route>
+   
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -125,6 +128,7 @@ function AppContent() {
           <Route path="categories/edit/:id" element={<CategoryEdit />} />
         </Route>
       </Routes>
+      <Chatbot />
     </>
   );
 }
