@@ -103,11 +103,15 @@ const MobileOrder = ({ orders, token, reloadOrders }) => {
       {/* Pagination chỉ hiện khi tổng orders > pageSize */}
       {orders.length > pageSize && (
         <div className="mt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(orders.length / pageSize)}
-            onPageChange={setCurrentPage}
-          />
+        <Pagination
+  currentPage={currentPage}
+  totalPages={Math.ceil(orders.length / pageSize)}
+  onPageChange={(page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }}
+/>
+
         </div>
       )}
 

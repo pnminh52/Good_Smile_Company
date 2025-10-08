@@ -11,6 +11,7 @@ const OrderSuccess = () => {
   const [countdown, setCountdown] = useState(299); // 299 giây
 
   useEffect(() => {
+    window.scrollTo({top:0, behavior:"smooth"})
     const interval = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);

@@ -35,9 +35,14 @@ const Order = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({top:0, behavior:"smooth"})
     fetchOrders();
   }, [token]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageKey]);
+  
   if (loading) return <Loader />;
   if (!orders.length) return <NoResult />;
 

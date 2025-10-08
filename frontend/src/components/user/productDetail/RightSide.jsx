@@ -170,7 +170,7 @@ const RightSide = ({ product }) => {
     type="primary"
     shape="round"
     size="large"
-    style={{ background: "#FF6900", fontWeight: 600, color:"#FFF", borderColor: "#FF6900", height: "48px", padding: "0 24px" }}
+    style={{ background: "#FF6900", color:"#FFF", borderColor: "#FF6900", height: "48px", padding: "0 24px" }}
     onClick={handleAddToCart}
     loading={loading}
     disabled={product.stock <= 0 && product.status !== "preorder" }
@@ -186,13 +186,12 @@ const RightSide = ({ product }) => {
   loading={wishlistLoading} 
   size="large"
   onClick={handleWishlist}
-  className={`flex items-center gap-2 font-semibold ${
+  className={`flex items-center gap-2  ${
     inWishlist
       ? "border-gray-400 text-gray-400"
       : "border-[#FF6900] text-[#FF6900]"
   }`}
   style={{
-    fontWeight: 600,
     borderColor: inWishlist ? "#d9d9d9" : "#FF6900",
     color: inWishlist ? "#9ca3af" : "#FF6900",
      height: "48px", padding: "0 24px"

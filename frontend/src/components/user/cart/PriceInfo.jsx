@@ -57,7 +57,7 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
         <button
           onClick={handleCheckout}
           disabled={shippingFee === null || shippingFee === 0}
-          className={`w-full py-3 transition duration-300 ease-in-out font-semibold rounded-full
+          className={`w-full py-3 transition duration-300 ease-in-out  rounded-full
             ${
               shippingFee === null || shippingFee === 0
                 ? "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -68,7 +68,7 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
         </button>
 
         <Link to={"/product"} className="block w-full">
-          <button className="bg-white border border-[#FF6900] text-[#FF6900] w-full py-3 font-semibold rounded-full cursor-pointer">
+          <button className="bg-white border border-[#FF6900] text-[#FF6900] w-full py-3  rounded-full cursor-pointer">
             Keep Shopping
           </button>
         </Link>

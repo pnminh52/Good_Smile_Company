@@ -36,7 +36,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
          <button
           onClick={handleCodPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
-          className={`w-full py-3 rounded-full font-semibold transition duration-300 ease-in-out 
+          className={`w-full py-3 rounded-full  transition duration-300 ease-in-out 
             ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-[#FF6900] text-white cursor-pointer"}`}
         >
           {loading ? "Processing..." : "Cash on Delivery"}
@@ -45,7 +45,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         <button
          onClick={handleVnpayPayment}
           disabled={shippingFee === null || shippingFee === 0 || loading}
-          className={`w-full h-12 rounded-full font-semibold transition duration-300 ease-in-out 
+          className={`w-full h-12 rounded-full  transition duration-300 ease-in-out 
             ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 border-blue-200 flex items-center justify-center text-gray-500 cursor-not-allowed" : "bg-[#FFF] border-blue-500 border rounded-full flex items-center justify-center text-white cursor-pointer"}`}
         >
           {loading ? "" : (
@@ -56,7 +56,7 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
         <button
         onClick={()=>upComingFeatured()}
         disabled={shippingFee === null || shippingFee === 0 || loading}
-         className={`w-full h-12 rounded-full font-semibold transition duration-300 ease-in-out 
+         className={`w-full h-12 rounded-full  transition duration-300 ease-in-out 
           ${shippingFee === null || shippingFee === 0 || loading ? "bg-gray-100 border-blue-200 flex items-center justify-center text-gray-500 cursor-not-allowed" : "bg-[#FFF] border-blue-500 border rounded-full flex items-center justify-center text-white cursor-pointer"}`}
       >
         {loading ? "" : (
@@ -70,13 +70,13 @@ const PriceTable = ({ total, shippingFee, handleCodPayment, handleVnpayPayment, 
       <div className="w-full py-1 flex flex-col lg:flex-row items-center gap-2">
        <button
           onClick={() => navigate("/product")}
-          className="w-full h-12 rounded-full cursor-pointer font-semibold border border-[#FF6624] bg-white text-[#FF6624]"
+          className="w-full h-12 rounded-full cursor-pointer  border border-[#FF6624] bg-white text-[#FF6624]"
         >
           Keep shopping
         </button>
        <button
           onClick={() => navigate("/cart")}
-          className="w-full h-12 rounded-full cursor-pointer font-semibold border border-[#FF6624] bg-white text-[#FF6624]"
+          className="w-full h-12 rounded-full cursor-pointer  border border-[#FF6624] bg-white text-[#FF6624]"
         >
           Back to Cart
         </button>

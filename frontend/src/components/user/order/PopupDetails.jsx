@@ -119,7 +119,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
               order.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-2  items-center"
+                  className="flex gap-2  "
                 >
                   <img
                     src={item.base_image}
@@ -192,6 +192,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
                            type="primary"
                            size="medium"
                            shape="round"
+                           loading={loading}
                            className="w-full"
                            style={{ background: "#DC2626", borderColor: "#DC2626", marginTop:"8px" }}
                            onClick={handleCancelOrder}
