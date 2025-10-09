@@ -88,7 +88,7 @@ const MenuBar = ({ upcomingAlert }) => {
       </div>
       {open && (
   <div
-    className="fixed top-30 left-0 w-full h-[calc(100%-4rem)] bg-black/40 z-40"
+    className="fixed top-42 left-0 w-full h-[calc(100%-4rem)] bg-black/40 z-40"
     onClick={() => setOpen(false)}
   >
     {/* Dropdown */}
