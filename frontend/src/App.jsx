@@ -49,7 +49,7 @@ import OrderDetails from "./pages/admin/order/OrderDetails";
 import UserList from "./pages/admin/user/UserList";
 
 
-const socket = io("http://localhost:3000", "https://good-smile-company.vercel.app", "http://localhost:5173", {
+const socket = io(import.meta.env.VITE_API_URL || "http://localhost:3000", {
   withCredentials: true,
   transports: ["websocket"],
 });
