@@ -1,21 +1,37 @@
-import { createContext, useState, useEffect } from "react";
-import { setLogoutRef, getAuth } from './../hook/useAuth';
+import { createContext, useState, useEffect, useRef } from "react";
+import { setLogoutRef } from "./../hook/useAuth";
+import socket, { registerSocketUser } from "../socket";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const initialized = useRef(false); 
 
   useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
     const savedUser = localStorage.getItem("user");
     const savedToken = localStorage.getItem("token");
     if (savedUser) setUser(JSON.parse(savedUser));
     if (savedToken) setToken(savedToken);
-    
-    // Đăng ký logout để dùng bên ngoài React (axios interceptor)
+
     setLogoutRef(logout);
+
+    socket.on("force-logout", (data) => {
+      alert(data.reason);
+      logout();
+      window.location.href = "/";
+    });
+
+    return () => socket.off("force-logout");
   }, []);
+
+  useEffect(() => {
+    if (user?.id) registerSocketUser(user.id);
+  }, [user]);
 
   const login = (userData, token) => {
     setUser(userData);

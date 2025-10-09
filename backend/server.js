@@ -1,10 +1,10 @@
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import { onlineUsers, setupSocket } from "./socket.js";
 
 import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -26,29 +26,26 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000", "https://good-smile-company.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://good-smile-company.vercel.app"
+  ],
   methods: ["GET", "POST"],
   credentials: true,
 }));
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:5173", "https://good-smile-company.vercel.app"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/payment/ipn", express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.send("Backend run successfully!");
-});
+// ✅ HTTP + Socket
+const server = http.createServer(app);
+export const io = setupSocket(server);
+export { onlineUsers };
 
 // Arcjet middleware
 app.use(async (req, res, next) => {
@@ -83,24 +80,6 @@ app.use("/api/news", newRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/account", accountRoutes)
 
-
-
-
-// ✅ Lắng nghe kết nối socket
-io.on("connection", (socket) => {
-  console.log("🔌 Client connected:", socket.id);
-
-  // Ví dụ: gửi tin nhắn realtime
-  socket.on("sendMessage", (message) => {
-    console.log("📩 Received:", message);
-    io.emit("newMessage", message); // gửi lại cho tất cả client
-  });
-
-  // Ngắt kết nối
-  socket.on("disconnect", () => {
-    console.log("❌ Client disconnected:", socket.id);
-  });
-});
 
 // ✅ Khởi động server
 server.listen(PORT, () => {

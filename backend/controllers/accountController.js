@@ -1,5 +1,6 @@
 import { sql } from "../config/db.js";
-import { io } from "socket.io-client";
+import { io, onlineUsers } from "../socket.js";
+
 export const requestDeleteAccount = async (req, res) => {
   const userId = req.user?.id;
   const { reason } = req.body;
