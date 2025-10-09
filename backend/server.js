@@ -33,8 +33,7 @@ app.use(cors({
     "http://localhost:3000",
     "https://good-smile-company.vercel.app"
   ],
-  methods: ["GET", "POST"],
-  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],  credentials: true,
 }));
 app.use(express.json());
 app.use(helmet());
