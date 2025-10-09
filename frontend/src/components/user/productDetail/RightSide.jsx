@@ -26,7 +26,10 @@ const RightSide = ({ product }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        setLoadingUser(false)
+        return;
+      }
       try {
         const data = await getProfile(token);
         setUser(data);
@@ -70,10 +73,7 @@ const RightSide = ({ product }) => {
   }, [product.id]);
 
   const handleAddToCart = async () => {
-if (!user || user.is_delete_requested===true) {
-  toast.error("Can't not add to cart! Your account is pending delete!")
-  return;
-}
+
 
     setLoading(true);
     try {
@@ -81,6 +81,11 @@ if (!user || user.is_delete_requested===true) {
       if (!token) {
         toast.error("You must be logged in!");
         setLoading(false);
+        return;
+      }
+
+      if ( user.is_delete_requested===true) {
+        toast.error("Can't not add to cart! Your account is pending delete!")
         return;
       }
   
@@ -108,13 +113,14 @@ if (!user || user.is_delete_requested===true) {
   
 
   const handleWishlist = async () => {
-    if (!user || user.is_delete_requested === true) {
-      toast.error("Can't not add to wishlist! Your account is pending delete!")
-      return;
-    }
+  
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in!");
+      return;
+    }
+    if ( user.is_delete_requested === true) {
+      toast.error("Can't not add to wishlist! Your account is pending delete!")
       return;
     }
     const userId = localStorage.getItem("userId");
