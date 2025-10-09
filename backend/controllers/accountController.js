@@ -47,43 +47,41 @@ export const getDeleteRequests = async (req, res) => {
   }
 };
 
-// 🔴 Admin xác nhận xóa hoặc từ chối
 export const confirmDeleteAccount = async (req, res) => {
-  const { userId, action } = req.body; // action: 'approve' | 'reject'
+  const { requestId, action } = req.body; // đổi từ userId -> requestId
   const adminId = req.user?.id;
 
   if (!adminId) return res.status(401).json({ error: "Unauthorized" });
   if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden: admin only" });
-  if (!userId || !action) return res.status(400).json({ error: "userId and action are required" });
+  if (!requestId || !action) return res.status(400).json({ error: "requestId and action are required" });
 
   try {
-    if (action === "approve") {
-      // Xóa user
-      await sql`DELETE FROM users WHERE id = ${userId}`;
+    const request = await sql`SELECT * FROM delete_requests WHERE id = ${requestId}`;
+    if (!request.length) return res.status(404).json({ error: "Delete request not found" });
 
-      // Cập nhật request thành approved
+    const userId = request[0].user_id;
+
+    if (action === "approve") {
+      await sql`DELETE FROM users WHERE id = ${userId}`;
       await sql`
         UPDATE delete_requests
         SET status = 'approved', reviewed_by = ${adminId}, reviewed_at = NOW()
-        WHERE user_id = ${userId}
+        WHERE id = ${requestId}
       `;
       res.json({ message: "User account deleted successfully." });
     } else if (action === "reject") {
-      // Cập nhật request thành rejected
       await sql`
         UPDATE delete_requests
         SET status = 'rejected', reviewed_by = ${adminId}, reviewed_at = NOW()
-        WHERE user_id = ${userId}
+        WHERE id = ${requestId}
       `;
-
-      // Reset cờ is_delete_requested
       await sql`UPDATE users SET is_delete_requested = false WHERE id = ${userId}`;
       res.json({ message: "Delete request has been rejected." });
     } else {
       res.status(400).json({ error: "Invalid action" });
     }
   } catch (err) {
-    console.error("Error in confirmDeleteAccount:", err.message, err.stack);
+    console.error("Error in confirmDeleteAccount:", err.stack);
     res.status(500).json({ error: "Failed to process delete confirmation." });
   }
 };
