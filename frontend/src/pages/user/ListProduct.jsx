@@ -276,7 +276,7 @@ if (loading) return <Loader />;
                          <div className="flex w-full  justify-center mt-4">
                            <button
                              onClick={handleLoadMore}
-                             className="sm:w-48 w-full py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
+                             className="sm:w-48 w-full py-3 rounded-full bg-[#FF6900] text-white   cursor-pointer transition"
                            >
                              Load More
                            </button>
