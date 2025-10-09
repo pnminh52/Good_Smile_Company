@@ -46,6 +46,7 @@ import ImportanNote from "./pages/user/guide/ImportanNote";
 import Coupons from "./pages/user/guide/Coupons";
 import OrderList from "./pages/admin/order/OrderList";
 import OrderDetails from "./pages/admin/order/OrderDetails";
+import UserList from "./pages/admin/user/UserList";
 
 function App() {
   return (
@@ -120,6 +121,7 @@ function AppContent() {
           <Route path="products" element={<ProductList />} />
           <Route path="products/add" element={<ProductAdd />} />
           <Route path="products/edit/:id" element={<ProductEdit />} />
+          <Route path="users" element={<UserList />} />
 
           <Route path="orders/:id" element={<OrderDetails/>} />
           <Route path="orders" element={<OrderList />} />

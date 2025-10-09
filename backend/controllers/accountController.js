@@ -114,3 +114,49 @@ export const cancelDeleteAccount = async (req, res) => {
     res.status(500).json({ error: "Failed to cancel delete request" });
   }
 };
+
+
+// 🔒 Admin khóa tài khoản user
+export const handleLockAccount = async (req, res) => {
+  const { userId } = req.body;
+  const adminId = req.user?.id;
+
+  if (!adminId) return res.status(401).json({ error: "Unauthorized" });
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden: admin only" });
+  if (!userId) return res.status(400).json({ error: "userId is required" });
+
+  try {
+    await sql`
+      UPDATE users
+      SET status = 'locked'
+      WHERE id = ${userId}
+    `;
+    res.json({ message: "User account has been locked." });
+  } catch (err) {
+    console.error("Error in handleLockAccount:", err.message);
+    res.status(500).json({ error: "Failed to lock account." });
+  }
+};
+
+// 🔓 Admin mở khóa tài khoản user
+export const handleUnlockAccount = async (req, res) => {
+  const { userId } = req.body;
+  const adminId = req.user?.id;
+
+  if (!adminId) return res.status(401).json({ error: "Unauthorized" });
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden: admin only" });
+  if (!userId) return res.status(400).json({ error: "userId is required" });
+
+  try {
+    await sql`
+      UPDATE users
+      SET status = 'active'
+      WHERE id = ${userId}
+    `;
+    res.json({ message: "User account has been unlocked." });
+  } catch (err) {
+    console.error("Error in handleUnlockAccount:", err.message);
+    res.status(500).json({ error: "Failed to unlock account." });
+  }
+};
+

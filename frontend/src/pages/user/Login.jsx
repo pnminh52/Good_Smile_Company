@@ -23,6 +23,14 @@ const Login = () => {
   
       // console.log("Full logged-in user:", user); // log full dữ liệu user
   
+      if (user.status !=="active") {
+        const msg = `Your account is ${user.status}. Please contact admin.`
+        toast.error(msg)
+        setError(msg)
+        setLoading(false)
+        return;
+        
+      }
       contextLogin(user, token);
       localStorage.setItem("token", token);
       localStorage.setItem("userId", user.id);

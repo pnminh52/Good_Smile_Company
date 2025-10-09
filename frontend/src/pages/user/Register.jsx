@@ -23,7 +23,8 @@ const Register = () => {
     password: "",
     address: "",
     district: "",
-    phone: ""
+    phone: "",
+    status:"active"
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();

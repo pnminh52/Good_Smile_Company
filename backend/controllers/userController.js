@@ -22,13 +22,12 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Chuyển district thành mảng nếu user gửi chuỗi
     const districtArray = Array.isArray(district) ? district : [district];
 
     const user = await sql`
-      INSERT INTO users (name, email, password, address, district, phone)
-      VALUES (${name}, ${email}, ${hashedPassword}, ${address}, ${districtArray}::text[], ${phone})
-      RETURNING id, name, email, address, district, phone
+      INSERT INTO users (name, email, password, address, district, phone, status)
+      VALUES (${name}, ${email}, ${hashedPassword}, ${address}, ${districtArray}::text[], ${phone}, 'active')
+      RETURNING id, name, email, address, district, phone, status
     `;
 
     res.status(201).json(user[0]);
@@ -38,14 +37,15 @@ export const registerUser = async (req, res) => {
   }
 };
 
-
-
-
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await sql`SELECT * FROM users WHERE email = ${email}`;
     if (!user.length) return res.status(400).json({ error: "User not found" });
+
+    if (user[0].status !== "active") {
+      return res.status(403).json({ error: `User account is ${user[0].status}. Please contact admin.` });
+    }
 
     const validPass = await bcrypt.compare(password, user[0].password);
     if (!validPass) return res.status(400).json({ error: "Invalid password" });
@@ -60,6 +60,7 @@ export const loginUser = async (req, res) => {
         name: user[0].name,
         email: user[0].email,
         role: user[0].role,
+        status: user[0].status,
         is_delete_requested: user[0].is_delete_requested,
         address: user[0].address || "",
         district: user[0].district || "",
@@ -72,6 +73,7 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 };
+
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
