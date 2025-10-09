@@ -4,31 +4,42 @@ import {
   handleLockAccount,
   handleUnlockAccount,
   getAllUsers,
+  getDeleteRequests,
   confirmDeleteAccount,
 } from "../../../api/account";
 
 const UserList = () => {
   const toast = useToast();
   const [users, setUsers] = useState([]);
+  const [deleteReqMap, setDeleteReqMap] = useState({}); // { user_id: request }
 
-  const fetchUsers = async () => {
+  // Fetch users + delete requests
+  const fetchData = async () => {
     try {
-      const data = await getAllUsers();
-      setUsers(data); // quan trọng: set state để render
+      const usersData = await getAllUsers();
+      const reqsData = await getDeleteRequests();
+      setUsers(usersData);
+
+      // Map requestId theo user_id
+      const map = {};
+      reqsData.forEach((r) => {
+        map[r.user_id] = r; // r.id là requestId
+      });
+      setDeleteReqMap(map);
     } catch (error) {
-      toast.error("Failed to fetch users!");
+      toast.error("Failed to fetch users or delete requests!");
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchData();
   }, []);
 
   const lockUser = async (id) => {
     try {
       await handleLockAccount(id);
       toast.success("User locked");
-      fetchUsers();
+      fetchData();
     } catch (error) {
       toast.error("Failed to lock user!");
     }
@@ -38,7 +49,7 @@ const UserList = () => {
     try {
       await handleUnlockAccount(id);
       toast.success("User unlocked");
-      fetchUsers();
+      fetchData();
     } catch (error) {
       toast.error("Failed to unlock user");
     }
@@ -48,7 +59,7 @@ const UserList = () => {
     try {
       await confirmDeleteAccount({ requestId, action });
       toast.success(`Request ${action}`);
-      fetchUsers();
+      fetchData();
     } catch (err) {
       toast.error("Failed to process delete request");
     }
@@ -68,48 +79,51 @@ const UserList = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
-            <tr key={u.id} className="text-center">
-              <td className="border px-2 py-1">{u.id}</td>
-              <td className="border px-2 py-1">{u.name}</td>
-              <td className="border px-2 py-1">{u.email}</td>
-              <td className="border px-2 py-1">{u.status}</td>
-              <td className="border px-2 py-1 space-x-2">
-                {u.status === "active" ? (
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => lockUser(u.id)}
-                  >
-                    Lock
-                  </button>
-                ) : (
-                  <button
-                    className="bg-green-500 text-white px-2 py-1 rounded"
-                    onClick={() => unlockUser(u.id)}
-                  >
-                    Unlock
-                  </button>
-                )}
+          {users.map((u) => {
+            const req = deleteReqMap[u.id]; // check request pending
+            return (
+              <tr key={u.id} className="text-center">
+                <td className="border px-2 py-1">{u.id}</td>
+                <td className="border px-2 py-1">{u.name}</td>
+                <td className="border px-2 py-1">{u.email}</td>
+                <td className="border px-2 py-1">{u.status}</td>
+                <td className="border px-2 py-1 space-x-2">
+                  {u.status === "active" ? (
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      onClick={() => lockUser(u.id)}
+                    >
+                      Lock
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded"
+                      onClick={() => unlockUser(u.id)}
+                    >
+                      Unlock
+                    </button>
+                  )}
 
-                {u.is_delete_requested && (
-                  <>
-                    <button
-                      className="bg-blue-500 text-white px-2 py-1 rounded"
-                      onClick={() => handleDeleteAction(u.id, "approve")}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-gray-500 text-white px-2 py-1 rounded"
-                      onClick={() => handleDeleteAction(u.id, "reject")}
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
+                  {req && req.status === "pending" && (
+                    <>
+                      <button
+                        className="bg-blue-500 text-white px-2 py-1 rounded"
+                        onClick={() => handleDeleteAction(req.id, "approve")}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="bg-gray-500 text-white px-2 py-1 rounded"
+                        onClick={() => handleDeleteAction(req.id, "reject")}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
