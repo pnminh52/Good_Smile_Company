@@ -286,7 +286,7 @@ if (loading) return <Loader />;
         </div>
 
         {/* Sidebar Desktop */}
-        <div className="hidden lg:block w-[20%] hide-scrollbar sticky top-21 self-start max-h-[80vh] overflow-y-auto">       
+        <div className="hidden lg:block w-[20%] hide-scrollbar sticky top-31 self-start max-h-[80vh] overflow-y-auto">       
            <FilterSideBar
   products={products}
   setFilteredProducts={setFilteredProducts}

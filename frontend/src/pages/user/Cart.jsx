@@ -144,7 +144,7 @@ const Cart = () => {
             handleDelete={handleDelete}
           />
         </div>
-        <div className="w-full lg:w-[35%] sticky top-18 self-start">
+        <div className="w-full lg:w-[35%] sticky top-28 self-start">
   {user && cartItems.length > 0 && (
     <PriceInfo
       handleCheckout={handleCheckout}
