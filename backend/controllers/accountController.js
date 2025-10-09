@@ -169,6 +169,7 @@ export const getAllUsers = async (req, res) => {
     const users = await sql`
       SELECT id, name, email, phone, status, is_delete_requested
       FROM users
+      WHERE role = 'customer'
       ORDER BY id ASC
     `;
     res.json(users);
