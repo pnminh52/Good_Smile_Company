@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from "@ant-design/icons";
+import useAuth from "../../hook/useAuth";
 
 const Topbar = () => {
+  const {logout}=useAuth()
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [options, setOptions] = useState([]);
+  const handleLogout =()=>{
+    logout()
+    navigate("/")
+
+  }
 
   const routes = [
     { label: "Dashboard", path: "/admin" },
@@ -56,7 +63,14 @@ const Topbar = () => {
             ))}
           </ul>
         )}
+
+
+      
       </div>
+      <div>
+                <button className="px-4 py-2 bg-red-500 rounded-lg text-white cursor-pointer" onClick={()=>handleLogout()}>Logout</button>
+              </div>
+      
     </div>
   );
 };
