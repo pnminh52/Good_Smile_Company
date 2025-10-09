@@ -16,6 +16,7 @@ const RightSide = ({ product }) => {
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(0);
+  const[loadingUser, setLoadingUser]=useState(true)
   let title="Add to Cart"
   if (cartQuantity >= 3) {
     title = "Maximum 3 items reached";
@@ -31,6 +32,8 @@ const RightSide = ({ product }) => {
         setUser(data);
       } catch (err) {
         console.error(err);
+      } finally{
+        setLoadingUser(false)
       }
     };
     fetchUser();
@@ -67,7 +70,7 @@ const RightSide = ({ product }) => {
   }, [product.id]);
 
   const handleAddToCart = async () => {
-if (!user || user.is_delete_requested) {
+if (!user || user.is_delete_requested===true) {
   toast.error("Can't not add to cart! Your account is pending delete!")
   return;
 }
@@ -105,7 +108,7 @@ if (!user || user.is_delete_requested) {
   
 
   const handleWishlist = async () => {
-    if (!user || user.is_delete_requested) {
+    if (!user || user.is_delete_requested === true) {
       toast.error("Can't not add to wishlist! Your account is pending delete!")
       return;
     }
@@ -198,8 +201,8 @@ if (!user || user.is_delete_requested) {
     size="large"
     style={{ background: "#FF6900", color:"#FFF", borderColor: "#FF6900", height: "48px", padding: "0 24px" }}
     onClick={handleAddToCart}
-    loading={loading}
-    disabled={user?.is_delete_requested }
+    loading={loading || loadingUser}
+    disabled={loadingUser}
   >
     {title}
   </Button>
@@ -209,7 +212,7 @@ if (!user || user.is_delete_requested) {
 
 <Button
   shape="round"
-  loading={wishlistLoading} 
+  loading={wishlistLoading || loadingUser} 
   size="large"
   onClick={handleWishlist}
   className={`flex items-center gap-2  ${
@@ -217,7 +220,7 @@ if (!user || user.is_delete_requested) {
       ? "border-gray-400 text-gray-400"
       : "border-[#FF6900] text-[#FF6900]"
   }`}
-  disabled={ user?.is_delete_requested }
+disabled={loadingUser}
   style={{
     borderColor: inWishlist ? "#d9d9d9" : "#FF6900",
     color: inWishlist ? "#9ca3af" : "#FF6900",

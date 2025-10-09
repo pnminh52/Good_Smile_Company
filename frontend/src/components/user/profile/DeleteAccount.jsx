@@ -87,6 +87,7 @@ const DeleteAccount = ({handdleLogOut}) => {
       await cancelDeleteAccount();
       toast.success("Your delete request has been canceled.");
       setHasRequested(false);
+      handdleLogOut()
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.error || "Failed to cancel delete request.");
@@ -166,11 +167,11 @@ const DeleteAccount = ({handdleLogOut}) => {
 </Radio.Group>
 
   
-                <p className="py-2">
+                <p className="pb-2">
                   This action <strong>cannot be undone</strong>. Type the phrase below:
                 </p>
                 <div className="bg-gray-100  rounded text-sm font-mono flex items-center justify-between">
-                  <span>{requiredPhrase}</span>
+                  <span className="pl-2">{requiredPhrase}</span>
                   <Tooltip title="Copy phrase">
                     <Button icon={<CopyOutlined />} type="text" onClick={handleCopyPhrase} />
                   </Tooltip>
