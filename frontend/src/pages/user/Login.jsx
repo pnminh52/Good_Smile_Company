@@ -3,6 +3,7 @@ import { login } from "../../api/auth";
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../hook/useAuth"; 
 import useToast from "../../hook/useToast";
+import { registerSocketUser } from "../../context/SocketContext";
 
 const Login = () => {
   const toast = useToast();
@@ -35,6 +36,9 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("userId", user.id);
       localStorage.setItem("user", JSON.stringify(user));
+      
+      
+      registerSocketUser(user.id);
   
       toast.success("Login successful!");
       if (user.role.toLowerCase() === "admin") navigate("/admin");

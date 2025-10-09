@@ -1,11 +1,11 @@
+// backend/socket.js
 import { Server } from "socket.io";
 
 export const onlineUsers = new Map();
 export let io;
 
 export function setupSocket(server) {
-    io = new Server(server, {
-  
+  io = new Server(server, {
     cors: {
       origin: ["http://localhost:5173", "https://good-smile-company.vercel.app"],
       methods: ["GET", "POST"],

@@ -9,7 +9,8 @@ export const socket = io(SOCKET_URL, {
 });
 
 export const registerSocketUser = (userId) => {
-  if (userId && socket.connected) {
+  if (userId) {
+    if (!socket.connected) socket.connect();
     socket.emit("register", userId);
   }
 };

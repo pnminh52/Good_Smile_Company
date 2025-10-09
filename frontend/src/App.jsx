@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
 import Dashboard from "./pages/admin/Dashboard";
 import ProductList from "./pages/admin/product/ProductList";
 import ProductAdd from "./pages/admin/product/ProductAdd";
@@ -13,7 +12,8 @@ import CategoryEdit from "./pages/admin/category/CategoryEdit";
 import NewAdd from "./pages/admin/new/NewAdd";
 import NewUpdate from "./pages/admin/new/NewUpdate";
 import OrderSuccess from "./pages/user/OrderSuccess";
-import Chatbot from "./pages/user/Chatbot";
+import { useSocket } from "./context/SocketContext";
+import useToast from "./hook/useToast";
 
 import UserGuide from "./pages/user/guide/UserGuide";
 
@@ -47,23 +47,31 @@ import Coupons from "./pages/user/guide/Coupons";
 import OrderList from "./pages/admin/order/OrderList";
 import OrderDetails from "./pages/admin/order/OrderDetails";
 import UserList from "./pages/admin/user/UserList";
+import useAuth from "./hook/useAuth";
 
 
-const socket = io(import.meta.env.VITE_API_URL || "http://localhost:3000", {
-  withCredentials: true,
-  transports: ["websocket"],
-});
+
 
 
 function App() {
+  const {logout} = useAuth()
+  const toast = useToast()
+  const socket = useSocket()
   useEffect(() => {
+    if (!socket) return;
+  
     socket.on("force-logout", ({ reason }) => {
-      alert(reason);
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      window.location.href = "/";
-    });  return () => socket.off("force-logout");
-  }, []);
+      toast.error(reason || "Your session has been terminated.");
+  
+      setTimeout(() => {
+        logout();
+      }, 1000); 
+    });
+  
+    return () => socket.off("force-logout");
+  }, [socket, toast, logout]);
+  
+  
   return (
     <div className="select-none">
       <Router>

@@ -11,13 +11,13 @@ const SOCKET_URL =
 const socket = io(SOCKET_URL, {
   withCredentials: true,
   transports: ["websocket"],
+  autoConnect: true,
 });
 
 export const SocketProvider = ({ children }) => {
   useEffect(() => {
     socket.on("connect", () => console.log("✅ Connected to socket:", socket.id));
     socket.on("disconnect", () => console.log("❌ Disconnected socket"));
-
     return () => {
       socket.off("connect");
       socket.off("disconnect");
@@ -30,3 +30,17 @@ export const SocketProvider = ({ children }) => {
 };
 
 export const useSocket = () => useContext(SocketContext);
+
+
+export const registerSocketUser = (userId) => {
+  if (!userId) return;
+  if (socket.connected) {
+    socket.emit("register", userId);
+    console.log("📡 Registered userId:", userId);
+  } else {
+    socket.once("connect", () => {
+      socket.emit("register", userId);
+      console.log("📡 Registered userId (after connect):", userId);
+    });
+  }
+};
