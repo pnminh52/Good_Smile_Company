@@ -35,17 +35,17 @@ export const cancelDeleteAccount = async () => {
 };
 
 
-export const handleLockAccount=async()=>{
-  const res= await api.post("/account/lock-account")
-  return res.data
-}
+export const handleLockAccount = async (userId) => {
+  const res = await api.post("/account/lock-account", { userId });
+  return res.data;
+};
 
 export const handleUnlockAccount=async(userId)=>{
   const res= await api.post("/account/unlock-account", {userId})
   return res.data
 }
 
-export const getAllUsers=async()=>{
-  const res= await api.get("/account/users",{userId})
-  return res.data
-}
+export const getAllUsers = async () => {
+  const res = await api.get("/account/users");
+  return res.data;
+};
