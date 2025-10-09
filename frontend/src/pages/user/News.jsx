@@ -116,7 +116,7 @@ const News = () => {
     <div className="flex justify-center my-4">
         <button
                              onClick={handleLoadMore}
-                             className="lg:w-48 md:w-80 w-full py-3 rounded-full bg-[#FF6900] text-white font-semibold  cursor-pointer transition"
+                             className="lg:w-48 md:w-80 w-full py-3 rounded-full bg-[#FF6900] text-white   cursor-pointer transition"
                            >
                              Load More
                            </button>

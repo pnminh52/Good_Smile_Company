@@ -44,7 +44,7 @@ const PreOrdersNow = () => {
           <ProductCard products={products.slice(0, 20)} columns={5} />
           <div className="py-2 block sm:hidden">
             <Link to={"/product"}>
-              <button className=" bg-[#F06E00] text-white font-semibold w-full rounded-full py-2.5">
+              <button className=" bg-[#FF6900] text-white  w-full rounded-full py-2.5">
                 Shopping Now!
               </button>
             </Link>
