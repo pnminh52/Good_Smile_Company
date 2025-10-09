@@ -1,6 +1,5 @@
 import { sql } from "../config/db.js";
 
-// 🟢 User gửi yêu cầu xóa tài khoản
 export const requestDeleteAccount = async (req, res) => {
   const userId = req.user?.id;
   const { reason } = req.body;
@@ -9,7 +8,6 @@ export const requestDeleteAccount = async (req, res) => {
   if (!reason || !reason.trim()) return res.status(400).json({ error: "Reason is required" });
 
   try {
-    // Insert hoặc update nếu user đã gửi request
     await sql`
       INSERT INTO delete_requests (user_id, reason, status, created_at)
       VALUES (${userId}, ${reason}, 'pending', NOW())
@@ -19,10 +17,13 @@ export const requestDeleteAccount = async (req, res) => {
           created_at = NOW()
     `;
 
-    // Đánh dấu user đã gửi request
     await sql`UPDATE users SET is_delete_requested = true WHERE id = ${userId}`;
 
-    res.json({ message: "Account deletion request sent. Waiting for admin confirmation." });
+    await sql`DELETE FROM cart WHERE user_id = ${userId}`;
+
+    await sql`DELETE FROM wishlist WHERE user_id = ${userId}`;
+
+    res.json({ message: "Account deletion request sent. Cart and wishlist cleared." });
   } catch (err) {
     console.error("Error in requestDeleteAccount:", err.message, err.stack);
     res.status(500).json({ error: "Failed to send delete request." });
