@@ -19,6 +19,11 @@ export const getWishlist = async (req, res) => {
 export const addToWishlist = async (req, res) => {
   const { userId, productId } = req.body;
   try {
+    const user = await sql`SELECT is_delete_requested FROM users WHERE id = ${userId}`;
+if (user[0]?.is_delete_requested) {
+  return res.status(403).json({ error: "User pending deletion, cannot modify wishlist" });
+}
+
     const exists = await sql`
       SELECT id FROM wishlist WHERE user_id = ${userId} AND product_id = ${productId};
     `;

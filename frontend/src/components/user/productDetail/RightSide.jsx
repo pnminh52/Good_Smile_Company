@@ -7,7 +7,10 @@ import api from "../../../api/axios";
 import { Button } from "antd";
 import dayjs from "dayjs";
 import { getCart } from "../../../api/cart";
+import { getProfile } from "../../../api/auth";
+
 const RightSide = ({ product }) => {
+  const [user, setUser] = useState(null)
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [inWishlist, setInWishlist] = useState(false);
@@ -19,6 +22,20 @@ const RightSide = ({ product }) => {
   } else if (product.status === "preorder") {
     title = "Preorder now";
   }
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const data = await getProfile(token);
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUser();
+  }, []);
+  
   useEffect(() => {
     const fetchWishlist = async () => {
       const token = localStorage.getItem("token");
@@ -50,6 +67,11 @@ const RightSide = ({ product }) => {
   }, [product.id]);
 
   const handleAddToCart = async () => {
+if (!user || user.is_delete_requested) {
+  toast.error("Can't not add to cart! Your account is pending delete!")
+  return;
+}
+
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -83,6 +105,10 @@ const RightSide = ({ product }) => {
   
 
   const handleWishlist = async () => {
+    if (!user || user.is_delete_requested) {
+      toast.error("Can't not add to wishlist! Your account is pending delete!")
+      return;
+    }
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in!");
@@ -173,7 +199,7 @@ const RightSide = ({ product }) => {
     style={{ background: "#FF6900", color:"#FFF", borderColor: "#FF6900", height: "48px", padding: "0 24px" }}
     onClick={handleAddToCart}
     loading={loading}
-    disabled={product.stock <= 0 && product.status !== "preorder" }
+    disabled={user?.is_delete_requested }
   >
     {title}
   </Button>
@@ -191,6 +217,7 @@ const RightSide = ({ product }) => {
       ? "border-gray-400 text-gray-400"
       : "border-[#FF6900] text-[#FF6900]"
   }`}
+  disabled={ user?.is_delete_requested }
   style={{
     borderColor: inWishlist ? "#d9d9d9" : "#FF6900",
     color: inWishlist ? "#9ca3af" : "#FF6900",

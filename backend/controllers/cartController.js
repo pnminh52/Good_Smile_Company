@@ -34,6 +34,11 @@ export const addToCart = async (req, res) => {
   const { product_id, quantity } = req.body;
 
   try {
+    const user = await sql`SELECT is_delete_requested FROM users WHERE id = ${userId}`
+    if (user[0]?.is_delete_requested) {
+      return res.status(403).json({error:"User pending deletion, cannot add to cart"})
+      
+    }
     const existing = await sql`
       SELECT * FROM cart WHERE user_id = ${userId} AND product_id = ${product_id}
     `;
