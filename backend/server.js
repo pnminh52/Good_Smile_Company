@@ -15,7 +15,6 @@ import shippingRoutes from "./routes/shippingRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import newRoutes from "./routes/newRoutes.js";
-import bannerRoutes from "./routes/bannerRoutes.js";
 import chatbotRoutes from "./routes/chatbotRoutes.js";
 import vnPayRoutes from "./routes/vnPayRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js"
@@ -69,7 +68,6 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/shipping", shippingRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/news", newRoutes);
-app.use("/api/banners", bannerRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/account", accountRoutes)
 
