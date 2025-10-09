@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Radio, Button, message as antdMessage, Tooltip } from "antd";
+import { Modal, Input, Radio, Button, message as toast, Tooltip } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import { requestDeleteAccount, cancelDeleteAccount } from "../../../api/account";
 import { getProfile } from "../../../api/auth";
 import useToast from "../../../hook/useToast";
+import { getUserOrders } from "../../../api/orders";
 
-const DeleteAccount = () => {
+const DeleteAccount = ({handdleLogOut}) => {
     const toast=useToast()
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ const DeleteAccount = () => {
   const [hasRequested, setHasRequested] = useState(false);
 
   const token = localStorage.getItem("token");
-  const requiredPhrase = "I understand and still want to delete my account";
+  const requiredPhrase = "I want to delete my account";
 
   const predefinedReasons = [
     "I’m concerned about my privacy.",
@@ -24,6 +25,7 @@ const DeleteAccount = () => {
     "Other",
   ];
 
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -40,39 +42,44 @@ const DeleteAccount = () => {
   }, []);
   
 
-  const handleOpenConfirm = () => {
-    if (!reason.trim()) {
-      antdMessage.warning("Please select a reason first.");
-      return;
-    }
-    setConfirmVisible(true);
-  };
-
   const handleCopyPhrase = async () => {
     try {
       await navigator.clipboard.writeText(requiredPhrase);
-      antdMessage.success("Copied to clipboard!");
+      toast.success("Copied to clipboard!");
     } catch {
-      antdMessage.error("Failed to copy text.");
+      toast.error("Failed to copy text.");
     }
   };
 
   const handleConfirmDelete = async () => {
     setLoading(true);
     try {
-      await requestDeleteAccount(reason);
-      antdMessage.success("Your delete request has been sent!");
+      const res = await getUserOrders(token);
+      const orders = res.data || [];
+            const hasActiveOrder = orders.some(o => o.status_id === 1 || o.status_id === 2);
+  
+      if (hasActiveOrder) {
+        toast.error(
+          "You have active orders (Pending or Processing). You cannot delete your account until all such orders are completed or canceled."
+        );
+        return;
+      }
+        await requestDeleteAccount(reason);
+       
+      toast.success("Your delete request has been sent!");
+      handdleLogOut()
       setHasRequested(true);
-      // ✅ Giữ token, không logout
+  
     } catch (err) {
       console.error(err);
-      antdMessage.error(err.response?.data?.error || "Failed to send delete request.");
+      toast.error(err.response?.data?.error || "Failed to send delete request.");
     } finally {
       setLoading(false);
       setConfirmVisible(false);
       setConfirmText("");
     }
   };
+  
 
   const handleUndoRequest = async () => {
     setLoading(true);
@@ -82,7 +89,7 @@ const DeleteAccount = () => {
       setHasRequested(false);
     } catch (err) {
       console.error(err);
-      antdMessage.error(err.response?.data?.error || "Failed to cancel delete request.");
+      toast.error(err.response?.data?.error || "Failed to cancel delete request.");
     } finally {
       setLoading(false);
     }
@@ -111,7 +118,7 @@ const DeleteAccount = () => {
               size="large"
               shape="round"
               className="w-full"
-              style={{ border: "1px solid #FB2C36", background: "#FFF", color: "#FB2C36" }}
+              style={{ border: "1px solid #DC2626", background: "#FFF", color: "#DC2626" }}
               onClick={handleUndoRequest}
               loading={loading}
             >
@@ -124,7 +131,7 @@ const DeleteAccount = () => {
                 size="large"
                 shape="round"
                 className="w-full"
-                style={{ border: "1px solid #FB2C36", background: "#FFF", color: "#FB2C36" }}
+                style={{ border: "1px solid #DC2626", background: "#FFF", color: "#DC2626" }}
                 onClick={() => setConfirmVisible(true)}
                 loading={loading}
               >
@@ -138,38 +145,51 @@ const DeleteAccount = () => {
                 onCancel={() => setConfirmVisible(false)}
                 footer={null}
                 centered
+                styles={{ padding: 0 }}
+                style={{ maxWidth: "95%" }}
               >
-                {/* Chọn lý do */}
-                <Radio.Group onChange={(e) => setReason(e.target.value)} value={reason} className="flex flex-col gap-2 mb-4">
-                  {predefinedReasons.map((r, i) => (
-                    <Radio key={i} value={r}>
-                      {r}
-                    </Radio>
-                  ))}
-                </Radio.Group>
+                <p>Please select a reason for delete your account:</p>
+               <Radio.Group
+  onChange={(e) => setReason(e.target.value)}
+  value={reason}
+  className="flex flex-col gap-2 "
+>
+  {predefinedReasons.map((r, i) => (
+    <Radio
+      key={i}
+      value={r}
+      style={{ display: "block" }}
+    >
+      {r}
+    </Radio>
+  ))}
+</Radio.Group>
+
   
-                <p className="mb-2">
-                  This action <strong>cannot be undone</strong>. Type the phrase below to confirm:
+                <p className="py-2">
+                  This action <strong>cannot be undone</strong>. Type the phrase below:
                 </p>
-                <div className="bg-gray-100 p-2 rounded text-sm font-mono mb-3 flex items-center justify-between">
+                <div className="bg-gray-100  rounded text-sm font-mono flex items-center justify-between">
                   <span>{requiredPhrase}</span>
                   <Tooltip title="Copy phrase">
                     <Button icon={<CopyOutlined />} type="text" onClick={handleCopyPhrase} />
                   </Tooltip>
                 </div>
-                <Input
-                  value={confirmText}
-                  onChange={(e) => setConfirmText(e.target.value)}
-                  placeholder="Type the confirmation phrase exactly..."
-                  className="mb-4"
-                />
+               <div className="py-2">
+                 <Input
+                                  value={confirmText}
+                                  onChange={(e) => setConfirmText(e.target.value)}
+                                  placeholder="Type the confirmation phrase exactly..."
+                                  className=""
+                                />
+               </div>
   
                 <Button
                   type="primary"
-                  size="large"
+                  size="medium"
                   shape="round"
-                  className="w-full px-8 py-2 sm:px-6 sm:py-4"
-                  style={{ border: "1px solid #FB2C36", background: "#FB2C36", color: "#FFF" }}
+                  className="w-full "
+                  style={{ border: "1px solid #DC2626", background: "#DC2626", color: "#FFF" }}
                   disabled={confirmText !== requiredPhrase || !reason}
                   loading={loading}
                   onClick={handleConfirmDelete}

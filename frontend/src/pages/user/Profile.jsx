@@ -26,7 +26,7 @@ const Profile = () => {
        <div className="">
        <UserMenu />
        <ProfileCard handdleLogOut={handdleLogOut}/>
-       <DeleteAccount />
+       <DeleteAccount handdleLogOut={handdleLogOut}/>
        </div>
     
       </div>
