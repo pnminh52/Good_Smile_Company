@@ -9,10 +9,11 @@ import { getUserOrders } from "../../../api/orders";
 const DeleteAccount = ({handdleLogOut}) => {
     const toast=useToast()
   const [reason, setReason] = useState("");
-  const [loading, setLoading] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [hasRequested, setHasRequested] = useState(false);
+const [profileLoading, setProfileLoading] = useState(true); 
+const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
   const requiredPhrase = "I want to delete my account";
@@ -36,6 +37,8 @@ const DeleteAccount = ({handdleLogOut}) => {
         setHasRequested(profile.is_delete_requested || false);
       } catch (err) {
         console.error(err);
+      } finally {
+        setProfileLoading(false);
       }
     };
     fetchProfile();
@@ -62,6 +65,7 @@ const DeleteAccount = ({handdleLogOut}) => {
         toast.error(
           "You have active orders (Pending or Processing). You cannot delete your account until all such orders are completed or canceled."
         );
+        setLoading(false)
         return;
       }
         await requestDeleteAccount(reason);
@@ -121,7 +125,8 @@ const DeleteAccount = ({handdleLogOut}) => {
               className="w-full"
               style={{ border: "1px solid #DC2626", background: "#FFF", color: "#DC2626" }}
               onClick={handleUndoRequest}
-              loading={loading}
+              loading={loading || profileLoading}
+              disabled={profileLoading}
             >
               Undo Delete Request
             </Button>
@@ -134,7 +139,8 @@ const DeleteAccount = ({handdleLogOut}) => {
                 className="w-full"
                 style={{ border: "1px solid #DC2626", background: "#FFF", color: "#DC2626" }}
                 onClick={() => setConfirmVisible(true)}
-                loading={loading}
+                loading={loading || profileLoading}
+                disabled={profileLoading}
               >
                 Delete Account
               </Button>
