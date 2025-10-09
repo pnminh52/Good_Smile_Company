@@ -60,7 +60,7 @@ const PopupDetails = ({ order, onClose, token, onUpdated }) => {
         title={`Order #${order.id}`}
         centered
         footer={null}
-        style={{ maxWidth: "95%" }}
+        style={{ maxWidth: "95%", maxHeight:"70vh", overflowY:"auto",scrollbarWidth:"none", msOverflowStyle:"none" }}
       >
         <Spin spinning={loading}>
           {/* Order Info */}
