@@ -31,7 +31,7 @@ app.use(cors({
   methods: ["GET", "POST"],
   credentials: true,
 }));
-
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173", "https://good-smile-company.vercel.app"],
@@ -83,7 +83,7 @@ app.use("/api/news", newRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/account", accountRoutes)
 
-const server = http.createServer(app);
+
 
 
 // ✅ Lắng nghe kết nối socket
