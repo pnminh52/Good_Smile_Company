@@ -40,12 +40,12 @@ export const handleLockAccount=async()=>{
   return res.data
 }
 
-export const handleUnlockAccount=async()=>{
-  const res= await api.post("/account/unlock-account")
+export const handleUnlockAccount=async(userId)=>{
+  const res= await api.post("/account/unlock-account", {userId})
   return res.data
 }
 
 export const getAllUsers=async()=>{
-  const res= await api.get("/account/users")
+  const res= await api.get("/account/users",{userId})
   return res.data
 }
