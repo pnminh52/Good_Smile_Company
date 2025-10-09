@@ -27,11 +27,12 @@ export const updateProfile = (data, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-// Lấy profile
-export const getProfile = (token) =>
-  api.get("/profile", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  export const getProfile = (token) =>
+    api
+      .get("/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => res.data);
 
   export const changePassword = (data, token) => {
     return api.put("/change-password", data, {

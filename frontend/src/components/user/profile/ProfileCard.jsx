@@ -38,8 +38,7 @@ const ProfileCard = ({ handdleLogOut }) => {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await getProfile(token);
-        const profile = res.data.user || res.data;
+        const profile = await getProfile(token); 
         setUser(profile);
         setFormData(profile);
       } catch (err) {
@@ -49,6 +48,7 @@ const ProfileCard = ({ handdleLogOut }) => {
     };
     fetchProfile();
   }, []);
+  
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
