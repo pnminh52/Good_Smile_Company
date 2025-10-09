@@ -12,7 +12,7 @@ const UserMenu = () => {
     <div className="flex justify-center gap-2 w-full">
     {buttons.map((btn, idx) => {
       const content = (
-        <div className="flex  items-center justify-center gap-1 border border-gray-200 p-4 rounded-md cursor-pointer text-center w-full">
+        <div className="flex  items-center justify-center gap-1 border border-gray-200 p-4 rounded-lg cursor-pointer text-center w-full">
           <img src={btn.icon} alt={btn.label} className="w-5 h-5" />
           <span className="text-sm font-medium truncate">{btn.label}</span>
         </div>

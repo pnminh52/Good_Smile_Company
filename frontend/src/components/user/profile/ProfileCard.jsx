@@ -147,7 +147,7 @@ const ProfileCard = ({ handdleLogOut }) => {
    <div>
      <p className=" text-xl  font-semibold py-4">  Information</p>
 
-<div className="w-full mx-auto bg-white p-4 border rounded-lg lg:rounded-md border-gray-200 ">
+<div className="w-full mx-auto bg-white p-4 border rounded-lg border-gray-200 ">
 
 
   <form onSubmit={handleSave} className="space-y-5">
