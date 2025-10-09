@@ -14,7 +14,7 @@ import NewUpdate from "./pages/admin/new/NewUpdate";
 import OrderSuccess from "./pages/user/OrderSuccess";
 import { useSocket } from "./context/SocketContext";
 import useToast from "./hook/useToast";
-
+import OrderFail from "./pages/user/OrderFail";
 import UserGuide from "./pages/user/guide/UserGuide";
 
 import Homepage from "./pages/user/Homepage";
@@ -122,7 +122,7 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
           <Route path="/payment-return" element={<PaymentReturn />} />
                     <Route path="/order-success" element={<OrderSuccess />} />
-          
+                    <Route path="/order-fail" element={<OrderFail />} />
           <Route path="/guide/user-guide" element={<UserGuide />} />
           <Route path="/guide/previous-shop" element={<PreviousShop />} />
           <Route path="/guide/about-payments" element={<AboutPayments />} />
