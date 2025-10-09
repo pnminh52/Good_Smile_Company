@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
-
+import { io } from "socket.io-client";
 import Dashboard from "./pages/admin/Dashboard";
 import ProductList from "./pages/admin/product/ProductList";
 import ProductAdd from "./pages/admin/product/ProductAdd";
@@ -48,7 +48,22 @@ import OrderList from "./pages/admin/order/OrderList";
 import OrderDetails from "./pages/admin/order/OrderDetails";
 import UserList from "./pages/admin/user/UserList";
 
+
+const socket = io("http://localhost:3000", "https://good-smile-company.vercel.app", "http://localhost:5173", {
+  withCredentials: true,
+  transports: ["websocket"],
+});
+
+
 function App() {
+  useEffect(() => {
+    socket.on("force-logout", ({ reason }) => {
+      alert(reason);
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      window.location.href = "/";
+    });  return () => socket.off("force-logout");
+  }, []);
   return (
     <div className="select-none">
       <Router>

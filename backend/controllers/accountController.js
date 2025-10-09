@@ -1,5 +1,5 @@
 import { sql } from "../config/db.js";
-
+import { io } from "socket.io-client";
 export const requestDeleteAccount = async (req, res) => {
   const userId = req.user?.id;
   const { reason } = req.body;
@@ -114,7 +114,7 @@ export const cancelDeleteAccount = async (req, res) => {
 };
 
 
-// 🔒 Admin khóa tài khoản user
+// Giả sử bạn có io và onlineUsers map userId -> socketId
 export const handleLockAccount = async (req, res) => {
   const { userId } = req.body;
   const adminId = req.user?.id;
@@ -129,6 +129,14 @@ export const handleLockAccount = async (req, res) => {
       SET status = 'locked'
       WHERE id = ${userId}
     `;
+
+    // 🔔 Force logout qua WebSocket
+    const socketId = onlineUsers.get(userId); // onlineUsers là Map<userId, socketId>
+    if (socketId) {
+      io.to(socketId).emit("force-logout", { reason: "Your account has been locked by admin." });
+      onlineUsers.delete(userId); // Xóa khỏi danh sách online
+    }
+
     res.json({ message: "User account has been locked." });
   } catch (err) {
     console.error("Error in handleLockAccount:", err.message);
