@@ -160,3 +160,24 @@ export const handleUnlockAccount = async (req, res) => {
   }
 };
 
+
+// 🟢 Admin lấy tất cả user
+export const getAllUsers = async (req, res) => {
+  const adminId = req.user?.id;
+  if (!adminId) return res.status(401).json({ error: "Unauthorized" });
+  if (req.user.role !== "admin") return res.status(403).json({ error: "Forbidden: admin only" });
+
+  try {
+    const users = await sql`
+      SELECT id, name, email, phone, status, is_delete_requested
+      FROM users
+      ORDER BY id ASC
+    `;
+    res.json(users);
+  } catch (err) {
+    console.error("Error in getAllUsers:", err.message);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+
+

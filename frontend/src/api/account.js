@@ -33,3 +33,19 @@ export const cancelDeleteAccount = async () => {
   const res = await api.post("/account/cancel-delete");
   return res.data;
 };
+
+
+export const handleLockAccount=async()=>{
+  const res= await api.post("/account/lock-account")
+  return res.data
+}
+
+export const handleUnlockAccount=async()=>{
+  const res= await api.post("/account/unlock-account")
+  return res.data
+}
+
+export const getAllUsers=async()=>{
+  const res= await api.get("/account/users")
+  return res.data
+}

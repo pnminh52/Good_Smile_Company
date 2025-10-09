@@ -9,5 +9,6 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.get("/profile", protect, getProfile);
 router.put("/update-profile", protect, updateProfile);
-router.put("/change-password", protect, changePassword)
+router.put("/change-password", protect, changePassword);
+
 export default router;
