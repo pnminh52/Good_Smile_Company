@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../api/auth";
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../hook/useAuth"; 
 import useToast from "../../hook/useToast";
 import { registerSocketUser } from "../../context/SocketContext";
-
+import { useLocation } from "react-router-dom";
 const Login = () => {
   const toast = useToast();
+  const location = useLocation()
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -49,6 +50,10 @@ const Login = () => {
       toast.error(errMsg);
     }
   };
+
+  // useEffect(()=>{
+  //   window.scrollTo({top:0, behavior:"smooth"})
+  // },[location.pathname])
   
   
   
@@ -86,7 +91,7 @@ const Login = () => {
       </div>
         <button
           type="submit"
-          className="w-full bg-[#FF6900] text-white py-3 rounded-full font-semibold cursor-pointer"
+          className="w-full bg-[#FF6900] text-white py-3 rounded-full  cursor-pointer"
         >
           Login
         </button>
@@ -101,7 +106,7 @@ const Login = () => {
     <div className="space-y-4">
         <p className="text-xl font-semibold flex justify-center w-full">Don’t have an account?</p>
        <Link to={"/register"}>
-       <button    type="submit"       className="w-full bg-[#FF6900] text-white py-3 rounded-full font-semibold cursor-pointer"
+       <button    type="submit"       className="w-full bg-[#FF6900] text-white py-3 rounded-full  cursor-pointer"
         >New member registration</button></Link>
       </div>
     </div>

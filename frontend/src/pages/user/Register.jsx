@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { register } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useToast from "../../hook/useToast";
 const provinces = [
   "An Giang","Bà Rịa - Vũng Tàu","Bắc Giang","Bắc Kạn","Bạc Liêu","Bắc Ninh",
@@ -176,12 +177,20 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#FF6900] text-white py-3 rounded-full font-semibold cursor-pointer"
+            className="w-full bg-[#FF6900] text-white py-3 rounded-full  cursor-pointer"
           >
             Register
           </button>
         </form>
+
+         
       </div>
+      <div className="space-y-4">
+                <p className="text-xl font-semibold flex justify-center w-full">Already have an account?</p>
+               <Link to={"/login"}>
+               <button    type="submit"       className="w-full bg-[#FF6900] text-white py-3 rounded-full  cursor-pointer"
+                >Login now</button></Link>
+              </div>
     </div>
   );
 };

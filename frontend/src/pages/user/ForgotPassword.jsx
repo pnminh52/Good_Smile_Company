@@ -41,7 +41,7 @@ const ForgotPassword = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-[#FF6900] text-white py-3 rounded-full font-semibold cursor-pointer"
+              className="w-full bg-[#FF6900] text-white py-3 rounded-full  cursor-pointer"
               disabled={loading}
             >
               {loading ? "Sending..." : "Send Reset Link"}
