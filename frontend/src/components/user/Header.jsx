@@ -203,7 +203,7 @@ const Header = () => {
         </li>
         <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
           <Link to="/guide/importan"> Notice</Link>
-        </li>import Timebar from './../Timebar';
+        </li>
 
         <li className=" cursor-pointer flex items-center lg:gap-2 gap-1"><p className="w-2 h-2 rounded-full bg-[#FF6900]"></p> 
           <Link to="/guide/coupons">Coupons</Link>
