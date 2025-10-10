@@ -58,18 +58,15 @@ export function createPaymentUrl({ amount, orderId, orderInfo, ipAddr, bankCode,
     .join('&');
 
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
-                       .update(signData, "utf-8")
-                       .digest("hex");
-
+    .update(signData, "utf-8")
+    .digest("hex");
   sortedParams["vnp_SecureHash"] = signed;
-
-const queryString = Object.keys(sortedParams)
-  .map(k => `${k}=${encodeURIComponent(sortedParams[k]).replace(/%20/g, "+")}`)
-  .join('&');
-
-
+  const queryString = Object.keys(sortedParams)
+    .map(k => `${k}=${encodeURIComponent(sortedParams[k]).replace(/%20/g, "+")}`)
+    .join('&');
   return `${vnp_Url}?${queryString}`;
 }
+
 function decodeVnpParams(params) {
   const newParams = {};
   Object.keys(params).forEach(key => {
@@ -84,7 +81,6 @@ export function verifyVnpayReturn(params) {
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
 
-  // Decode tất cả giá trị trước khi hash
   Object.keys(vnp_Params).forEach(k => {
     vnp_Params[k] = decodeURIComponent(vnp_Params[k]);
   });
@@ -96,8 +92,8 @@ export function verifyVnpayReturn(params) {
     .join('&');
 
   const signed = crypto.createHmac("sha512", vnp_HashSecret)
-                       .update(signData, "utf-8")
-                       .digest("hex");
+    .update(signData, "utf-8")
+    .digest("hex");
 
   return secureHash?.toLowerCase() === signed.toLowerCase();
 }

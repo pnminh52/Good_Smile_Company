@@ -54,24 +54,24 @@ import useAuth from "./hook/useAuth";
 
 
 function App() {
-  const {logout} = useAuth()
+  const { logout } = useAuth()
   const toast = useToast()
   const socket = useSocket()
   useEffect(() => {
     if (!socket) return;
-  
+
     socket.on("force-logout", ({ reason }) => {
       toast.error(reason || "Your session has been terminated.");
-  
+
       setTimeout(() => {
         logout();
-      }, 1000); 
+      }, 1000);
     });
-  
+
     return () => socket.off("force-logout");
   }, [socket, toast, logout]);
-  
-  
+
+
   return (
     <div className="select-none">
       <Router>
@@ -103,8 +103,8 @@ function AppContent() {
       <Routes>
         {/* User */}
 
-  
-      <Route element={<UserLayout />}>
+
+        <Route element={<UserLayout />}>
           <Route path="/" element={<Homepage />} />
           <Route path="/product" element={<ListProduct />} />
           <Route path="/product/:id" element={<ProductDetails />} />
@@ -121,8 +121,8 @@ function AppContent() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/payment-return" element={<PaymentReturn />} />
-                    <Route path="/order-success" element={<OrderSuccess />} />
-                    <Route path="/order-fail" element={<OrderFail />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/order-fail" element={<OrderFail />} />
           <Route path="/guide/user-guide" element={<UserGuide />} />
           <Route path="/guide/previous-shop" element={<PreviousShop />} />
           <Route path="/guide/about-payments" element={<AboutPayments />} />
@@ -133,7 +133,7 @@ function AppContent() {
           <Route path="/guide/importan" element={<ImportanNote />} />
           <Route path="/guide/coupons" element={<Coupons />} />
         </Route>
-   
+
 
         {/* Admin */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -146,7 +146,7 @@ function AppContent() {
           <Route path="products/edit/:id" element={<ProductEdit />} />
           <Route path="users" element={<UserList />} />
 
-          <Route path="orders/:id" element={<OrderDetails/>} />
+          <Route path="orders/:id" element={<OrderDetails />} />
           <Route path="orders" element={<OrderList />} />
           <Route path="categories" element={<CategoryList />} />
           <Route path="categories/add" element={<CategoryAdd />} />

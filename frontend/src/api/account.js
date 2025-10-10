@@ -28,7 +28,6 @@ export const confirmDeleteAccount = async ({ requestId, action }) => {
   return res.data;
 };
 
-// 🆕 Thêm API hủy yêu cầu xóa tài khoản
 export const cancelDeleteAccount = async () => {
   const res = await api.post("/account/cancel-delete");
   return res.data;

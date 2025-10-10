@@ -63,6 +63,13 @@ export const confirmDeleteAccount = async (req, res) => {
     const userId = request[0].user_id;
 
     if (action === "approve") {
+
+const socketId= onlineUsers.get(userId)
+if (socketId) {
+  io.to(socketId).emit("force-logout",{reason:"Your account has been permanently deleted."})
+  onlineUsers.delete(userId)
+}
+
       await sql`DELETE FROM users WHERE id = ${userId}`;
       await sql`
         UPDATE delete_requests
