@@ -77,13 +77,18 @@ export const loginUser = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
+
   try {
     const user = await sql`SELECT * FROM users WHERE email = ${email}`;
-    if (!user.length) return res.status(400).json({ error: "User not found" });
+    if (!user.length) {
+      return res.status(400).json({ error: "User not found" });
+    }
 
+    // Tạo token + expire
     const token = crypto.randomBytes(32).toString("hex");
     const expires_at = new Date(Date.now() + 60 * 60 * 1000); // 1h
 
+    // Lưu vào DB
     await sql`
       INSERT INTO password_resets (user_id, token, expires_at)
       VALUES (${user[0].id}, ${token}, ${expires_at})
@@ -91,18 +96,23 @@ export const forgotPassword = async (req, res) => {
       SET token = ${token}, expires_at = ${expires_at};
     `;
 
-    const resetLink = `${FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
 
-    // Gửi mail và chờ xong mới trả response
-    await sendResetPasswordEmail(email, resetLink);
+    // Gửi email bất đồng bộ, không block response
+    sendResetPasswordEmail(email, resetLink)
+      .then(info => console.log("Email sent:", info.messageId))
+      .catch(err => console.error("Email sending failed:", err));
 
-    res.json({ message: "Reset password email sent successfully" });
+    // Trả response ngay
+    res.json({
+      message:
+        "Password reset request created. Please check your email soon!",
+    });
   } catch (err) {
     console.error("❌ Forgot password error:", err.message);
-    res.status(500).json({ error: "Could not send reset email" });
+    res.status(500).json({ error: "Could not process reset request" });
   }
 };
-
 
 export const resetPassword = async (req, res) => {
   const { email, token, newPassword } = req.body;
