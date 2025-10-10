@@ -9,15 +9,32 @@ const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handle
     {/* Basic Info */}
     <input
       className="border rounded p-2"
+      placeholder="Base Image URL"
+      value={form.base_image}
+      onChange={(e) =>
+        setForm({ ...form, base_image: e.target.value })
+      }
+    />
+      <input
+          className="border rounded p-2"
+          placeholder="Title"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
+    <input
+      className="border rounded p-2"
       placeholder="Product Name"
       value={form.name}
       onChange={(e) => setForm({ ...form, name: e.target.value })}
     />
-    <input
+  
+  <input
+      type="number"
+      step="0.01"
       className="border rounded p-2"
-      placeholder="Title"
-      value={form.title}
-      onChange={(e) => setForm({ ...form, title: e.target.value })}
+      placeholder="Price"
+      value={form.price}
+      onChange={(e) => setForm({ ...form, price: e.target.value })}
     />
     <BrandSelect form={form} setForm={setForm} />
 
@@ -27,14 +44,15 @@ const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handle
       value={form.series}
       onChange={(e) => setForm({ ...form, series: e.target.value })}
     />
-    <input
-      type="date"
-      className="border rounded p-2"
-      value={form.release_date}
-      onChange={(e) =>
-        setForm({ ...form, release_date: e.target.value })
-      }
-    />
+   <input
+  type="date"
+  className="border rounded p-2"
+  value={form.release_date || new Date().toISOString().split("T")[0]}
+  onChange={(e) =>
+    setForm({ ...form, release_date: e.target.value })
+  }
+/>
+
     <input
       className="border rounded p-2"
       placeholder="Decal Production"
@@ -177,14 +195,7 @@ const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handle
         setForm({ ...form, copyrightSeries: e.target.value })
       }
     />
-    <input
-      type="number"
-      step="0.01"
-      className="border rounded p-2"
-      placeholder="Price"
-      value={form.price}
-      onChange={(e) => setForm({ ...form, price: e.target.value })}
-    />
+   
     <input
       type="number"
       className="border rounded p-2"
@@ -201,14 +212,7 @@ const Form = ({form, categories ,addAdditionImage, handleSubmit, setForm, handle
       <option value="preorder">Pre-Order</option>
       <option value="soldout">Sold Out</option>
     </select>
-    <input
-      className="border rounded p-2"
-      placeholder="Base Image URL"
-      value={form.base_image}
-      onChange={(e) =>
-        setForm({ ...form, base_image: e.target.value })
-      }
-    />
+   
 
     {/* Category */}
     <select

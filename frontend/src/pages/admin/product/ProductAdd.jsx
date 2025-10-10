@@ -27,7 +27,7 @@ function ProductAdd() {
     stock: "",
     sold:0,
     status: "available",
-    base_image: "",
+    base_image: "https://www.goodsmile.com",
     additional_images: [""],
     gift_items: [],
     category_id: "",
@@ -58,6 +58,7 @@ function ProductAdd() {
         ...form,
         price: form.price ? parseFloat(form.price) : 0,
         stock: form.stock ? parseInt(form.stock) : 0,
+        release_date: form.release_date || new Date().toISOString().split("T")[0],
       });
       navigate("/admin/products");
     } catch (err) {
@@ -84,9 +85,9 @@ function ProductAdd() {
     });
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">➕ Add New Product (Figure)</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="">
+      <h1 className="text-xl font-semibold py-4">Add New Product</h1>
+      {error && <p className="text-red-500 ">{error}</p>}
 
       <Form
   form={form}

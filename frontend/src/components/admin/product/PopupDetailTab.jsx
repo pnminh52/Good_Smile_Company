@@ -88,17 +88,36 @@ const PopupDetailTab = ({ product, onClose }) => {
           )}
 
           {activeTab === "specs" && (
-            <div className="space-y-2">
-              <p><strong>Decal Production:</strong> {product.decalProduction}</p>
-              <p><strong>Specifications:</strong> {product.specifications}</p>
-              <p><strong>Sculptor:</strong> {product.sculptor}</p>
-              <p><strong>Planning & Production:</strong> {product.planningAndProduction}</p>
-              <p><strong>Production Cooperation:</strong> {product.productionCooperation}</p>
-              <p><strong>Paintwork:</strong> {product.paintwork}</p>
-              <p><strong>Manufacturer:</strong> {product.manufacturer}</p>
-              <p><strong>Distributed By:</strong> {product.distributedBy}</p>
-              <p><strong>Copyright Series:</strong> {product.copyrightSeries}</p>
-            </div>
+           <div className="space-y-2">
+           {product.decalProduction && (
+             <p><strong>Decal Production:</strong> {product.decalProduction}</p>
+           )}
+           {product.specifications && (
+             <p><strong>Specifications:</strong> {product.specifications}</p>
+           )}
+           {product.sculptor && (
+             <p><strong>Sculptor:</strong> {product.sculptor}</p>
+           )}
+           {product.planningAndProduction && (
+             <p><strong>Planning & Production:</strong> {product.planningAndProduction}</p>
+           )}
+           {product.productionCooperation && (
+             <p><strong>Production Cooperation:</strong> {product.productionCooperation}</p>
+           )}
+           {product.paintwork && (
+             <p><strong>Paintwork:</strong> {product.paintwork}</p>
+           )}
+           {product.manufacturer && (
+             <p><strong>Manufacturer:</strong> {product.manufacturer}</p>
+           )}
+           {product.distributedby && (
+             <p><strong>Distributed By:</strong> {product.distributedby}</p>
+           )}
+           {product.copyrightseries && (
+             <p><strong>Copyright Series:</strong> {product.copyrightseries}</p>
+           )}
+         </div>
+         
           )}
         </div>
       </div>

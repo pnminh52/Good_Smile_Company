@@ -8,9 +8,9 @@ function ProductEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    imagecopyright:"",
+ const [form, setForm] = useState({
     name: "",
+    imagecopyright:"",
     title: "",
     series: "",
     release_date: "",
@@ -25,16 +25,15 @@ function ProductEdit() {
     distributedBy: "",
     price: "",
     stock: "",
-    gift_items: [],
     sold:0,
     status: "available",
-    base_image: "",
+    base_image: "https://www.goodsmile.com",
     additional_images: [""],
+    gift_items: [],
     category_id: "",
     description: "",
     copyrightSeries: "",
   });
-
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
 
@@ -44,11 +43,14 @@ function ProductEdit() {
         const res = await getProductById(id);
         setForm({
           ...res.data,
+          copyrightSeries: res.data.copyrightseries || "",
+          distributedBy: res.data.distributedby || "",
           release_date: res.data.release_date
-            ? new Date(res.data.release_date).toISOString().split("T")[0] // ép thành YYYY-MM-DD
+            ? new Date(res.data.release_date).toISOString().split("T")[0]
             : "",
           additional_images: res.data.additional_images || [""],
         });
+        
       } catch (err) {
         console.error("❌ Error fetching product:", err);
       }
