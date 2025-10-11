@@ -34,7 +34,7 @@ const Coupons = () => {
     <li>A coupon's validity period is calculated based on its download date/time.</li>
     <li>The time of expiry of a coupon is calculated based on the download time of the coupon, and not 23:59 (JST) of the date of expiry.</li>
   </ul>
-  <p className="italic text-red-500">
+  <p className="italic text-red-500 text-sm">
     Example: A coupon that is valid for 3 days (72 hours) which was downloaded on Nov 13th at 15:00 (JST) will expire at 14:59 (JST) on Nov 16th.
   </p>
 

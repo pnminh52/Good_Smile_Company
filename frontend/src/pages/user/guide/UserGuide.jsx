@@ -39,7 +39,7 @@ const UserGuide = () => {
                 product before ordering.
               </p>
         
-              <p className="text-red-500">
+              <p className="text-red-500 italic text-sm">
                 All communication regarding ordered items will be sent to the registered
                 email address provided. Please ensure that you are able to receive
                 emails from the Good Smile Company Online Store.

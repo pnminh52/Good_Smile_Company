@@ -14,8 +14,8 @@ const AboutPayments = () => {
   Important Notice
 </h1>
 <p className="">
-  Customers outside of Japan and Taiwan are required to make their purchase in <span className="text-red-500">US dollars (USD)</span>. 
-  Please note that purchases cannot be made in <span className="text-red-500">Japanese yen (JPY)</span>. 
+  Customers outside of Japan and Taiwan are required to make their purchase in <span className="text-sm italic text-red-500">US dollars (USD)</span>. 
+  Please note that purchases cannot be made in <span className="text-red-500 text-sm italic">Japanese yen (JPY)</span>. 
   We apologize for the inconvenience and hope for your understanding on the matter.
 </p>
 
@@ -52,7 +52,7 @@ const AboutPayments = () => {
     <li>We do not accept changes in payment method for orders. (1*) Please ensure that details of your order are correct before checking out.</li>
   </ul>
 
-  <p className="text-sm text-red-500 ">
+  <p className="text-sm text-red-500 italic ">
     (1*) Depending on the status of your order, we may or may not be able to accommodate your request. Please contact customer support as soon as possible to inquire.
   </p>
 
@@ -71,7 +71,7 @@ const AboutPayments = () => {
   <p className="text-gray-800 ">
     If the payment is not complete within the specified time frame, the order will be canceled automatically.
   </p>
-  <p className="text-red-500  italic">
+  <p className="text-red-500 text-sm italic">
     *The deadline for handling payment errors is within one week from the date of receipt of the first payment error notification email.
   </p>
 

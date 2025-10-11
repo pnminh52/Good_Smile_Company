@@ -54,14 +54,14 @@ const DeliveryAndShipping = () => {
     <li>If you change the shipping address information registered in your account, the shipping address of orders that have already been placed will not be updated automatically. Please ensure to update the shipping address manually for each individual order number.</li>
   </ul>
 
-  <p className="text-red-500 py-2 italic">
+  <p className="text-red-500 py-2 text-sm italic">
     (1*) For Orders Placed on the Old GOODSMILE ONLINE SHOP
   </p>
   <ul className="list-disc list-inside space-y-2 text-gray-800">
     <li>Orders of multiple types of products made at the same will result in only one order number. Example: If an order for three types of products was made in a single checkout, only one order number will be issued. If the shipping address for the order was updated, the change will apply to all three product types.</li>
   </ul>
 
-  <p className="text-red-500 py-2 italic">
+  <p className="text-red-500 py-2 text-sm italic">
     For Orders Placed on the Good Smile Company Online Store
   </p>
   <ul className="list-disc list-inside space-y-2 text-gray-800">
