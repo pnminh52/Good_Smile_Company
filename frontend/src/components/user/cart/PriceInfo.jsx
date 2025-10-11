@@ -10,7 +10,9 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
     0
   );
   const grandTotal = subtotal + (shippingFee ?? 0);
-
+const clearAll =()=>{
+  handleDeleteAll()
+}
   return (
     <div>
       {/* Price summary */}
@@ -73,12 +75,12 @@ const PriceInfo = ({ cartItems, handleCheckout, handleDeleteAll }) => {
           </button>
         </Link>
 
-        {/* <button
-          onClick={handleClearCart}
-          className="border text-red-600 border-red-600 w-full py-3 font-semibold rounded-full cursor-pointer"
+        <button
+          onClick={()=>clearAll()}
+          className="border text-red-600 border-red-600 w-full py-3  rounded-full cursor-pointer"
         >
-          Clear cart
-        </button> */}
+          Clear Cart
+        </button>
       </div>
 
      
