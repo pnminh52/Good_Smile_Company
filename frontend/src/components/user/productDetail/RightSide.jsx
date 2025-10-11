@@ -241,7 +241,7 @@ disabled={loadingUser}
                     <p>{product.description}</p>
                     
                     <p className="text-gray-500 text-md">We prioritize the cash on delivery (COD) payment method. For your convenience, you can pay directly to the delivery staff upon receiving your order. Other payment methods will also be available soon.</p>
-                    <p>{dayjs(product.created_at).format("DD/MM/YYYY HH:mm")}</p>
+                    <p>Release date: {dayjs(product.created_at).format("DD/MM/YYYY HH:mm")}</p>
                 </div>
       </div>
       <div className="block lg:hidden sm:px-0 px-4 ">
