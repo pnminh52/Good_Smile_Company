@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { Image } from "antd";
 const Dropdown = ({ title, children, defaultOpen = true }) => {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -39,11 +39,11 @@ const DetailSection = ({ product }) => {
                        
 
             {gift.image && (
-             <div className="flex items-center justify-center p-4 bg-gray-100">
-               <img
+             <div className="flex items-center justify-center p-6 bg-gray-100">
+               <Image
                 src={gift.image}
                 alt={gift.title || `Gift ${index + 1}`}
-                className="w-[300px] h-auto object-cover "
+                className="w-[150px] h-auto object-cover "
               />
              </div>
             )}
