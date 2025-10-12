@@ -29,14 +29,23 @@ export const getOrderDetail = (id, token) =>
       },
     });
 
-    export const updateOrderStatus = (id, status_id, token, cancel_reason = null) =>
-      api.put(
-        `/orders/${id}/status`,
-        { status_id, cancel_reason },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+    export const updateOrderStatus = async (id, status_id, token, cancel_reason = null) => {
+      try {
+        const res = await api.put(
+          `/orders/${id}/status`,
+          { status_id, cancel_reason },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+          return res.data;
+      } catch (error) {
+        if (error.response) {
+          throw new Error(error.response.data?.error || "Failed to update order status");
         }
-      );
+        throw new Error("Network error");
+      }
+    };
     
 
   
