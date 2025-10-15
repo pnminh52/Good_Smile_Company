@@ -24,3 +24,55 @@
   }
   
 
+
+  .default-ltr-cache-dulgtd {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
+    width: 100%;
+    height: 5.25rem;
+    z-index: 2;
+  }
+  
+  .default-ltr-cache-1f97ztc {
+    box-sizing: border-box;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    transform: rotate(180deg);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    border: solid 0.25rem transparent;
+    border-top-left-radius: 50% 100%;
+    border-top-right-radius: 50% 100%;
+    border-bottom: none;
+    background: #FF6900;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    width: 200%;
+    left: -50%;
+  }
+  
+  .default-ltr-cache-1f97ztc:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin-top: -0.25rem;
+    border-radius: inherit;
+    background:  #FF6900
+    ;
+  }
+  
+  .default-ltr-cache-jtcpfi {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    margin-top: 1.375em;
+  }
