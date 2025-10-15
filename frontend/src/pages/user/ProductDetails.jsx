@@ -8,6 +8,7 @@ import History from './../../components/user/productDetail/History';
 import SameCategory from './../../components/user/productDetail/SameCategory';
 import RecommendProduction from './../../components/user/productDetail/RecommendProduction';
 import NoResult from './../../components/user/NoResult';
+import Description2 from './../../components/user/productDetail/Description2';
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -53,10 +54,13 @@ const ProductDetails = () => {
    
 
   </div>
-  <div className="space-y-0 lg:px-50 md:px-4 py-2">
+  <div className="space-y-0 lg:px-50 md:px-4 pt-2">
   <History product={product}/>
    <SameCategory product={product} />
    <RecommendProduction product={product} />
+  </div>
+  <div>
+    <Description2 />
   </div>
   </div>
   
