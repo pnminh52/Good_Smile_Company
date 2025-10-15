@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import SliderSkeleton from './SliderSkeleton';
 import { getProductsBySameCategory } from "../../../api/products";
+import Loader from './../../Loader';
 
 const SameCategory = ({ product }) => {
   const [sameProducts, setSameProducts] = useState([]);
+  const [loading, setLoading]=useState(false)
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -11,16 +13,20 @@ const SameCategory = ({ product }) => {
     const fetchSameCategory = async () => {
       if (!product?.id) return;
       try {
+        setLoading(true)
         const { data } = await getProductsBySameCategory(product.id);
         setSameProducts(data || []);
       } catch (err) {
         console.error("❌ Error fetchSameCategory:", err.message);
+      } finally{
+        setLoading(false)
       }
     };
     fetchSameCategory();
   }, [product]);
 
   if (!sameProducts.length) return null;
+  if (loading) return <><Loader /></>
 
   return (
     <div className="max-w-screen-xl mx-auto ">
