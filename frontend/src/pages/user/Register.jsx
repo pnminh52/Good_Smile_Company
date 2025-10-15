@@ -17,6 +17,24 @@ const provinces = [
 ];
 
 const Register = () => {
+  const handleGeneratePassword=()=>{
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*()_+[]{}|;:,.<>?";
+    const all = upper + lower + numbers + symbols;
+    let password = "";
+    password += upper[Math.floor(Math.random() * upper.length)];
+    password += lower[Math.floor(Math.random() * lower.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+    for (let i = 0; i < 8; i++) {
+      password += all[Math.floor(Math.random() * all.length)];
+    }
+    password = password.split("").sort(() => 0.5 - Math.random()).join("");
+    setForm({ ...form, password });
+    toast.success("Recommended password generated!");
+  };
   const toast=useToast()
   const [form, setForm] = useState({
     name: "",
@@ -130,7 +148,7 @@ const Register = () => {
               Password (Must include at least one uppercase letter, one lowercase letter, one number and one special character)
             </p>
             <input
-              type="password"
+              type="text"
               name="password"
               placeholder="Password"
               value={form.password}
@@ -138,6 +156,7 @@ const Register = () => {
               className="w-full border border-gray-400 px-3 py-2 rounded"
               required
             />
+            <p onClick={()=>handleGeneratePassword()} className="text-sm text-blue-500 cursor-pointer underline">Use recommended password </p>
           </div>
 
           {/* Address (province) */}
