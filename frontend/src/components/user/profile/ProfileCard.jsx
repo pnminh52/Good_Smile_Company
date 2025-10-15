@@ -32,6 +32,7 @@ const ProfileCard = ({ handdleLogOut }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const toast = useToast();
   const [isChanged, setIsChanged]=useState(false)
+  const [lastPasswordChange, setLastPasswordChange]=useState(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -48,6 +49,23 @@ const ProfileCard = ({ handdleLogOut }) => {
     };
     fetchProfile();
   }, []);
+  useEffect(()=>{
+    const sortedDate=localStorage.getItem("lastPasswordChange")
+    if (sortedDate) setLastPasswordChange(new Date(sortedDate))
+  },[])
+
+  const handleOpenChangePassword = () => {
+    if (lastPasswordChange) {
+      const diffDays =
+        (Date.now() - lastPasswordChange.getTime()) / (1000 * 60 * 60 * 24);
+      if (diffDays < 2) {
+        toast.error(`You can change your password again after ${Math.ceil(3 - diffDays)} day(s).`);
+        return;
+      }
+    }
+    setIsModalVisible(true);
+  };
+  
   
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -132,6 +150,8 @@ const ProfileCard = ({ handdleLogOut }) => {
       const token = localStorage.getItem("token");
       const res = await changePassword({ oldPassword, newPassword }, token);
       toast.success(res.data?.message || "Password changed successfully!");
+      localStorage.setItem("lastPasswordChange", new Date().toISOString())
+      setLastPasswordChange(new Date())
       setIsModalVisible(false);
       setOldPassword("");
       setNewPassword("");
@@ -247,14 +267,31 @@ const ProfileCard = ({ handdleLogOut }) => {
         />
        <button
   type="button"
-  onClick={() => setIsModalVisible(true)}
+  onClick={() => handleOpenChangePassword()}
   className="rounded-lg cursor-pointer bg-white text-[#FF6900] border font-semibold 
              w-10 h-10 p-2 lg:w-auto lg:h-auto lg:px-4 lg:py-2"
 >
   <EditOutlined /> <span className="hidden lg:inline">Change</span>
 </button>
 
+
       </div>
+      {lastPasswordChange && (
+  <p className="text-xs text-gray-500 mt-1">
+    Last changed:{" "}
+    {(() => {
+      const diffDays = Math.floor(
+        (Date.now() - lastPasswordChange.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return diffDays === 0
+        ? "Today"
+        : `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    })()}{" "}
+    ({lastPasswordChange.toLocaleDateString()})
+  </p>
+)}
+
+
     </div>
 
     <div className="flex flex-col w-full lg:flex-row gap-2 ">
