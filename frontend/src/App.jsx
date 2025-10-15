@@ -48,6 +48,7 @@ import OrderList from "./pages/admin/order/OrderList";
 import OrderDetails from "./pages/admin/order/OrderDetails";
 import UserList from "./pages/admin/user/UserList";
 import useAuth from "./hook/useAuth";
+import CookiePopup from "./components/CookiePopup";
 import CustomerSupport from "./pages/user/contact/CustomerSupport";
 
 
@@ -131,12 +132,14 @@ function AppContent() {
             path="/guide/delivery-and-shipping"
             element={<DeliveryAndShipping />}
           />
+
            <Route
                       path="/support/customer-support"
                       element={<CustomerSupport />}
                     />
           <Route path="/guide/importan" element={<ImportanNote />} />
-          <Route path="/guide/coupons" element={<Coupons />} />
+          <Route path="/guide/import CookiePopup from './components/CookiePopup';
+coupons" element={<Coupons />} />
         </Route>
 
 
@@ -159,6 +162,7 @@ function AppContent() {
         </Route>
       </Routes>
       {/* <Chatbot /> */}
+      <CookiePopup />
     </>
   );
 }
