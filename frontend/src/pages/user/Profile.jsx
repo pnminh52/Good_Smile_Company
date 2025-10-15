@@ -13,7 +13,7 @@ const Profile = () => {
     logout();
     navigate("/");
     localStorage.removeItem("historyProducts");
-    localStorage.removeItem("cookieAccepted")
+    // localStorage.removeItem("cookieAccepted")
     toast.success("Logout successful!");
   };
   useEffect(()=>{

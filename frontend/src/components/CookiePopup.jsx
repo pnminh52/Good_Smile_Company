@@ -20,6 +20,7 @@ const CookiePopup = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  
 
   const handleAccept = () => {
     localStorage.setItem("cookieAccepted", "true");
