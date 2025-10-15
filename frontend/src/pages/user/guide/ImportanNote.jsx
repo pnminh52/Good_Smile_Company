@@ -8,7 +8,7 @@ const ImportanNote = () => {
   return (
     <div className="max-w-screen-xl mx-auto lg:px-40 px-4 text-[15px]">
       <h1 className="font-semibold sm:py-4 text-xl py-6">Important Notices</h1>
-      <ul className="space-y-2 text-gray-800">
+      <ul className="space-y-2  ">
   <li>
     <span className="font-semibold">2025.03.07 </span>　
     <span className="text-blue-600 underline">Notice and Apology Regarding Defect for THE GATTAI Fighbird </span>

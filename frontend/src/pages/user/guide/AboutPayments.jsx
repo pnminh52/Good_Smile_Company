@@ -30,7 +30,7 @@ const AboutPayments = () => {
   <p className="text-sm text-red-500 italic ">
     *Payments are processed at the time of shipment.
   </p>
-  <ul className="list-disc list-inside space-y-1 text-gray-800">
+  <ul className="list-disc list-inside space-y-1  ">
     <li>
       <span className="font-medium">Credit Card</span> (VISA / MASTERCARD / JCB / AMERICAN EXPRESS / Diners Club)
     </li>
@@ -44,7 +44,7 @@ const AboutPayments = () => {
 <div className="space-y-2 text-[15px]">
  <h1 className="text-xl  py-4 font-semibold">Important Notes</h1>
 
-  <ul className="list-disc list-inside space-y-2 text-gray-800">
+  <ul className="list-disc list-inside space-y-2  ">
     <li>Only credit cards that support the authentication service (3D Secure 2.0) can be used (installments not permitted).</li>
     <li>For preorders that exceed a certain amount, payment will be processed at the time of checkout instead of upon shipment. This applies to payment using both PayPal and credit cards.</li>
     <li>Your credit card may be charged to verify its validity if credit card payment is selected. This charge will be cancelled after the settlement is confirmed.</li>
@@ -57,7 +57,7 @@ const AboutPayments = () => {
   </p>
 
   <p className="font-semibold text-gray-700">Related FAQ:</p>
-  <ul className="list-disc list-inside text-gray-800">
+  <ul className="list-disc list-inside  ">
     <li>Implementation of Personal Authentication Service (3D Secure 2.0)</li>
   </ul>
 </div>
@@ -65,10 +65,10 @@ const AboutPayments = () => {
 
 <div className="space-y-2 text-[15px]">
  <h1 className="text-xl  py-4 font-semibold">About Payment Errors</h1>
-  <p className="text-gray-800 ">
+  <p className="  ">
     If a payment error occurs, you will be notified via email at the registered email address provided. Please check the details and follow the instructions to correctly process your payment.
   </p>
-  <p className="text-gray-800 ">
+  <p className="  ">
     If the payment is not complete within the specified time frame, the order will be canceled automatically.
   </p>
   <p className="text-red-500 text-sm italic">
@@ -76,13 +76,13 @@ const AboutPayments = () => {
   </p>
 
  <h1 className="text-xl  py-4 font-semibold">Common Causes of Payment Error</h1>
-  <ul className="list-disc list-inside space-y-2 text-gray-800 ">
+  <ul className="list-disc list-inside space-y-2   ">
     <li>The credit card registered is not a card included in the list of accepted credit cards.</li>
     <li>The transaction was rejected by the credit card company for various reasons.</li>
     <li>Your remaining account balance was insufficient.</li>
   </ul>
 
-  <p className="text-gray-800">
+  <p className=" ">
     We are unable to provide you with the exact reason as to why your credit card was rejected. Please contact the credit card company directly for further information.
   </p>
 </div>

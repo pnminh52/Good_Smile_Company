@@ -8,7 +8,7 @@ const CustomerSupport = () => {
         It may take up to 4 working days for the reply or longer in some cases.
       </p>
       <h1 className="font-semibold  text-xl py-4">Notes Regarding Inquiries</h1>
-      <ul className="list-disc list-inside space-y-2 text-gray-800">
+      <ul className="list-disc list-inside space-y-2  ">
         <li>
           {" "}
           Depending on the content of your inquiry, we may not be able to
@@ -50,7 +50,7 @@ const CustomerSupport = () => {
       </p>
      </div>
 
-      <ul className="text-orange-500 list-disc list-inside space-y-2">
+      <ul className="  list-disc list-inside space-y-2">
         <li>Products eligible for customer support</li>
         <li>What to do in case of defective products</li>
         <li>Regarding request for unopened product exchange</li>
@@ -66,7 +66,7 @@ const CustomerSupport = () => {
 <p className="text-red-500 italic text-sm">Be sure to provide the email address used to register your account.</p>
     </div>
     <h1 className="font-semibold  text-xl py-4">How to use the inquiry form</h1>
-    <ul className="space-y-2 list-disc list-inside text-gray-800">
+    <ul className="space-y-2 list-disc list-inside  ">
         <li>Click on “Submit a request” at the top right corner.</li>
         <li>For inquiries about product defects, select “Defects, missing parts or other product-related inquiry“
         For inquiries about the Good Smile Company Online Store, select “Inquiry about pre-order, payment or shipment“</li>
@@ -76,12 +76,12 @@ const CustomerSupport = () => {
     <h1 className="font-semibold  text-xl py-4">Handling of Personal Information</h1>
 <div className="space-y-2">
 <p>Personal information provided will be used only to the extent necessary for interaction with customers. If you provide us with your personal information, we assume that you have given us permission to use your personal information in accordance with this policy.</p>
-<ul className="space-y-2 list-disc list-inside text-gray-800">
+<ul className="space-y-2 list-disc list-inside  ">
     <li>Provision of services;</li>
     <li>Development and improvement of products and services.</li>
 </ul>
 
-<p>For more details, we recommend that you read our privacy policy here <span className="text-orange-500">(Japanese available only).</span></p>
+<p>For more details, we recommend that you read our privacy policy here <span className=" ">(Japanese available only).</span></p>
 
 
 </div>
