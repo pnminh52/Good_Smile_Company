@@ -16,13 +16,11 @@ import { useSocket } from "./context/SocketContext";
 import useToast from "./hook/useToast";
 import OrderFail from "./pages/user/OrderFail";
 import UserGuide from "./pages/user/guide/UserGuide";
-
 import Homepage from "./pages/user/Homepage";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
 import NotFound from "./pages/user/NotFound";
 import UserLayout from "./layouts/UserLayout";
-
 import AdminLayout from "./layouts/AdminLayout";
 import ProductDetails from "./pages/user/ProductDetails";
 import ListProduct from "./pages/user/ListProduct";
