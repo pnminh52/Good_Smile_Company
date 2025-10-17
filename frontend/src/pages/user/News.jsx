@@ -126,7 +126,7 @@ const News = () => {
       {filteredNews.length === 0 && <NoResult />}
 
       {/* Modal hiển thị chi tiết */}
-      <Modal width={800} open={isModalVisible} onCancel={closeModal} footer={null}>
+      <Modal  centered open={isModalVisible} onCancel={closeModal} footer={null} style={{maxWidth:"95%", width:"100%"}}>
         {selectedNews && (
           <div>
             <div className="flex items-center gap-2">

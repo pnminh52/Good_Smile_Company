@@ -45,7 +45,7 @@ const Header = () => {
         <div className="lg:h-16 h-14 flex items-center justify-between max-w-screen-xl mx-auto lg:px-0 px-4">
   <Link to={"/"}>
   <img
-              className="sm:w-35 w-25  h-full cursor-pointer"
+              className="lg:w-35 w-25  h-full cursor-pointer"
               src="https://www.goodsmile.com/img/common/logo.svg"
               alt=""
             />

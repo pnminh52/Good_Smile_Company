@@ -28,7 +28,7 @@ const Homepage = () => {
    <div>
     <SliderBanner />
     <Section1  />
-  <div className=" max-w-screen-xl mx-auto">
+  <div className=" max-w-screen-xl mx-auto md:px-0">
     {/* <Top10Revenue /> */}
   <PreOrdersNow  />
 
