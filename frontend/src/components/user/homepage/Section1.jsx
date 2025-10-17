@@ -27,7 +27,7 @@ const Section1 = () => {
       </div>
 
       {/* Search */}
-      <div className="w-full sm:px-30 px-4 rounded-bl-[25%] h-25 rounded-br-[25%] sm:rounded-br-none sm:rounded-bl-none bg-[#F06E00] flex flex-col gap-2 items-center justify-center">
+      <div className="w-full sm:px-30 px-4 h-25  bg-[#F06E00] flex flex-col gap-2 items-center justify-center">
         {/* <p className="text-sm lg:text-lg text-white">Discover officially licensed figures for true collectors.</p> */}
         <div className="relative w-full">
           <img
