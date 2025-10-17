@@ -23,7 +23,7 @@ setCurrentTime(new Date())
   }
   return (
     <div className='flex items-center flex-col sm:flex-row sm:gap-2 gap-0 justify-center bg-[#FF6900] text-white font-semibold lg:h-10 h-12'>
-    <span className='font-medium lg:text-md text-xs'> We wish you an enjoyable and successful shopping experience!</span>  <span className='text-sm'>{formatTime(currentTime)} (GMT+7)</span>
+    <span className='font-medium lg:text-md text-xs md:text-sm'> We wish you an enjoyable and successful shopping experience!</span>  <span className='text-sm'>{formatTime(currentTime)} (GMT+7)</span>
     </div>
   )
 }
